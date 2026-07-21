@@ -1,34 +1,73 @@
 import Foundation
 import SwiftData
 
+// SwiftData's composite-attribute schema generation crashes (EXC_BREAKPOINT inside
+// its Codable-encoding path) when a @Model has 2+ stored properties of the same
+// custom Codable struct type, and also when a stored property is an array of a
+// custom Codable struct. Every `ClosetColor`-shaped value here is therefore stored
+// as JSON-encoded `Data` with a computed accessor, never as a native `ClosetColor`
+// or `[ClosetColor]` stored property.
 @Model
 final class UserColorimetryProfile {
     var name: String?
-    var skinToneSample: ClothingColor
-    var eyeColorSample: ClothingColor
-    var hairColorSample: ClothingColor
+    private var skinToneSampleData: Data
+    private var eyeColorSampleData: Data
+    private var hairColorSampleData: Data
     var season: Season
-    var recommendedColors: [ClothingColor]
-    var avoidColors: [ClothingColor]
+    private var recommendedColorsData: Data
+    private var avoidColorsData: Data
     var createdAt: Date
+
+    var skinToneSample: ClosetColor {
+        get { Self.decodeColor(skinToneSampleData) }
+        set { skinToneSampleData = Self.encodeColor(newValue) }
+    }
+
+    var eyeColorSample: ClosetColor {
+        get { Self.decodeColor(eyeColorSampleData) }
+        set { eyeColorSampleData = Self.encodeColor(newValue) }
+    }
+
+    var hairColorSample: ClosetColor {
+        get { Self.decodeColor(hairColorSampleData) }
+        set { hairColorSampleData = Self.encodeColor(newValue) }
+    }
+
+    var recommendedColors: [ClosetColor] {
+        get { (try? JSONDecoder().decode([ClosetColor].self, from: recommendedColorsData)) ?? [] }
+        set { recommendedColorsData = (try? JSONEncoder().encode(newValue)) ?? Data() }
+    }
+
+    var avoidColors: [ClosetColor] {
+        get { (try? JSONDecoder().decode([ClosetColor].self, from: avoidColorsData)) ?? [] }
+        set { avoidColorsData = (try? JSONEncoder().encode(newValue)) ?? Data() }
+    }
 
     init(
         name: String?,
-        skinToneSample: ClothingColor,
-        eyeColorSample: ClothingColor,
-        hairColorSample: ClothingColor,
+        skinToneSample: ClosetColor,
+        eyeColorSample: ClosetColor,
+        hairColorSample: ClosetColor,
         season: Season,
-        recommendedColors: [ClothingColor],
-        avoidColors: [ClothingColor],
+        recommendedColors: [ClosetColor],
+        avoidColors: [ClosetColor],
         createdAt: Date = .now
     ) {
         self.name = name
-        self.skinToneSample = skinToneSample
-        self.eyeColorSample = eyeColorSample
-        self.hairColorSample = hairColorSample
+        self.skinToneSampleData = Self.encodeColor(skinToneSample)
+        self.eyeColorSampleData = Self.encodeColor(eyeColorSample)
+        self.hairColorSampleData = Self.encodeColor(hairColorSample)
         self.season = season
-        self.recommendedColors = recommendedColors
-        self.avoidColors = avoidColors
+        self.recommendedColorsData = (try? JSONEncoder().encode(recommendedColors)) ?? Data()
+        self.avoidColorsData = (try? JSONEncoder().encode(avoidColors)) ?? Data()
         self.createdAt = createdAt
+    }
+
+    private static func encodeColor(_ color: ClosetColor) -> Data {
+        (try? JSONEncoder().encode(color)) ?? Data()
+    }
+
+    private static func decodeColor(_ data: Data) -> ClosetColor {
+        (try? JSONDecoder().decode(ClosetColor.self, from: data)) ?? ClosetColor(red: 0, green: 0, blue: 0)
     }
 }

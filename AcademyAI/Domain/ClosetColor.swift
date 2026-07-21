@@ -1,0 +1,29 @@
+import Foundation
+
+struct ClosetColor: Codable, Equatable {
+    let red: Double
+    let green: Double
+    let blue: Double
+}
+
+extension ClosetColor {
+    static let coral = ClosetColor(red: 0.93, green: 0.51, blue: 0.42)
+    static let peach = ClosetColor(red: 0.98, green: 0.78, blue: 0.63)
+    static let turquoise = ClosetColor(red: 0.25, green: 0.80, blue: 0.75)
+    static let golden = ClosetColor(red: 0.85, green: 0.65, blue: 0.20)
+
+    static let softBlue = ClosetColor(red: 0.55, green: 0.65, blue: 0.80)
+    static let lavender = ClosetColor(red: 0.70, green: 0.60, blue: 0.80)
+    static let roseGray = ClosetColor(red: 0.75, green: 0.60, blue: 0.62)
+    static let slate = ClosetColor(red: 0.40, green: 0.45, blue: 0.55)
+
+    static let lime = ClosetColor(red: 0.78, green: 0.82, blue: 0.38)
+    static let wine = ClosetColor(red: 0.27, green: 0.12, blue: 0.15)
+    static let beige = ClosetColor(red: 0.965, green: 0.949, blue: 0.918)
+    static let mauve = ClosetColor(red: 0.83, green: 0.41, blue: 0.51)
+
+    static let icyBlue = ClosetColor(red: 0.75, green: 0.85, blue: 0.95)
+    static let emerald = ClosetColor(red: 0.0, green: 0.5, blue: 0.4)
+    static let trueRed = ClosetColor(red: 0.80, green: 0.05, blue: 0.10)
+    static let deepBlack = ClosetColor(red: 0.05, green: 0.05, blue: 0.05)
+}

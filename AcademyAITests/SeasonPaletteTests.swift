@@ -18,9 +18,9 @@ struct SeasonPaletteTests {
 
     @Test func autumnPaletteMatchesProductPersona() {
         let autumn = SeasonPalette.recommendedColors(for: .autumn)
-        #expect(autumn.contains(ClothingColor.lime))
-        #expect(autumn.contains(ClothingColor.wine))
-        #expect(autumn.contains(ClothingColor.beige))
-        #expect(autumn.contains(ClothingColor.mauve))
+        #expect(autumn.contains(ClosetColor.lime))
+        #expect(autumn.contains(ClosetColor.wine))
+        #expect(autumn.contains(ClosetColor.beige))
+        #expect(autumn.contains(ClosetColor.mauve))
     }
 }

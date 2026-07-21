@@ -1,7 +1,7 @@
 import Foundation
 
 enum SeasonClassifier {
-    static func classify(skinTone: ClothingColor, eyeColor: ClothingColor, hairColor: ClothingColor) -> Season {
+    static func classify(skinTone: ClosetColor, eyeColor: ClosetColor, hairColor: ClosetColor) -> Season {
         let isWarm = (skinTone.red - skinTone.blue) > 0
         let isLight = averageLuminance(skinTone, hairColor) > 0.55
 
@@ -13,11 +13,11 @@ enum SeasonClassifier {
         }
     }
 
-    private static func averageLuminance(_ a: ClothingColor, _ b: ClothingColor) -> Double {
+    private static func averageLuminance(_ a: ClosetColor, _ b: ClosetColor) -> Double {
         (luminance(a) + luminance(b)) / 2
     }
 
-    private static func luminance(_ color: ClothingColor) -> Double {
+    private static func luminance(_ color: ClosetColor) -> Double {
         0.299 * color.red + 0.587 * color.green + 0.114 * color.blue
     }
 }

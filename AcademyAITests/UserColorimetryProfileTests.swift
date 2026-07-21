@@ -12,9 +12,9 @@ struct UserColorimetryProfileTests {
 
         let profile = UserColorimetryProfile(
             name: "Ana",
-            skinToneSample: ClothingColor(red: 0.7, green: 0.5, blue: 0.4),
-            eyeColorSample: ClothingColor(red: 0.3, green: 0.2, blue: 0.1),
-            hairColorSample: ClothingColor(red: 0.15, green: 0.08, blue: 0.05),
+            skinToneSample: ClosetColor(red: 0.7, green: 0.5, blue: 0.4),
+            eyeColorSample: ClosetColor(red: 0.3, green: 0.2, blue: 0.1),
+            hairColorSample: ClosetColor(red: 0.15, green: 0.08, blue: 0.05),
             season: .autumn,
             recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
             avoidColors: SeasonPalette.avoidColors(for: .autumn)

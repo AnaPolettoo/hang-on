@@ -1,7 +1,7 @@
 import Foundation
 
 enum SeasonPalette {
-    static func recommendedColors(for season: Season) -> [ClothingColor] {
+    static func recommendedColors(for season: Season) -> [ClosetColor] {
         switch season {
         case .spring: return [.coral, .peach, .turquoise, .golden]
         case .summer: return [.softBlue, .lavender, .roseGray, .slate]
@@ -10,7 +10,7 @@ enum SeasonPalette {
         }
     }
 
-    static func avoidColors(for season: Season) -> [ClothingColor] {
+    static func avoidColors(for season: Season) -> [ClosetColor] {
         recommendedColors(for: season.opposite)
     }
 }
