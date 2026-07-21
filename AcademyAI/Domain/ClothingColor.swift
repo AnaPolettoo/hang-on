@@ -1,6 +1,6 @@
 import Foundation
 
-struct ClothingColor: Codable, Equatable {
+struct ClothingColor: Codable, Equatable, Hashable {
     let red: Double
     let green: Double
     let blue: Double
