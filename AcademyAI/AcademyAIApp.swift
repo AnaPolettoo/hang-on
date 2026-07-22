@@ -37,7 +37,12 @@ struct AcademyAIApp: App {
 
     var body: some Scene {
         WindowGroup {
+            // The whole design (Theme.swift) is a fixed light palette with no dark
+            // variants — without this, system chrome (tab bar material, nav bar)
+            // follows the device's Dark Mode schedule while our hardcoded colors
+            // don't, causing mismatched/invisible text once the system switches.
             RootView(modelContext: modelContainer.mainContext)
+                .preferredColorScheme(.light)
         }
         .modelContainer(modelContainer)
     }

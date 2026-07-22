@@ -94,7 +94,7 @@ struct ClosetView: View {
 
             Spacer()
         }
-        .padding()
+        .padding(.horizontal, 32)
     }
 
     private var populatedState: some View {
@@ -114,7 +114,8 @@ struct ClosetView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal, 24)
+            .padding(.top, 8)
         }
     }
 
