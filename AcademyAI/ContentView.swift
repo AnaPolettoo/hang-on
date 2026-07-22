@@ -6,14 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Query private var profiles: [UserColorimetryProfile]
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 8) {
+            Image(systemName: "checkmark.seal")
+                .font(.largeTitle)
+            if let profile = profiles.first {
+                Text("Onboarding completo — perfil: \(profile.season.rawValue)")
+            } else {
+                Text("Onboarding completo")
+            }
         }
         .padding()
     }
