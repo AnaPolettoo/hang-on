@@ -21,10 +21,14 @@ struct ClosetView: View {
         ZStack(alignment: .bottomTrailing) {
             Theme.Color.cream.ignoresSafeArea()
 
-            if viewModel.items.isEmpty {
-                emptyState
-            } else {
-                populatedState
+            VStack(spacing: 0) {
+                header
+
+                if viewModel.items.isEmpty {
+                    emptyState
+                } else {
+                    populatedState
+                }
             }
 
             if !viewModel.items.isEmpty {
@@ -41,24 +45,47 @@ struct ClosetView: View {
                 .padding()
             }
         }
-        .navigationTitle("My Closet")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                if let profileName = viewModel.profileName, let initials = Self.initials(from: profileName) {
-                    Text(initials)
-                        .font(Theme.Font.subheadline)
-                        .foregroundStyle(Theme.Color.ink)
-                        .frame(width: 32, height: 32)
-                        .background(Theme.Color.accentBorder)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
-                }
-            }
-        }
+        // Native `.large` title display mode + a custom UINavigationBarAppearance
+        // font silently failed to render any text on a real device (confirmed via
+        // screenshot — AddPieceView's `.inline` title with the same appearance DID
+        // render correctly, isolating the bug to large titles specifically). Rather
+        // than depend on that unreliable native path, this screen draws its own
+        // title/avatar row — guaranteed to render since it's plain SwiftUI, and it
+        // also matches Figma's single-row title+avatar layout more closely than a
+        // native large title (whose trailing toolbar item sits in a separate compact
+        // bar above the large title) ever could.
+        .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $showAddPiece) {
             AddPieceView(viewModel: viewModel, onDone: { showAddPiece = false })
         }
+    }
+
+    private var header: some View {
+        HStack {
+            Text("My Closet")
+                .font(Theme.Font.largeTitle)
+                .foregroundStyle(Theme.Color.ink)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Theme.Color.ink)
+                        .frame(height: 2)
+                        .offset(y: 4)
+                }
+
+            Spacer()
+
+            if let profileName = viewModel.profileName, let initials = Self.initials(from: profileName) {
+                Text(initials)
+                    .font(Theme.Font.subheadline)
+                    .foregroundStyle(Theme.Color.ink)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.Color.accentBorder)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
     }
 
     private var emptyState: some View {
