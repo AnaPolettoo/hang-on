@@ -5,14 +5,28 @@ struct SplashView: View {
     let onFinished: () -> Void
 
     var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tshirt")
-                .font(.system(size: 48))
-            Text("Closet")
-                .font(.largeTitle)
-            Text("check it before you buy it")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+        ZStack {
+            Theme.Color.cream.ignoresSafeArea()
+
+            VStack(spacing: 12) {
+                Image(systemName: "hanger")
+                    .font(.system(size: 40, weight: .light))
+                    .foregroundStyle(Theme.Color.ink)
+
+                Text("Closet")
+                    .font(Theme.Font.display)
+                    .foregroundStyle(Theme.Color.ink)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(Theme.Color.ink)
+                            .frame(height: 2)
+                            .offset(y: 4)
+                    }
+
+                Text("check it before you buy it")
+                    .font(Theme.Font.subheadline)
+                    .foregroundStyle(Theme.Color.inkMuted)
+            }
         }
         .onAppear { viewModel.startTimer() }
         .onChange(of: viewModel.isReadyToAdvance) { _, isReady in

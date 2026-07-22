@@ -6,25 +6,51 @@ struct NameView: View {
     let onSkip: () -> Void
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Nice to meet you")
-                .font(.largeTitle)
-            Text("What should we call you?")
-                .foregroundStyle(.secondary)
-            TextField("Ana Carolina", text: $viewModel.name)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal)
+        ZStack {
+            Theme.Color.cream.ignoresSafeArea()
 
-            Spacer()
+            VStack(spacing: 24) {
+                Spacer()
 
-            Button("Continue", action: onContinue)
-                .buttonStyle(.borderedProminent)
-                .padding(.horizontal)
+                Text("Nice to meet you")
+                    .font(Theme.Font.largeTitle)
+                    .foregroundStyle(Theme.Color.ink)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(Theme.Color.ink)
+                            .frame(height: 2)
+                            .offset(y: 4)
+                    }
 
-            Button("Skip for now", action: onSkip)
-                .font(.footnote)
+                Text("What should we call you?")
+                    .font(Theme.Font.subheadline)
+                    .foregroundStyle(Theme.Color.inkMuted)
+
+                TextField("Ana Carolina", text: $viewModel.name)
+                    .font(Theme.Font.title)
+                    .foregroundStyle(Theme.Color.ink)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 20)
+                    .background(Theme.Color.cream)
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule().stroke(Theme.Color.accentBorder, lineWidth: 1.5)
+                    )
+                    .padding(.horizontal)
+
+                Spacer()
+
+                Button("Continue", action: onContinue)
+                    .buttonStyle(.closetPrimary)
+                    .padding(.horizontal)
+
+                Button("Skip for now", action: onSkip)
+                    .font(Theme.Font.subheadline)
+                    .foregroundStyle(Theme.Color.inkMuted)
+                    .padding(.bottom, 8)
+            }
+            .padding()
         }
-        .padding()
     }
 }
 

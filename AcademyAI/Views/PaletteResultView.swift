@@ -5,28 +5,46 @@ struct PaletteResultView: View {
     let onStartChecking: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(seasonTitle)
-                .font(.largeTitle)
+        ZStack {
+            Theme.Color.cream.ignoresSafeArea()
 
-            ForEach(Array(viewModel.recommended.enumerated()), id: \.offset) { _, color in
-                Text(colorName(for: color))
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(swiftUIColor(from: color))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            VStack(alignment: .leading, spacing: 16) {
+                Text(seasonTitle)
+                    .font(Theme.Font.largeTitle)
+                    .foregroundStyle(Theme.Color.ink)
+                    .overlay(alignment: .bottomLeading) {
+                        Rectangle()
+                            .fill(Theme.Color.ink)
+                            .frame(height: 2)
+                            .offset(y: 4)
+                    }
+                    .padding(.top, 8)
+
+                ForEach(Array(viewModel.recommended.enumerated()), id: \.offset) { _, color in
+                    Text(colorName(for: color))
+                        .font(Theme.Font.title)
+                        .foregroundStyle(textColor(for: color))
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(swiftUIColor(from: color))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius)
+                                .stroke(Theme.Color.ink, lineWidth: 1.5)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius))
+                }
+
+                Text(viewModel.explanation)
+                    .font(Theme.Font.body)
+                    .foregroundStyle(Theme.Color.inkMuted)
+
+                Spacer()
+
+                Button("Start Checking", action: onStartChecking)
+                    .buttonStyle(.closetPrimary)
             }
-
-            Text(viewModel.explanation)
-                .foregroundStyle(.secondary)
-
-            Spacer()
-
-            Button("Start Checking", action: onStartChecking)
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity)
+            .padding()
         }
-        .padding()
     }
 
     private var seasonTitle: String {
@@ -40,10 +58,10 @@ struct PaletteResultView: View {
 
     private func colorName(for color: ClosetColor) -> String {
         switch color {
-        case .lime: return "Lime"
-        case .wine: return "Wine"
-        case .beige: return "Beige"
-        case .mauve: return "Mauve"
+        case .lime: return "Lime — everyday base"
+        case .wine: return "Wine — rich accent"
+        case .beige: return "Beige — neutral"
+        case .mauve: return "Mauve — pop of color"
         case .coral: return "Coral"
         case .peach: return "Peach"
         case .turquoise: return "Turquoise"
@@ -62,5 +80,11 @@ struct PaletteResultView: View {
 
     private func swiftUIColor(from color: ClosetColor) -> Color {
         Color(red: color.red, green: color.green, blue: color.blue)
+    }
+
+    /// Cream text over dark/saturated swatches, ink text over light ones — by relative luminance.
+    private func textColor(for color: ClosetColor) -> Color {
+        let luminance = 0.299 * color.red + 0.587 * color.green + 0.114 * color.blue
+        return luminance > 0.6 ? Theme.Color.ink : Theme.Color.cream
     }
 }

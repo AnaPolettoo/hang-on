@@ -1,0 +1,63 @@
+import SwiftUI
+
+/// Design tokens ported from the Figma file (Closet, node 24eGOEwSDQxLEySg4jg9lu).
+enum Theme {
+    enum Color {
+        /// `color/red/15` — primary text, borders, and filled buttons.
+        static let ink = SwiftUI.Color(hex: "2B1F22")
+        /// `color/grey/98` — screen background.
+        static let cream = SwiftUI.Color(hex: "FDFBF7")
+        /// `color/red/15 40%` — secondary/placeholder text over cream.
+        static let inkMuted = SwiftUI.Color(hex: "2B1F22").opacity(0.4)
+        /// `color/red/67` — accent border (name field, selection states).
+        static let accentBorder = SwiftUI.Color(hex: "D38492")
+    }
+
+    enum Font {
+        /// `font family/Font 1` — the app's display/handwriting typeface throughout the Figma file.
+        private static let familyName = "PatrickHand-Regular"
+
+        static let display = SwiftUI.Font.custom(familyName, size: 44)
+        static let largeTitle = SwiftUI.Font.custom(familyName, size: 30)
+        static let title = SwiftUI.Font.custom(familyName, size: 19)
+        static let button = SwiftUI.Font.custom(familyName, size: 17)
+        static let body = SwiftUI.Font.custom(familyName, size: 16)
+        static let subheadline = SwiftUI.Font.custom(familyName, size: 15)
+        static let caption = SwiftUI.Font.custom(familyName, size: 14)
+    }
+
+    enum Layout {
+        static let cornerRadius: CGFloat = 12
+        static let spacingXS: CGFloat = 8
+        static let spacingXXS: CGFloat = 4
+    }
+}
+
+extension SwiftUI.Color {
+    init(hex: String) {
+        var hexValue = UInt64()
+        Scanner(string: hex).scanHexInt64(&hexValue)
+        let red = Double((hexValue & 0xFF0000) >> 16) / 255
+        let green = Double((hexValue & 0x00FF00) >> 8) / 255
+        let blue = Double(hexValue & 0x0000FF) / 255
+        self.init(red: red, green: green, blue: blue)
+    }
+}
+
+/// A full-width, pill-shaped filled button matching the Figma "PrimaryBtn" component.
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Theme.Font.button)
+            .foregroundStyle(Theme.Color.cream)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 18)
+            .background(Theme.Color.ink)
+            .clipShape(Capsule())
+            .opacity(configuration.isPressed ? 0.8 : 1)
+    }
+}
+
+extension ButtonStyle where Self == PrimaryButtonStyle {
+    static var closetPrimary: PrimaryButtonStyle { PrimaryButtonStyle() }
+}
