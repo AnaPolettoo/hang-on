@@ -11,6 +11,8 @@ enum Theme {
         static let inkMuted = SwiftUI.Color(hex: "2B1F22").opacity(0.4)
         /// `color/red/67` — accent border (name field, selection states).
         static let accentBorder = SwiftUI.Color(hex: "D38492")
+        /// `color/yellow/62` — accent fill for the "+ Add this piece" confirm action.
+        static let accentYellow = SwiftUI.Color(hex: "CFD16D")
     }
 
     enum Font {
@@ -82,4 +84,23 @@ struct DashedButtonStyle: ButtonStyle {
 
 extension ButtonStyle where Self == DashedButtonStyle {
     static var closetDashed: DashedButtonStyle { DashedButtonStyle() }
+}
+
+/// A pill-shaped, filled accent button, matching the Figma "+ Add this piece" button.
+struct AccentButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Theme.Font.title)
+            .foregroundStyle(Theme.Color.ink)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(Theme.Color.accentYellow)
+            .overlay(Capsule().stroke(Theme.Color.ink.opacity(0.2), lineWidth: 2))
+            .clipShape(Capsule())
+            .opacity(configuration.isPressed ? 0.8 : 1)
+    }
+}
+
+extension ButtonStyle where Self == AccentButtonStyle {
+    static var closetAccent: AccentButtonStyle { AccentButtonStyle() }
 }
