@@ -60,7 +60,7 @@ private struct RootView: View {
 
     var body: some View {
         if hasCompletedOnboarding {
-            ClosetView(viewModel: closetViewModel)
+            TabBarShell(closetViewModel: closetViewModel)
                 .onAppear { closetViewModel.loadItems() }
         } else {
             OnboardingCoordinatorView(modelContext: modelContext, onCompleted: {
