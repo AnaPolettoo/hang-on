@@ -1,172 +1,294 @@
 // AcademyAI/Views/ClosetView.swift
+
 import SwiftUI
 import UIKit
+import SwiftData
 
 struct ClosetView: View {
     let viewModel: ClosetViewModel
 
     @State private var showAddPiece = false
 
-    private let thumbnailColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    private let horizontalPadding: CGFloat = 24
+    private let gridSpacing: CGFloat = 8
 
-    private var groupedItems: [(category: ClothingCategory, items: [ClothingItem])] {
-        let order: [ClothingCategory] = [.tops, .bottoms, .outerwear, .shoes, .other]
+    private var thumbnailColumns: [GridItem] {
+        Array(
+            repeating: GridItem(
+                .flexible(),
+                spacing: gridSpacing
+            ),
+            count: 4
+        )
+    }
+
+    private var groupedItems: [
+        (category: ClothingCategory, items: [ClothingItem])
+    ] {
+        let order: [ClothingCategory] = [
+            .tops,
+            .outerwear,
+            .bottoms,
+            .shoes,
+            .other
+        ]
+
         return order.compactMap { category in
-            let items = viewModel.items.filter { $0.category == category }
-            return items.isEmpty ? nil : (category, items)
+            let items = viewModel.items.filter {
+                $0.category == category
+            }
+
+            return items.isEmpty
+                ? nil
+                : (category, items)
         }
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            Theme.Color.cream.ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                header
-
-                if viewModel.items.isEmpty {
-                    emptyState
-                } else {
-                    populatedState
-                }
-            }
-
-            if !viewModel.items.isEmpty {
-                Button {
-                    showAddPiece = true
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 22))
-                        .foregroundStyle(Theme.Color.cream)
-                        .frame(width: 56, height: 56)
-                        .background(Theme.Color.ink)
-                        .clipShape(Circle())
-                }
-                .padding()
+        // Previously this content sat inside an outer ZStack alongside the
+        // background color and the floating button, which buries the ScrollView
+        // (populatedState) a level deeper than NavigationStack's UIKit bridge
+        // expects — the native large-title-collapse-on-scroll tracking needs the
+        // scroll view to be a direct-enough descendant to detect. Using
+        // .background/.overlay instead of ZStack keeps the conditional content
+        // (ScrollView or plain VStack) as the actual body, which is what let the
+        // title render/collapse correctly in the populated state.
+        Group {
+            if viewModel.items.isEmpty {
+                emptyState
+            } else {
+                populatedState
             }
         }
-        // Native `.large` title display mode + a custom UINavigationBarAppearance
-        // font silently failed to render any text on a real device (confirmed via
-        // screenshot — AddPieceView's `.inline` title with the same appearance DID
-        // render correctly, isolating the bug to large titles specifically). Rather
-        // than depend on that unreliable native path, this screen draws its own
-        // title/avatar row — guaranteed to render since it's plain SwiftUI, and it
-        // also matches Figma's single-row title+avatar layout more closely than a
-        // native large title (whose trailing toolbar item sits in a separate compact
-        // bar above the large title) ever could.
-        .toolbar(.hidden, for: .navigationBar)
+        .background(Theme.Color.cream.ignoresSafeArea())
+        .overlay(alignment: .bottomTrailing) {
+            if !viewModel.items.isEmpty {
+                addPieceFloatingButton
+            }
+        }
+        .navigationTitle("My Closet")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                profileButton
+            }
+        }
         .navigationDestination(isPresented: $showAddPiece) {
-            AddPieceView(viewModel: viewModel, onDone: { showAddPiece = false })
+            AddPieceView(
+                viewModel: viewModel,
+                onDone: {
+                    showAddPiece = false
+                }
+            )
         }
     }
 
-    private var header: some View {
-        HStack {
-            Text("My Closet")
-                .font(Theme.Font.largeTitle)
-                .foregroundStyle(Theme.Color.ink)
-                .overlay(alignment: .bottom) {
-                    Rectangle()
-                        .fill(Theme.Color.ink)
-                        .frame(height: 2)
-                        .offset(y: 4)
-                }
+    private var addPieceFloatingButton: some View {
+        Button {
+            showAddPiece = true
+        } label: {
+            Image(systemName: "plus")
+                .font(
+                    .system(
+                        size: 24,
+                        weight: .medium
+                    )
+                )
+                .foregroundStyle(Theme.Color.cream)
+                .frame(width: 64, height: 64)
+                .background(Theme.Color.ink)
+                .clipShape(Circle())
+                .shadow(
+                    color: Theme.Color.ink.opacity(0.18),
+                    radius: 10,
+                    y: 5
+                )
+        }
+        .buttonStyle(.plain)
+        .padding(.trailing, 24)
+        .padding(.bottom, 24)
+        .accessibilityLabel("Add a piece")
+    }
 
-            Spacer()
-
-            if let profileName = viewModel.profileName, let initials = Self.initials(from: profileName) {
+    @ViewBuilder
+    private var profileButton: some View {
+        if let profileName = viewModel.profileName,
+           let initials = Self.initials(from: profileName) {
+            Button {
+                // Abrir perfil futuramente
+            } label: {
                 Text(initials)
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.ink)
                     .frame(width: 44, height: 44)
                     .background(Theme.Color.accentBorder)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Profile")
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 8)
     }
 
     private var emptyState: some View {
         VStack(spacing: 16) {
             Spacer()
 
-            Image("ClosetEmptyHanger")
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 54, height: 54)
-                .foregroundStyle(Theme.Color.ink)
-
-            VStack(spacing: 12) {
-                Text("Your closet is empty")
-                    .font(Theme.Font.sectionTitle)
+            VStack(spacing: 4) {
+                Image("ClosetEmptyHanger")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 54, height: 54)
                     .foregroundStyle(Theme.Color.ink)
-                    .overlay(alignment: .bottom) {
-                        Rectangle()
-                            .fill(Theme.Color.ink)
-                            .frame(height: 2)
-                            .offset(y: 3)
-                    }
 
-                Text("It fills itself as you go — every piece you buy after a check lands here on its own. Or add a few now.")
-                    .font(Theme.Font.subheadline)
-                    .foregroundStyle(Theme.Color.ink.opacity(0.6))
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 12) {
+                    Text("Your closet is empty")
+                        .font(Theme.Font.sectionTitle)
+                        .foregroundStyle(Theme.Color.ink)
+                        .overlay(alignment: .bottom) {
+                            Rectangle()
+                                .fill(Theme.Color.ink)
+                                .frame(height: 2)
+                                .offset(y: 3)
+                        }
+
+                    Text("It fills itself as you go")
+                        .font(Theme.Font.subheadline)
+                        .foregroundStyle(
+                            Theme.Color.ink.opacity(0.6)
+                        )
+                        .multilineTextAlignment(.center)
+                }
             }
 
-            Button("+ Add a piece") { showAddPiece = true }
-                .buttonStyle(.closetPrimary)
+            Button("+ Add a piece") {
+                showAddPiece = true
+            }
+            .buttonStyle(.closetPrimary)
 
             Spacer()
         }
         .padding(.horizontal, 32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var populatedState: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                ForEach(groupedItems, id: \.category) { group in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("\(group.category.rawValue.capitalized) · \(group.items.count)")
-                            .font(Theme.Font.subheadline)
-                            .foregroundStyle(Theme.Color.ink)
-
-                        LazyVGrid(columns: thumbnailColumns, spacing: 8) {
-                            ForEach(group.items) { item in
-                                itemTile(item)
-                            }
-                        }
-                    }
+            LazyVStack(
+                alignment: .leading,
+                spacing: 30
+            ) {
+                ForEach(
+                    groupedItems,
+                    id: \.category
+                ) { group in
+                    categorySection(group)
                 }
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 8)
+            .padding(.top, 12)
+            .padding(.bottom, 120)
         }
+        .contentMargins(
+            .horizontal,
+            horizontalPadding,
+            for: .scrollContent
+        )
+        .scrollIndicators(.hidden)
     }
 
-    private func itemTile(_ item: ClothingItem) -> some View {
-        Group {
+    private func categorySection(
+        _ group: (
+            category: ClothingCategory,
+            items: [ClothingItem]
+        )
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(
+                "\(group.category.rawValue.uppercased()) · \(group.items.count)"
+            )
+            .font(Theme.Font.subheadline)
+            .foregroundStyle(
+                Theme.Color.ink.opacity(0.55)
+            )
+
+            LazyVGrid(
+                columns: thumbnailColumns,
+                alignment: .leading,
+                spacing: gridSpacing
+            ) {
+                ForEach(group.items) { item in
+                    itemTile(item)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func itemTile(
+        _ item: ClothingItem
+    ) -> some View {
+        ZStack {
+            Theme.Color.cream
+
             if let uiImage = UIImage(data: item.imageData) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
+                    .padding(6)
             } else {
-                Theme.Color.ink.opacity(0.1)
+                Theme.Color.ink
+                    .opacity(0.06)
             }
         }
-        .aspectRatio(0.75, contentMode: .fill)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Theme.Color.ink.opacity(0.15), lineWidth: 1)
+        .aspectRatio(0.75, contentMode: .fit)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 12,
+                style: .continuous
+            )
         )
+        .overlay {
+            RoundedRectangle(
+                cornerRadius: 12,
+                style: .continuous
+            )
+            .stroke(
+                Theme.Color.ink.opacity(0.18),
+                lineWidth: 1
+            )
+        }
     }
 
-    private static func initials(from name: String) -> String? {
-        let letters = name.split(separator: " ").compactMap { $0.first }
-        guard !letters.isEmpty else { return nil }
-        return String(letters.prefix(2)).uppercased()
+    private static func initials(
+        from name: String
+    ) -> String? {
+        let letters = name
+            .split(separator: " ")
+            .compactMap(\.first)
+
+        guard !letters.isEmpty else {
+            return nil
+        }
+
+        return String(letters.prefix(2))
+            .uppercased()
     }
+}
+
+#Preview("Empty Closet") {
+    let configuration = ModelConfiguration(
+        isStoredInMemoryOnly: true
+    )
+
+    let container = try! ModelContainer(
+        for: ClothingItem.self,
+        configurations: configuration
+    )
+
+    let viewModel = ClosetViewModel(
+        modelContext: container.mainContext
+    )
+
+    ClosetView(viewModel: viewModel)
+        .modelContainer(container)
 }
