@@ -12,7 +12,7 @@ import SwiftData
 struct AcademyAIApp: App {
     let modelContainer: ModelContainer = {
         do {
-            return try ModelContainer(for: UserColorimetryProfile.self)
+            return try ModelContainer(for: UserColorimetryProfile.self, ClothingItem.self)
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
@@ -20,22 +20,32 @@ struct AcademyAIApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(modelContext: modelContainer.mainContext)
         }
         .modelContainer(modelContainer)
     }
 }
 
 private struct RootView: View {
-    @Environment(\.modelContext) private var modelContext
     @Query private var profiles: [UserColorimetryProfile]
     @State private var hasCompletedOnboarding = false
+    @State private var closetViewModel: ClosetViewModel
+    private let modelContext: ModelContext
+
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        _closetViewModel = State(initialValue: ClosetViewModel(modelContext: modelContext))
+    }
 
     var body: some View {
         if hasCompletedOnboarding || !profiles.isEmpty {
-            ContentView()
+            ClosetView(viewModel: closetViewModel)
+                .onAppear { closetViewModel.loadItems() }
         } else {
-            OnboardingCoordinatorView(modelContext: modelContext, onCompleted: { hasCompletedOnboarding = true })
+            OnboardingCoordinatorView(modelContext: modelContext, onCompleted: {
+                hasCompletedOnboarding = true
+                closetViewModel.loadItems()
+            })
         }
     }
 }
