@@ -74,12 +74,7 @@ struct ClosetView: View {
             }
         }
         .navigationDestination(isPresented: $showAddPiece) {
-            AddPieceView(
-                viewModel: viewModel,
-                onDone: {
-                    showAddPiece = false
-                }
-            )
+            AddPieceView(viewModel: viewModel)
         }
     }
 

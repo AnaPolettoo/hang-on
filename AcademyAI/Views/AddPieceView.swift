@@ -3,7 +3,6 @@ import UIKit
 
 struct AddPieceView: View {
     let viewModel: ClosetViewModel
-    let onDone: () -> Void
 
     @State private var showActionSheet = false
     @State private var showCamera = false
@@ -29,6 +28,7 @@ struct AddPieceView: View {
                         reviewCard(reviewImage)
                     } else {
                         addPhotoCard
+                        addMoreButton
                     }
 
                     if let errorMessage = viewModel.errorMessage {
@@ -43,14 +43,15 @@ struct AddPieceView: View {
                         detectedLabel
                         colorSection
                         categorySection
-                        addThisPieceButton
                     }
                 }
                 .padding()
                 .padding(.bottom, 90)
             }
 
-            doneBar
+            if reviewImage != nil {
+                doneBar
+            }
         }
         .background(Theme.Color.cream.ignoresSafeArea())
         .navigationTitle("Add a Piece")
@@ -124,6 +125,17 @@ struct AddPieceView: View {
         }
         .buttonStyle(.plain)
         .disabled(viewModel.isProcessing)
+    }
+
+    private var addMoreButton: some View {
+        HStack {
+            Spacer()
+            Button("+ Add more") {
+                showActionSheet = true
+            }
+            .buttonStyle(.closetAccent)
+            Spacer()
+        }
     }
 
     private func reviewCard(_ image: UIImage) -> some View {
@@ -222,23 +234,14 @@ struct AddPieceView: View {
         .buttonStyle(.plain)
     }
 
-    private var addThisPieceButton: some View {
-        HStack {
-            Spacer()
-            Button("+ Add this piece") {
-                addThisPiece()
-            }
-            .buttonStyle(.closetAccent)
-            Spacer()
-        }
-    }
-
     private var doneBar: some View {
-        Button("Done", action: onDone)
-            .buttonStyle(.closetPrimary)
-            .padding(.horizontal, 24)
-            .padding(.vertical, 13)
-            .background(Theme.Color.cream)
+        Button("Done") {
+            addThisPiece()
+        }
+        .buttonStyle(.closetPrimary)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 13)
+        .background(Theme.Color.cream)
     }
 
     private func swiftUIColor(_ color: ClosetColor) -> Color {
