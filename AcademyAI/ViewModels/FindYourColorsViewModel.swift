@@ -3,6 +3,7 @@ import SwiftData
 import CoreGraphics
 import Observation
 
+@MainActor
 @Observable
 final class FindYourColorsViewModel {
     var isProcessing = false

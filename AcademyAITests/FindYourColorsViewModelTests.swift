@@ -32,6 +32,7 @@ private func makeSolidColorImage(red: UInt8, green: UInt8, blue: UInt8, size: In
     return context.makeImage()!
 }
 
+@MainActor
 struct FindYourColorsViewModelTests {
     @Test func processSelfieSavesProfileAndSetsResult() async throws {
         let container = try ModelContainer(for: UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))

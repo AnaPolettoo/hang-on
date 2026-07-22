@@ -37,7 +37,10 @@ struct FindYourColorsView: View {
             CameraCaptureView(
                 onCapture: { image in
                     showCamera = false
-                    guard let cgImage = image.cgImage else { return }
+                    guard let cgImage = image.cgImage else {
+                        viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+                        return
+                    }
                     Task {
                         await viewModel.processSelfie(cgImage, name: name)
                         if viewModel.result != nil { onResult() }
