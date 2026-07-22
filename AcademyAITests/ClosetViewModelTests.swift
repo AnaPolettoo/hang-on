@@ -1,0 +1,79 @@
+import Foundation
+import Testing
+import SwiftData
+import CoreGraphics
+@testable import AcademyAI
+
+private struct FakeClothingClassifier: ClothingClassifying {
+    let result: ClothingClassification
+    func classify(_ image: CGImage) async throws -> ClothingClassification { result }
+}
+
+private func makeSolidColorImage(size: Int = 8) -> CGImage {
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    var pixelData = [UInt8](repeating: 0, count: size * size * 4)
+    for i in stride(from: 0, to: pixelData.count, by: 4) {
+        pixelData[i] = 200
+        pixelData[i + 1] = 100
+        pixelData[i + 2] = 90
+        pixelData[i + 3] = 255
+    }
+    let context = CGContext(
+        data: &pixelData, width: size, height: size, bitsPerComponent: 8,
+        bytesPerRow: size * 4, space: colorSpace,
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+    )!
+    return context.makeImage()!
+}
+
+@MainActor
+struct ClosetViewModelTests {
+    @Test func addItemSavesClothingItemWithColorimetryMatch() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let profile = UserColorimetryProfile(
+            name: nil, skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+            season: .autumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
+            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+        )
+        context.insert(profile)
+        try context.save()
+
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
+
+        await viewModel.addItem(image: makeSolidColorImage(), imageData: Data([0x01]))
+
+        #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.items.count == 1)
+        #expect(viewModel.items.first?.category == .tops)
+        #expect(viewModel.items.first?.matchesColorimetry == true)
+    }
+
+    @Test func addItemWithoutProfileLeavesMatchesColorimetryNil() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .shoes, dominantColor: .deepBlack))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
+
+        await viewModel.addItem(image: makeSolidColorImage(), imageData: Data([0x01]))
+
+        #expect(viewModel.items.first?.matchesColorimetry == nil)
+    }
+
+    @Test func loadItemsFetchesExistingItemsSortedByNewestFirst() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let older = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil, dateAdded: .now.addingTimeInterval(-100))
+        let newer = ClothingItem(imageData: Data(), category: .bottoms, dominantColor: .wine, matchesColorimetry: nil, dateAdded: .now)
+        context.insert(older)
+        context.insert(newer)
+        try context.save()
+
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
+
+        #expect(viewModel.items.map(\.category) == [.bottoms, .tops])
+    }
+}
