@@ -26,27 +26,36 @@ final class ClosetViewModel {
         profileName = (try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()))?.first?.name
     }
 
-    func addItem(image: CGImage, imageData: Data) async {
+    func classify(image: CGImage) async -> ClothingClassification? {
         isProcessing = true
         errorMessage = nil
         defer { isProcessing = false }
 
         do {
-            let classification = try await classifier.classify(image)
-            let profile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
-            let matches = ColorimetryMatcher.matches(color: classification.dominantColor, profile: profile)
+            return try await classifier.classify(image)
+        } catch {
+            errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
+            return nil
+        }
+    }
 
-            let item = ClothingItem(
-                imageData: imageData,
-                category: classification.category,
-                dominantColor: classification.dominantColor,
-                matchesColorimetry: matches
-            )
-            modelContext.insert(item)
+    func saveItem(imageData: Data, category: ClothingCategory, colorSwatch: ClothingColorSwatch) {
+        let color = colorSwatch.color
+        let profile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
+        let matches = ColorimetryMatcher.matches(color: color, profile: profile)
+
+        let item = ClothingItem(
+            imageData: imageData,
+            category: category,
+            dominantColor: color,
+            matchesColorimetry: matches
+        )
+        modelContext.insert(item)
+        do {
             try modelContext.save()
             loadItems()
         } catch {
-            errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
+            errorMessage = "Não foi possível salvar a peça. Tenta de novo."
         }
     }
 }

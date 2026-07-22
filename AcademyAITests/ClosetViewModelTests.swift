@@ -1,3 +1,4 @@
+// AcademyAI/AcademyAITests/ClosetViewModelTests.swift
 import Foundation
 import Testing
 import SwiftData
@@ -7,6 +8,11 @@ import CoreGraphics
 private struct FakeClothingClassifier: ClothingClassifying {
     let result: ClothingClassification
     func classify(_ image: CGImage) async throws -> ClothingClassification { result }
+}
+
+private struct FailingClothingClassifier: ClothingClassifying {
+    struct TestError: Error {}
+    func classify(_ image: CGImage) async throws -> ClothingClassification { throw TestError() }
 }
 
 private func makeSolidColorImage(size: Int = 8) -> CGImage {
@@ -28,7 +34,29 @@ private func makeSolidColorImage(size: Int = 8) -> CGImage {
 
 @MainActor
 struct ClosetViewModelTests {
-    @Test func addItemSavesClothingItemWithColorimetryMatch() async throws {
+    @Test func classifyReturnsClassificationWithoutSaving() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: ModelContext(container))
+
+        let result = await viewModel.classify(image: makeSolidColorImage())
+
+        #expect(result?.category == .tops)
+        #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.items.isEmpty)
+    }
+
+    @Test func classifySetsErrorMessageOnFailure() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let viewModel = ClosetViewModel(classifier: FailingClothingClassifier(), modelContext: ModelContext(container))
+
+        let result = await viewModel.classify(image: makeSolidColorImage())
+
+        #expect(result == nil)
+        #expect(viewModel.errorMessage != nil)
+    }
+
+    @Test func saveItemPersistsWithColorimetryMatch() throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
@@ -43,7 +71,7 @@ struct ClosetViewModelTests {
         let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
         let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
 
-        await viewModel.addItem(image: makeSolidColorImage(), imageData: Data([0x01]))
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
 
         #expect(viewModel.errorMessage == nil)
         #expect(viewModel.items.count == 1)
@@ -51,13 +79,13 @@ struct ClosetViewModelTests {
         #expect(viewModel.items.first?.matchesColorimetry == true)
     }
 
-    @Test func addItemWithoutProfileLeavesMatchesColorimetryNil() async throws {
+    @Test func saveItemWithoutProfileLeavesMatchesColorimetryNil() throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)
         let classifier = FakeClothingClassifier(result: ClothingClassification(category: .shoes, dominantColor: .deepBlack))
         let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
 
-        await viewModel.addItem(image: makeSolidColorImage(), imageData: Data([0x01]))
+        viewModel.saveItem(imageData: Data([0x01]), category: .shoes, colorSwatch: .black)
 
         #expect(viewModel.items.first?.matchesColorimetry == nil)
     }
