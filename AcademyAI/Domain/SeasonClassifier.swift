@@ -1,6 +1,8 @@
 import Foundation
 
 enum SeasonClassifier {
+    // `eyeColor` is intentionally unused by the formula below: it's extracted and
+    // persisted for REQ-1.3/1.6, not yet part of the season/depth calculation.
     static func classify(skinTone: ClosetColor, eyeColor: ClosetColor, hairColor: ClosetColor) -> Season {
         let isWarm = (skinTone.red - skinTone.blue) > 0
         let isLight = averageLuminance(skinTone, hairColor) > 0.55

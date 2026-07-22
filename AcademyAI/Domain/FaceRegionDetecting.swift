@@ -48,7 +48,12 @@ struct VisionFaceRegionDetector: FaceRegionDetecting {
             height: hairHeight
         )
 
-        return FaceRegions(skinRegion: skinRegion, eyeRegion: eyeRegion, hairRegion: hairRegion)
+        let unitBounds = CGRect(x: 0, y: 0, width: 1, height: 1)
+        return FaceRegions(
+            skinRegion: flippedToTopLeftOrigin(skinRegion).intersection(unitBounds),
+            eyeRegion: flippedToTopLeftOrigin(eyeRegion).intersection(unitBounds),
+            hairRegion: flippedToTopLeftOrigin(hairRegion)
+        )
     }
 
     private func boundingBox(of points: [CGPoint], in faceBounds: CGRect) -> CGRect {
@@ -58,5 +63,14 @@ struct VisionFaceRegionDetector: FaceRegionDetecting {
         let minX = xs.min()!, maxX = xs.max()!
         let minY = ys.min()!, maxY = ys.max()!
         return CGRect(x: minX, y: minY, width: max(maxX - minX, 0.02), height: max(maxY - minY, 0.02))
+    }
+
+    /// Vision's `VNFaceObservation.boundingBox` (and everything derived from it above)
+    /// lives in Vision's native coordinate space: origin bottom-left, y increasing
+    /// upward. `FaceColorSampler` expects the opposite: origin top-left, y increasing
+    /// downward. Flip once here, at the boundary, so `FaceRegions` genuinely means
+    /// "top-left origin" for every consumer.
+    private func flippedToTopLeftOrigin(_ rect: CGRect) -> CGRect {
+        CGRect(x: rect.origin.x, y: 1 - rect.origin.y - rect.height, width: rect.width, height: rect.height)
     }
 }
