@@ -27,8 +27,12 @@ struct AcademyAIApp: App {
 }
 
 private struct RootView: View {
-    @Query private var profiles: [UserColorimetryProfile]
-    @State private var hasCompletedOnboarding = false
+    // Persisted (not derived from `UserColorimetryProfile` existing) because a profile
+    // is saved mid-onboarding, right after the selfie — well before the flow finishes
+    // (palette result, optional catalog prompt). Gating on profile existence made
+    // RootView swap away from OnboardingCoordinatorView the instant that save happened,
+    // skipping the rest of onboarding.
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var closetViewModel: ClosetViewModel
     private let modelContext: ModelContext
 
@@ -38,7 +42,7 @@ private struct RootView: View {
     }
 
     var body: some View {
-        if hasCompletedOnboarding || !profiles.isEmpty {
+        if hasCompletedOnboarding {
             ClosetView(viewModel: closetViewModel)
                 .onAppear { closetViewModel.loadItems() }
         } else {
