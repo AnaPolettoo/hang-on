@@ -66,6 +66,7 @@ struct FindYourColorsView: View {
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(
+                cameraDevice: .front,
                 onCapture: { image in
                     showCamera = false
                     guard let cgImage = image.cgImage else {

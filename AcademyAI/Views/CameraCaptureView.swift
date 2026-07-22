@@ -2,13 +2,14 @@ import SwiftUI
 import UIKit
 
 struct CameraCaptureView: UIViewControllerRepresentable {
+    var cameraDevice: UIImagePickerController.CameraDevice = .rear
     let onCapture: (UIImage) -> Void
     let onCancel: () -> Void
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.sourceType = .camera
-        picker.cameraDevice = .front
+        picker.cameraDevice = cameraDevice
         picker.delegate = context.coordinator
         return picker
     }
