@@ -19,6 +19,7 @@ enum Theme {
 
         static let display = SwiftUI.Font.custom(familyName, size: 44)
         static let largeTitle = SwiftUI.Font.custom(familyName, size: 30)
+        static let sectionTitle = SwiftUI.Font.custom(familyName, size: 24)
         static let title = SwiftUI.Font.custom(familyName, size: 19)
         static let button = SwiftUI.Font.custom(familyName, size: 17)
         static let body = SwiftUI.Font.custom(familyName, size: 16)
