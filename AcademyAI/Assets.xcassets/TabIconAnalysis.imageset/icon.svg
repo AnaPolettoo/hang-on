@@ -1,0 +1,64 @@
+<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="21" height="21" fill="#1E1E1E"/>
+<g id="Wireframes">
+<rect width="995" height="8678" transform="translate(-225.996 -5670)" fill="#E5E1D8"/>
+<g id="Container" clip-path="url(#clip0_275_5743)">
+<rect width="938" height="8678" transform="translate(-225.996 -5670)" fill="#E5E1D8"/>
+<g id="Main Content" clip-path="url(#clip1_275_5743)">
+<g id="AllScreensOverview">
+<g id="Container_2">
+<g id="Container_3">
+<g id="Container_4">
+<g id="Container_5">
+<g id="PhoneFrame" filter="url(#filter0_d_275_5743)">
+<mask id="path-1-inside-1_275_5743" fill="white">
+<path d="M-185.996 -724C-185.996 -753.823 -161.819 -778 -131.996 -778H153.004C182.827 -778 207.004 -753.823 207.004 -724V20C207.004 49.8234 182.827 74 153.004 74H-131.996C-161.819 74 -185.996 49.8234 -185.996 20V-724Z"/>
+</mask>
+<path d="M-185.996 -724C-185.996 -753.823 -161.819 -778 -131.996 -778H153.004C182.827 -778 207.004 -753.823 207.004 -724V20C207.004 49.8234 182.827 74 153.004 74H-131.996C-161.819 74 -185.996 49.8234 -185.996 20V-724Z" fill="#FDFBF7"/>
+<path d="M-131.996 -778V-776H153.004V-778V-780H-131.996V-778ZM207.004 -724H205.004V20H207.004H209.004V-724H207.004ZM153.004 74V72H-131.996V74V76H153.004V74ZM-185.996 20H-183.996V-724H-185.996H-187.996V20H-185.996ZM-131.996 74V72C-160.715 72 -183.996 48.7188 -183.996 20H-185.996H-187.996C-187.996 50.9279 -162.924 76 -131.996 76V74ZM207.004 20H205.004C205.004 48.7188 181.723 72 153.004 72V74V76C183.932 76 209.004 50.9279 209.004 20H207.004ZM153.004 -778V-776C181.723 -776 205.004 -752.719 205.004 -724H207.004H209.004C209.004 -754.928 183.932 -780 153.004 -780V-778ZM-131.996 -778V-780C-162.924 -780 -187.996 -754.928 -187.996 -724H-185.996H-183.996C-183.996 -752.719 -160.715 -776 -131.996 -776V-778Z" fill="#2B1F22" mask="url(#path-1-inside-1_275_5743)"/>
+<g id="BottomNav">
+<g id="Container_6">
+<path d="M-165.996 17C-165.996 0.431457 -152.565 -13 -135.996 -13H157.004C173.572 -13 187.004 0.431458 187.004 17V23C187.004 39.5685 173.572 53 157.004 53H-135.996C-152.565 53 -165.996 39.5685 -165.996 23V17Z" fill="white" fill-opacity="0.65"/>
+<g id="Container_7">
+<g id="Button">
+<g id="TabIcon">
+<g id="Container_8">
+<g id="Icon" clip-path="url(#clip2_275_5743)">
+<path id="Vector" d="M5.25659 17.5V9.625M10.4999 17.5V3.5M15.7432 17.5V12.25" stroke="#3C3C43" stroke-opacity="0.6" stroke-width="1.74889" stroke-linecap="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_275_5743" x="-185.996" y="-778" width="399" height="860" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="6" dy="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.168627 0 0 0 0 0.121569 0 0 0 0 0.133333 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_275_5743"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_275_5743" result="shape"/>
+</filter>
+<clipPath id="clip0_275_5743">
+<rect width="938" height="8678" fill="white" transform="translate(-225.996 -5670)"/>
+</clipPath>
+<clipPath id="clip1_275_5743">
+<rect width="938" height="8678" fill="white" transform="translate(-225.996 -5670)"/>
+</clipPath>
+<clipPath id="clip2_275_5743">
+<rect width="12.2344" height="15.75" fill="white" transform="translate(4.38281 2.625)"/>
+</clipPath>
+</defs>
+</svg>
