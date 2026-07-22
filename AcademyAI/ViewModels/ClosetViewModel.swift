@@ -7,6 +7,7 @@ import Observation
 @Observable
 final class ClosetViewModel {
     var items: [ClothingItem] = []
+    var profileName: String?
     var isProcessing = false
     var errorMessage: String?
 
@@ -22,6 +23,7 @@ final class ClosetViewModel {
     func loadItems() {
         let descriptor = FetchDescriptor<ClothingItem>(sortBy: [SortDescriptor(\.dateAdded, order: .reverse)])
         items = (try? modelContext.fetch(descriptor)) ?? []
+        profileName = (try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()))?.first?.name
     }
 
     func addItem(image: CGImage, imageData: Data) async {

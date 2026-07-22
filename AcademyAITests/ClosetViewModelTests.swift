@@ -76,4 +76,31 @@ struct ClosetViewModelTests {
 
         #expect(viewModel.items.map(\.category) == [.bottoms, .tops])
     }
+
+    @Test func loadItemsPopulatesProfileNameWhenProfileExists() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let profile = UserColorimetryProfile(
+            name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+            season: .autumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
+            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+        )
+        context.insert(profile)
+        try context.save()
+
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
+
+        #expect(viewModel.profileName == "Ana Carolina")
+    }
+
+    @Test func profileNameIsNilWithoutProfile() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, modelContext: context)
+
+        #expect(viewModel.profileName == nil)
+    }
 }
