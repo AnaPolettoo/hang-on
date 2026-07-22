@@ -261,6 +261,7 @@ struct AddPieceView: View {
     private func addThisPiece() {
         guard let imageData = reviewImageData, let colorSwatch = selectedColorSwatch, let category = selectedCategory else { return }
         viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
+        guard viewModel.errorMessage == nil else { return }
         reviewImage = nil
         reviewImageData = nil
         selectedColorSwatch = nil
