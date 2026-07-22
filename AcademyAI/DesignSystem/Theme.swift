@@ -61,3 +61,24 @@ struct PrimaryButtonStyle: ButtonStyle {
 extension ButtonStyle where Self == PrimaryButtonStyle {
     static var closetPrimary: PrimaryButtonStyle { PrimaryButtonStyle() }
 }
+
+/// A pill-shaped, dashed-border secondary button, matching the Figma "DashedBtn" component.
+struct DashedButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Theme.Font.button)
+            .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 17)
+            .overlay(
+                Capsule()
+                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [4]))
+                    .foregroundStyle(Theme.Color.ink.opacity(0.4))
+            )
+            .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+extension ButtonStyle where Self == DashedButtonStyle {
+    static var closetDashed: DashedButtonStyle { DashedButtonStyle() }
+}
