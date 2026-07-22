@@ -20,6 +20,11 @@ struct FaceRegionDetectingTests {
         return context.makeImage()!
     }
 
+    // Skipped in sandboxed/virtualized CI environments without Neural Engine/GPU
+    // passthrough: Vision throws "Could not create inference context" (Domain
+    // com.apple.Vision Code=9) before this can even assert. Run on a real device
+    // or a properly GPU-accelerated Simulator to verify (see Task 12's manual
+    // verification step in the plan).
     @Test func returnsNilWhenNoFaceIsPresent() async throws {
         let detector = VisionFaceRegionDetector()
         let image = makeSolidColorImage()
