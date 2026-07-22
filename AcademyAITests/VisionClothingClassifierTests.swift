@@ -1,5 +1,6 @@
 import Testing
 import CoreGraphics
+import ImageIO
 @testable import AcademyAI
 
 struct VisionClothingClassifierTests {
@@ -28,7 +29,7 @@ struct VisionClothingClassifierTests {
     @Test func classifyReturnsDominantColorSampledFromImage() async throws {
         let classifier = VisionClothingClassifier()
         let image = makeSolidColorImage(red: 200, green: 40, blue: 40)
-        let result = try await classifier.classify(image)
+        let result = try await classifier.classify(image, orientation: .up)
         #expect(abs(result.dominantColor.red - 200.0 / 255.0) < 0.05)
     }
 }

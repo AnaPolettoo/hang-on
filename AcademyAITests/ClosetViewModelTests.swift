@@ -3,16 +3,17 @@ import Foundation
 import Testing
 import SwiftData
 import CoreGraphics
+import ImageIO
 @testable import AcademyAI
 
 private struct FakeClothingClassifier: ClothingClassifying {
     let result: ClothingClassification
-    func classify(_ image: CGImage) async throws -> ClothingClassification { result }
+    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation) async throws -> ClothingClassification { result }
 }
 
 private struct FailingClothingClassifier: ClothingClassifying {
     struct TestError: Error {}
-    func classify(_ image: CGImage) async throws -> ClothingClassification { throw TestError() }
+    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation) async throws -> ClothingClassification { throw TestError() }
 }
 
 private func makeSolidColorImage(size: Int = 8) -> CGImage {
@@ -39,7 +40,7 @@ struct ClosetViewModelTests {
         let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
         let viewModel = ClosetViewModel(classifier: classifier, modelContext: ModelContext(container))
 
-        let result = await viewModel.classify(image: makeSolidColorImage())
+        let result = await viewModel.classify(image: makeSolidColorImage(), orientation: .up)
 
         #expect(result?.category == .tops)
         #expect(viewModel.errorMessage == nil)
@@ -50,7 +51,7 @@ struct ClosetViewModelTests {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let viewModel = ClosetViewModel(classifier: FailingClothingClassifier(), modelContext: ModelContext(container))
 
-        let result = await viewModel.classify(image: makeSolidColorImage())
+        let result = await viewModel.classify(image: makeSolidColorImage(), orientation: .up)
 
         #expect(result == nil)
         #expect(viewModel.errorMessage != nil)

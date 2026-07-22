@@ -58,9 +58,12 @@ struct AddClothingItemMenu: View {
             return
         }
         Task {
-            guard let classification = await viewModel.classify(image: cgImage) else { return }
-            let colorSwatch = ClothingColorSwatch.nearest(to: classification.dominantColor)
-            viewModel.saveItem(imageData: imageData, category: classification.category, colorSwatch: colorSwatch)
+            let classification = await viewModel.classify(image: cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
+            // Low-confidence/failed identification still shouldn't block saving
+            // (REQ-2.2 in docs/specs.md): falls back to "other"/an approximate color.
+            let colorSwatch = classification.map { ClothingColorSwatch.nearest(to: $0.dominantColor) } ?? .grey
+            let category = classification?.category ?? .other
+            viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
             if viewModel.errorMessage == nil { onAdded() }
         }
     }

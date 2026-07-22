@@ -250,12 +250,15 @@ struct AddPieceView: View {
             viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
             return
         }
-        guard let classification = await viewModel.classify(image: cgImage) else { return }
+        let classification = await viewModel.classify(image: cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
 
+        // Low-confidence/failed identification still shouldn't block the person from
+        // saving (REQ-2.2 in docs/specs.md: falls back to "other"/an approximate color
+        // instead) — always show the review step so they can just fix it manually.
         reviewImage = image
         reviewImageData = image.jpegData(compressionQuality: 0.85)
-        selectedColorSwatch = ClothingColorSwatch.nearest(to: classification.dominantColor)
-        selectedCategory = reviewableCategories.contains(classification.category) ? classification.category : .tops
+        selectedColorSwatch = classification.map { ClothingColorSwatch.nearest(to: $0.dominantColor) } ?? .grey
+        selectedCategory = classification.map { reviewableCategories.contains($0.category) ? $0.category : .other } ?? .other
     }
 
     private func addThisPiece() {

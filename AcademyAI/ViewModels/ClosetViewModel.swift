@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import CoreGraphics
+import ImageIO
 import Observation
 
 @MainActor
@@ -26,13 +27,13 @@ final class ClosetViewModel {
         profileName = (try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()))?.first?.name
     }
 
-    func classify(image: CGImage) async -> ClothingClassification? {
+    func classify(image: CGImage, orientation: CGImagePropertyOrientation) async -> ClothingClassification? {
         isProcessing = true
         errorMessage = nil
         defer { isProcessing = false }
 
         do {
-            return try await classifier.classify(image)
+            return try await classifier.classify(image, orientation: orientation)
         } catch {
             errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
             return nil
@@ -40,6 +41,12 @@ final class ClosetViewModel {
     }
 
     func saveItem(imageData: Data, category: ClothingCategory, colorSwatch: ClothingColorSwatch) {
+        // A failed classify() call earlier leaves its error message behind; without
+        // clearing it here, a save that succeeds right after still reads as a failure
+        // to every caller that gates on `errorMessage == nil` (AddPieceView's "+ Add
+        // this piece", AddClothingItemMenu's onAdded) — the piece gets persisted, but
+        // the UI stays stuck on the review screen looking like nothing happened.
+        errorMessage = nil
         let color = colorSwatch.color
         let profile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
         let matches = ColorimetryMatcher.matches(color: color, profile: profile)
