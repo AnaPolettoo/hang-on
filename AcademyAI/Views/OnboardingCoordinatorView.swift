@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 private enum OnboardingStep {
-    case splash, name, findYourColors, paletteResult
+    case splash, name, findYourColors, paletteResult, catalogPrompt
 }
 
 struct OnboardingCoordinatorView: View {
@@ -11,10 +11,12 @@ struct OnboardingCoordinatorView: View {
     @State private var step: OnboardingStep = .splash
     @State private var nameViewModel = NameViewModel()
     @State private var findYourColorsViewModel: FindYourColorsViewModel
+    @State private var closetViewModel: ClosetViewModel
 
     init(modelContext: ModelContext, onCompleted: @escaping () -> Void) {
         self.onCompleted = onCompleted
         _findYourColorsViewModel = State(initialValue: FindYourColorsViewModel(modelContext: modelContext))
+        _closetViewModel = State(initialValue: ClosetViewModel(modelContext: modelContext))
     }
 
     var body: some View {
@@ -43,9 +45,11 @@ struct OnboardingCoordinatorView: View {
                             avoid: result.avoid,
                             explanation: result.explanation
                         ),
-                        onStartChecking: onCompleted
+                        onStartChecking: { step = .catalogPrompt }
                     )
                 }
+            case .catalogPrompt:
+                CatalogPromptView(viewModel: closetViewModel, onContinue: onCompleted)
             }
         }
     }
