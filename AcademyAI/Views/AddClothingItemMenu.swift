@@ -58,7 +58,9 @@ struct AddClothingItemMenu: View {
             return
         }
         Task {
-            await viewModel.addItem(image: cgImage, imageData: imageData)
+            guard let classification = await viewModel.classify(image: cgImage) else { return }
+            let colorSwatch = ClothingColorSwatch.nearest(to: classification.dominantColor)
+            viewModel.saveItem(imageData: imageData, category: classification.category, colorSwatch: colorSwatch)
             if viewModel.errorMessage == nil { onAdded() }
         }
     }

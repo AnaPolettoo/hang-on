@@ -9,26 +9,48 @@ struct AddPieceView: View {
     @State private var showCamera = false
     @State private var showLibrary = false
 
+    @State private var reviewImage: UIImage?
+    @State private var reviewImageData: Data?
+    @State private var selectedColorSwatch: ClothingColorSwatch?
+    @State private var selectedCategory: ClothingCategory?
+
+    private let colorColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .bottoms, .shoes]
+
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("For pieces you already own. Add a photo and we'll guess its color and type — fix anything that's off, then save.")
-                    .font(Theme.Font.subheadline)
-                    .foregroundStyle(Theme.Color.inkMuted)
-
-                addPhotoCard
-
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("For pieces you already own. Add a photo and we'll guess its color and type — fix anything that's off, then save.")
                         .font(Theme.Font.caption)
                         .foregroundStyle(Theme.Color.inkMuted)
-                        .multilineTextAlignment(.center)
-                }
 
-                Button("Done", action: onDone)
-                    .buttonStyle(.closetDashed)
+                    if let reviewImage {
+                        reviewCard(reviewImage)
+                    } else {
+                        addPhotoCard
+                    }
+
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .font(Theme.Font.caption)
+                            .foregroundStyle(Theme.Color.inkMuted)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                    }
+
+                    if reviewImage != nil {
+                        detectedLabel
+                        colorSection
+                        categorySection
+                        addThisPieceButton
+                    }
+                }
+                .padding()
+                .padding(.bottom, 90)
             }
-            .padding()
+
+            doneBar
         }
         .background(Theme.Color.cream.ignoresSafeArea())
         .navigationTitle("Add a Piece")
@@ -43,7 +65,7 @@ struct AddPieceView: View {
                 cameraDevice: .rear,
                 onCapture: { image in
                     showCamera = false
-                    process(image)
+                    Task { await process(image) }
                 },
                 onCancel: { showCamera = false }
             )
@@ -53,7 +75,7 @@ struct AddPieceView: View {
             PhotoLibraryPickerView(
                 onPick: { image in
                     showLibrary = false
-                    process(image)
+                    Task { await process(image) }
                 },
                 onCancel: { showLibrary = false }
             )
@@ -104,13 +126,144 @@ struct AddPieceView: View {
         .disabled(viewModel.isProcessing)
     }
 
-    private func process(_ image: UIImage) {
-        guard let cgImage = image.cgImage, let imageData = image.jpegData(compressionQuality: 0.85) else {
+    private func reviewCard(_ image: UIImage) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .scaledToFit()
+            .frame(maxWidth: .infinity)
+            .frame(height: 200)
+            .background(Color(hex: "F6F2EA"))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1)
+            )
+    }
+
+    private var detectedLabel: some View {
+        HStack(spacing: 6) {
+            Text("✦")
+            Text("WE DETECTED — TAP TO FIX")
+                .tracking(0.3)
+        }
+        .font(Theme.Font.caption)
+        .foregroundStyle(Theme.Color.ink.opacity(0.5))
+    }
+
+    private var colorSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Color")
+                .font(Theme.Font.body)
+                .foregroundStyle(Theme.Color.ink)
+
+            LazyVGrid(columns: colorColumns, spacing: 8) {
+                ForEach(ClothingColorSwatch.allCases, id: \.self) { swatch in
+                    swatchPill(swatch)
+                }
+            }
+        }
+    }
+
+    private func swatchPill(_ swatch: ClothingColorSwatch) -> some View {
+        let isSelected = selectedColorSwatch == swatch
+        return Button {
+            selectedColorSwatch = swatch
+        } label: {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(swiftUIColor(swatch.color))
+                    .frame(width: 18, height: 18)
+                    .overlay(Circle().stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1))
+                Text(swatch.displayName)
+                    .font(Theme.Font.caption)
+            }
+            .foregroundStyle(isSelected ? Theme.Color.cream : Theme.Color.ink)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .background(isSelected ? Theme.Color.ink : Color.clear)
+            .overlay(
+                Capsule().stroke(isSelected ? Theme.Color.ink : Theme.Color.ink.opacity(0.3), lineWidth: isSelected ? 2 : 1)
+            )
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var categorySection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Category")
+                .font(Theme.Font.body)
+                .foregroundStyle(Theme.Color.ink)
+
+            HStack(spacing: 8) {
+                ForEach(reviewableCategories, id: \.self) { category in
+                    categoryPill(category)
+                }
+            }
+        }
+    }
+
+    private func categoryPill(_ category: ClothingCategory) -> some View {
+        let isSelected = selectedCategory == category
+        return Button {
+            selectedCategory = category
+        } label: {
+            Text(category.rawValue.capitalized)
+                .font(Theme.Font.subheadline)
+                .foregroundStyle(isSelected ? Theme.Color.cream : Theme.Color.ink)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 18)
+                .background(isSelected ? Theme.Color.ink : Color.clear)
+                .overlay(
+                    Capsule().stroke(isSelected ? Theme.Color.ink : Theme.Color.ink.opacity(0.3), lineWidth: 2)
+                )
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var addThisPieceButton: some View {
+        HStack {
+            Spacer()
+            Button("+ Add this piece") {
+                addThisPiece()
+            }
+            .buttonStyle(.closetAccent)
+            Spacer()
+        }
+    }
+
+    private var doneBar: some View {
+        Button("Done", action: onDone)
+            .buttonStyle(.closetPrimary)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 13)
+            .background(Theme.Color.cream)
+    }
+
+    private func swiftUIColor(_ color: ClosetColor) -> Color {
+        Color(red: color.red, green: color.green, blue: color.blue)
+    }
+
+    private func process(_ image: UIImage) async {
+        guard let cgImage = image.cgImage else {
             viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
             return
         }
-        Task {
-            await viewModel.addItem(image: cgImage, imageData: imageData)
-        }
+        guard let classification = await viewModel.classify(image: cgImage) else { return }
+
+        reviewImage = image
+        reviewImageData = image.jpegData(compressionQuality: 0.85)
+        selectedColorSwatch = ClothingColorSwatch.nearest(to: classification.dominantColor)
+        selectedCategory = reviewableCategories.contains(classification.category) ? classification.category : .tops
+    }
+
+    private func addThisPiece() {
+        guard let imageData = reviewImageData, let colorSwatch = selectedColorSwatch, let category = selectedCategory else { return }
+        viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
+        reviewImage = nil
+        reviewImageData = nil
+        selectedColorSwatch = nil
+        selectedCategory = nil
     }
 }
