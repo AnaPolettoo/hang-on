@@ -26,7 +26,7 @@ struct NameView: View {
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.inkMuted)
 
-                TextField("Ana Carolina", text: $viewModel.name)
+                TextField("Your name", text: $viewModel.name)
                     .font(Theme.Font.title)
                     .foregroundStyle(Theme.Color.ink)
                     .padding(.vertical, 14)
@@ -34,7 +34,7 @@ struct NameView: View {
                     .background(Theme.Color.cream)
                     .clipShape(Capsule())
                     .overlay(
-                        Capsule().stroke(Theme.Color.accentBorder, lineWidth: 1.5)
+                        Capsule().stroke(Theme.Color.ink, lineWidth: 1.5)
                     )
                     .padding(.horizontal)
 
