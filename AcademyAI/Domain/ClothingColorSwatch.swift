@@ -4,7 +4,7 @@ import Foundation
 /// 2091:10110), so a person corrects Vision's detected color to one of a
 /// small, recognizable set instead of an arbitrary continuous RGB value.
 enum ClothingColorSwatch: String, CaseIterable {
-    case cream, brown, indigo, navy, white, burgundy, taupe, grey, yellow, teal, pink, black
+    case cream, brown, indigo, navy, white, red, taupe, grey, yellow, teal, pink, black
 
     var displayName: String {
         switch self {
@@ -13,7 +13,7 @@ enum ClothingColorSwatch: String, CaseIterable {
         case .indigo: return "Indigo"
         case .navy: return "Navy"
         case .white: return "White"
-        case .burgundy: return "Burgundy"
+        case .red: return "Red"
         case .taupe: return "Taupe"
         case .grey: return "Grey"
         case .yellow: return "Yellow"
@@ -31,7 +31,7 @@ enum ClothingColorSwatch: String, CaseIterable {
         case .indigo: return ClosetColor(red: 0.239, green: 0.290, blue: 0.541)    // 3D4A8A
         case .navy: return ClosetColor(red: 0.102, green: 0.137, blue: 0.251)      // 1A2340
         case .white: return ClosetColor(red: 0.973, green: 0.965, blue: 0.949)     // F8F6F2
-        case .burgundy: return ClosetColor(red: 0.420, green: 0.122, blue: 0.165)  // 6B1F2A
+        case .red: return ClosetColor(red: 0.420, green: 0.122, blue: 0.165)  // 6B1F2A
         case .taupe: return ClosetColor(red: 0.620, green: 0.557, blue: 0.486)     // 9E8E7C
         case .grey: return ClosetColor(red: 0.604, green: 0.604, blue: 0.604)      // 9A9A9A
         case .yellow: return ClosetColor(red: 0.910, green: 0.831, blue: 0.302)    // E8D44D

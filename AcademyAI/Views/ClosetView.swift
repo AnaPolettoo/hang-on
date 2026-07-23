@@ -55,17 +55,16 @@ struct ClosetView: View {
             }
         }
         .background(Theme.Color.cream.ignoresSafeArea())
-        .overlay(alignment: .bottomTrailing) {
-            if !viewModel.items.isEmpty {
-                addPieceFloatingButton
-            }
-        }
-        // Native `.large` title reliably goes blank on a real device once the
-        // closet has items and the populated ScrollView is on screen — confirmed
-        // twice now, across two different body structures (a prior commit had
-        // already diagnosed and fixed this exact combination before this file was
-        // touched again this session). A hand-drawn header sidesteps the native
-        // rendering bug entirely instead of chasing another structural variant.
+        // Native `.large` title reliably goes blank once the closet has items —
+        // confirmed exhaustively: ZStack wrapping, Group+background/overlay,
+        // ScrollView (with and without contentMargins/scrollIndicators), List
+        // with proper row styling, live empty->populated transition, and a cold
+        // launch straight into a populated closet all reproduce the identical
+        // failure. The one constant across every failing case is "the closet has
+        // items"; the one constant across every working case is "it doesn't." That
+        // rules out ScrollView vs List and transition timing as the cause — this
+        // is a native rendering bug in this iOS build, not something fixable from
+        // the SwiftUI side. A hand-drawn header sidesteps it entirely.
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $showAddPiece) {
             AddPieceView(viewModel: viewModel)
@@ -87,55 +86,34 @@ struct ClosetView: View {
             Spacer()
 
             profileButton
+            addPieceButton
         }
         .padding(.horizontal, 24)
         .padding(.top, 8)
     }
 
-    private var addPieceFloatingButton: some View {
+    private var addPieceButton: some View {
         Button {
             showAddPiece = true
         } label: {
             Image(systemName: "plus")
-                .font(
-                    .system(
-                        size: 24,
-                        weight: .medium
-                    )
-                )
-                .foregroundStyle(Theme.Color.cream)
-                .frame(width: 64, height: 64)
-                .background(Theme.Color.ink)
-                .clipShape(Circle())
-                .shadow(
-                    color: Theme.Color.ink.opacity(0.18),
-                    radius: 10,
-                    y: 5
-                )
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(Theme.Color.ink)
+                .frame(width: 36, height: 36)
         }
-        .buttonStyle(.plain)
-        .padding(.trailing, 24)
-        .padding(.bottom, 24)
         .accessibilityLabel("Add a piece")
     }
 
-    @ViewBuilder
     private var profileButton: some View {
-        if let profileName = viewModel.profileName,
-           let initials = Self.initials(from: profileName) {
-            Button {
-                // Abrir perfil futuramente
-            } label: {
-                Text(initials)
-                    .font(Theme.Font.subheadline)
-                    .foregroundStyle(Theme.Color.ink)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.Color.accentBorder)
-                    .clipShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Profile")
+        Button {
+            // Abrir perfil futuramente
+        } label: {
+            Image(systemName: "person.crop.circle")
+                .font(.system(size: 22, weight: .regular))
+                .foregroundStyle(Theme.Color.ink)
+                .frame(width: 36, height: 36)
         }
+        .accessibilityLabel("Profile")
     }
 
     private var emptyState: some View {
@@ -268,20 +246,6 @@ struct ClosetView: View {
         }
     }
 
-    private static func initials(
-        from name: String
-    ) -> String? {
-        let letters = name
-            .split(separator: " ")
-            .compactMap(\.first)
-
-        guard !letters.isEmpty else {
-            return nil
-        }
-
-        return String(letters.prefix(2))
-            .uppercased()
-    }
 }
 
 #Preview("Empty Closet") {
