@@ -63,4 +63,40 @@ enum FaceColorSampler {
         guard count > 0 else { return ClosetColor(red: 0, green: 0, blue: 0) }
         return ClosetColor(red: totalRed / count, green: totalGreen / count, blue: totalBlue / count)
     }
+
+    /// Averages only foreground pixels — those where the mask's red channel > 127.
+    /// `mask` is drawn scaled to `image`'s pixel size, so both must frame the same
+    /// subject (they do: both come from the same background-removal composite).
+    static func averageColor(in image: CGImage, mask: CGImage) -> ClosetColor {
+        let width = image.width, height = image.height
+        guard width > 0, height > 0 else { return ClosetColor(red: 0, green: 0, blue: 0) }
+
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bytesPerRow = width * 4
+        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+
+        func draw(_ cg: CGImage) -> [UInt8]? {
+            var data = [UInt8](repeating: 0, count: width * height * 4)
+            guard let ctx = CGContext(data: &data, width: width, height: height, bitsPerComponent: 8,
+                                      bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo)
+            else { return nil }
+            ctx.draw(cg, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return data
+        }
+
+        guard let imageData = draw(image), let maskData = draw(mask) else {
+            return ClosetColor(red: 0, green: 0, blue: 0)
+        }
+
+        var totalRed = 0.0, totalGreen = 0.0, totalBlue = 0.0, count = 0.0
+        for offset in stride(from: 0, to: imageData.count, by: 4) where maskData[offset] > 127 {
+            totalRed += Double(imageData[offset]) / 255.0
+            totalGreen += Double(imageData[offset + 1]) / 255.0
+            totalBlue += Double(imageData[offset + 2]) / 255.0
+            count += 1
+        }
+
+        guard count > 0 else { return ClosetColor(red: 0, green: 0, blue: 0) }
+        return ClosetColor(red: totalRed / count, green: totalGreen / count, blue: totalBlue / count)
+    }
 }

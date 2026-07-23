@@ -95,4 +95,33 @@ struct FaceColorSamplerTests {
         #expect(abs(full.green - quarter.green) < 0.02)
         #expect(abs(full.blue - quarter.blue) < 0.02)
     }
+
+    // Left half foreground (mask white), right half background (mask black).
+    // Image: left half red, right half green. Masked average must be pure red.
+    @Test func averageColorWithMaskIgnoresBackgroundPixels() {
+        let size = 16
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bytesPerRow = size * 4
+
+        func makeImage(_ fill: (Int) -> (UInt8, UInt8, UInt8)) -> CGImage {
+            var data = [UInt8](repeating: 0, count: size * size * 4)
+            for row in 0..<size {
+                for col in 0..<size {
+                    let o = row * bytesPerRow + col * 4
+                    let (r, g, b) = fill(col)
+                    data[o] = r; data[o + 1] = g; data[o + 2] = b; data[o + 3] = 255
+                }
+            }
+            return CGContext(data: &data, width: size, height: size, bitsPerComponent: 8,
+                             bytesPerRow: bytesPerRow, space: colorSpace,
+                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!.makeImage()!
+        }
+
+        let image = makeImage { col in col < size / 2 ? (200, 0, 0) : (0, 200, 0) }
+        let mask = makeImage { col in col < size / 2 ? (255, 255, 255) : (0, 0, 0) }
+
+        let color = FaceColorSampler.averageColor(in: image, mask: mask)
+        #expect(abs(color.red - 200.0 / 255.0) < 0.05)
+        #expect(color.green < 0.05)
+    }
 }
