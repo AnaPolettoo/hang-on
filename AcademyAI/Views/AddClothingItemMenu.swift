@@ -5,15 +5,28 @@ struct AddClothingItemMenu: View {
     let viewModel: ClosetViewModel
     let onAdded: () -> Void
 
-    @State private var showActionSheet = false
     @State private var showCamera = false
     @State private var showLibrary = false
 
     var body: some View {
         VStack(spacing: 8) {
-            Button("Add a Piece") { showActionSheet = true }
-                .buttonStyle(.closetPrimary)
-                .disabled(viewModel.isProcessing)
+            // A Menu instead of a confirmationDialog so Take Photo / Choose from
+            // Library pop up anchored right at this button. The label reproduces
+            // PrimaryButtonStyle's look by hand — a custom ButtonStyle isn't
+            // guaranteed to apply to a Menu's trigger.
+            Menu {
+                Button("Take Photo") { showCamera = true }
+                Button("Choose from Library") { showLibrary = true }
+            } label: {
+                Text("Add a Piece")
+                    .font(Theme.Font.button)
+                    .foregroundStyle(Theme.Color.cream)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Theme.Color.ink)
+                    .clipShape(Capsule())
+            }
+            .disabled(viewModel.isProcessing)
 
             if viewModel.isProcessing {
                 ProgressView()
@@ -24,11 +37,6 @@ struct AddClothingItemMenu: View {
                     .foregroundStyle(Theme.Color.inkMuted)
                     .multilineTextAlignment(.center)
             }
-        }
-        .confirmationDialog("Add a Piece", isPresented: $showActionSheet, titleVisibility: .visible) {
-            Button("Take Photo") { showCamera = true }
-            Button("Choose from Library") { showLibrary = true }
-            Button("Cancel", role: .cancel) {}
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(

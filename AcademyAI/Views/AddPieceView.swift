@@ -7,7 +7,6 @@ struct AddPieceView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @State private var showActionSheet = false
     @State private var showCamera = false
     @State private var showLibrary = false
     
@@ -65,11 +64,6 @@ struct AddPieceView: View {
         .navigationTitle("Add a Piece")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
-        .confirmationDialog("Add a Piece", isPresented: $showActionSheet, titleVisibility: .visible) {
-            Button("Take Photo") { showCamera = true }
-            Button("Choose from Library") { showLibrary = true }
-            Button("Cancel", role: .cancel) {}
-        }
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(
                 cameraDevice: .rear,
@@ -139,9 +133,12 @@ struct AddPieceView: View {
         .background(Theme.Color.cream.ignoresSafeArea())
     }
     
+    // A Menu instead of a confirmationDialog so Take Photo / Choose from Library pop
+    // up anchored right at this card, not as an unrelated sheet from the bottom.
     private var addPhotoCard: some View {
-        Button {
-            showActionSheet = true
+        Menu {
+            Button("Take Photo") { showCamera = true }
+            Button("Choose from Library") { showLibrary = true }
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 20)
@@ -179,7 +176,6 @@ struct AddPieceView: View {
             .frame(height: 224)
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
-        .buttonStyle(.plain)
         .disabled(viewModel.isProcessing)
     }
     

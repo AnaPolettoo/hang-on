@@ -4,7 +4,6 @@ import UIKit
 struct PurchaseCheckView: View {
     let viewModel: PurchaseCheckViewModel
 
-    @State private var showActionSheet = false
     @State private var showCamera = false
     @State private var showLibrary = false
     @State private var pendingLibraryImage: UIImage?
@@ -57,11 +56,6 @@ struct PurchaseCheckView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 avatarButton
             }
-        }
-        .confirmationDialog("Check a Piece", isPresented: $showActionSheet, titleVisibility: .visible) {
-            Button("Take Photo") { showCamera = true }
-            Button("Choose from Library") { showLibrary = true }
-            Button("Cancel", role: .cancel) {}
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(
@@ -123,6 +117,26 @@ struct PurchaseCheckView: View {
         }
     }
 
+    // A Menu instead of a confirmationDialog so the Take Photo / Choose from Library
+    // choices pop up anchored right at this button, not as an unrelated sheet sliding
+    // up from the bottom of the screen. The label reproduces PrimaryButtonStyle's look
+    // by hand — a custom ButtonStyle isn't guaranteed to apply to a Menu's trigger.
+    private var checkAPieceMenu: some View {
+        Menu {
+            Button("Take Photo") { showCamera = true }
+            Button("Choose from Library") { showLibrary = true }
+        } label: {
+            Text("Check a piece")
+                .font(Theme.Font.button)
+                .foregroundStyle(Theme.Color.cream)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .background(Theme.Color.ink)
+                .clipShape(Capsule())
+        }
+        .disabled(viewModel.isProcessing)
+    }
+
     private var avatarButton: some View {
         Button {
             // Open profile in a future update.
@@ -156,14 +170,18 @@ struct PurchaseCheckView: View {
                     Text("Should you buy it?")
                         .font(Theme.Font.sectionTitle)
                         .foregroundStyle(Theme.Color.ink)
+                        .overlay(alignment: .bottom) {
+                            Rectangle()
+                                .fill(Theme.Color.ink)
+                                .frame(height: 2)
+                                .offset(y: 3)
+                        }
                     Text("Snap a piece before you buy — I'll check it against your palette and closet.")
                         .font(Theme.Font.subheadline)
                         .foregroundStyle(Theme.Color.inkMuted)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 8)
-                    Button("Check a piece") { showActionSheet = true }
-                        .buttonStyle(.closetPrimary)
-                        .disabled(viewModel.isProcessing)
+                    checkAPieceMenu
                 }
                 .padding(.top, 48)
                 .padding(.bottom, 22)

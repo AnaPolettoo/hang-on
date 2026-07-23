@@ -65,7 +65,7 @@ struct PurchaseCheckVerdictView: View {
                     .font(Theme.Font.title)
                     .foregroundStyle(Theme.Color.ink)
                 HStack(spacing: 8) {
-                    badgePill(colorSwatch.displayName, background: swiftUIColor(colorSwatch.color))
+                    colorBadge
                     badgePill(category.displayNoun, background: Theme.Color.accentYellow)
                 }
             }
@@ -77,6 +77,26 @@ struct PurchaseCheckVerdictView: View {
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Color.ink, lineWidth: 2))
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .padding(.horizontal, 24)
+    }
+
+    // Matches AddPieceView's selected color-swatch pill (Views/AddPieceView.swift,
+    // swatchPill): a small color circle next to the name, on a solid ink capsule so
+    // the text always reads as white/cream — unlike filling the whole pill with the
+    // raw swatch color, which goes unreadable for light colors (white, cream).
+    private var colorBadge: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(swiftUIColor(colorSwatch.color))
+                .frame(width: 14, height: 14)
+                .overlay(Circle().stroke(Theme.Color.cream.opacity(0.4), lineWidth: 1))
+            Text(colorSwatch.displayName)
+                .font(Theme.Font.caption)
+        }
+        .foregroundStyle(Theme.Color.cream)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 3)
+        .background(Theme.Color.ink)
+        .clipShape(Capsule())
     }
 
     private func badgePill(_ text: String, background: Color) -> some View {
@@ -180,12 +200,22 @@ struct PurchaseCheckVerdictView: View {
         .padding(.horizontal, 24)
     }
 
+    // Which action leads follows the recommendation, not a fixed order — a "worth it"
+    // verdict puts Buy up front (Pass demoted to the outline fallback), everything
+    // else (already owned / skip it) leads with Pass instead.
     private var buttons: some View {
         VStack(spacing: 12) {
-            Button("Pass", action: onPass)
-                .buttonStyle(.closetPrimary)
-            Button("Buy it anyway", action: onBuy)
-                .buttonStyle(.closetOutline)
+            if recommendation == .worthIt {
+                Button("Buy", action: onBuy)
+                    .buttonStyle(.closetPrimary)
+                Button("Pass it anyway", action: onPass)
+                    .buttonStyle(.closetOutline)
+            } else {
+                Button("Pass", action: onPass)
+                    .buttonStyle(.closetPrimary)
+                Button("Buy it anyway", action: onBuy)
+                    .buttonStyle(.closetOutline)
+            }
         }
         .padding(.horizontal, 24)
         .padding(.top, 12)
