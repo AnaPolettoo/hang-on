@@ -53,16 +53,20 @@ struct AddClothingItemMenu: View {
     }
 
     private func process(_ image: UIImage) {
-        guard let cgImage = image.cgImage, let imageData = image.jpegData(compressionQuality: 0.85) else {
+        guard let cgImage = image.cgImage else {
             viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
             return
         }
         Task {
-            let classification = await viewModel.classify(image: cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
-            // Low-confidence/failed identification still shouldn't block saving
-            // (REQ-2.2 in docs/specs.md): falls back to "other"/an approximate color.
-            let colorSwatch = classification.map { ClothingColorSwatch.nearest(to: $0.dominantColor) } ?? .grey
-            let category = classification?.category ?? .other
+            let processed = await viewModel.processPhoto(cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
+            // Low-confidence/failed identification still shouldn't block saving (REQ-2.2).
+            let displayImage = processed.map { UIImage(cgImage: $0.image) } ?? image
+            guard let imageData = displayImage.jpegData(compressionQuality: 0.85) else {
+                viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+                return
+            }
+            let colorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
+            let category = processed?.classification.category ?? .other
             viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
             if viewModel.errorMessage == nil { onAdded() }
         }

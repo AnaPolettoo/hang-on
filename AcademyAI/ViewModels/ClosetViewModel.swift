@@ -38,19 +38,6 @@ final class ClosetViewModel {
         profileName = (try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()))?.first?.name
     }
 
-    func classify(image: CGImage, orientation: CGImagePropertyOrientation) async -> ClothingClassification? {
-        isProcessing = true
-        errorMessage = nil
-        defer { isProcessing = false }
-
-        do {
-            return try await classifier.classify(image, orientation: orientation, mask: nil)
-        } catch {
-            errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
-            return nil
-        }
-    }
-
     func processPhoto(_ image: CGImage, orientation: CGImagePropertyOrientation) async -> ProcessedPhoto? {
         isProcessing = true
         errorMessage = nil

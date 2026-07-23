@@ -324,15 +324,16 @@ struct AddPieceView: View {
             viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
             return
         }
-        let classification = await viewModel.classify(image: cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
-        
-        // Low-confidence/failed identification still shouldn't block the person from
-        // saving (REQ-2.2 in docs/specs.md: falls back to "other"/an approximate color
-        // instead) — always show the review step so they can just fix it manually.
-        reviewImage = image
-        reviewImageData = image.jpegData(compressionQuality: 0.85)
-        selectedColorSwatch = classification.map { ClothingColorSwatch.nearest(to: $0.dominantColor) } ?? .grey
-        selectedCategory = classification.map { reviewableCategories.contains($0.category) ? $0.category : .other } ?? .other
+        let processed = await viewModel.processPhoto(cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
+
+        // Low-confidence/failed identification still shouldn't block saving (REQ-2.2):
+        // fall back to "other"/an approximate color. When processed is nil (classify
+        // failed), keep the original photo so the person can still review and fix it.
+        let displayImage = processed.map { UIImage(cgImage: $0.image) } ?? image
+        reviewImage = displayImage
+        reviewImageData = displayImage.jpegData(compressionQuality: 0.85)
+        selectedColorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
+        selectedCategory = processed.map { reviewableCategories.contains($0.classification.category) ? $0.classification.category : .other } ?? .other
     }
     
     private func addThisPiece() {
