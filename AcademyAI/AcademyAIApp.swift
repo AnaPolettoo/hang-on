@@ -12,7 +12,7 @@ import SwiftData
 struct AcademyAIApp: App {
     let modelContainer: ModelContainer = {
         do {
-            return try ModelContainer(for: UserColorimetryProfile.self, ClothingItem.self)
+            return try ModelContainer(for: UserColorimetryProfile.self, ClothingItem.self, PurchaseCheck.self)
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
