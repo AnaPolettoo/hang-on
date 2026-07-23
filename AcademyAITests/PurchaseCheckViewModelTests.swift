@@ -101,4 +101,34 @@ struct PurchaseCheckViewModelTests {
         let checks = try context.fetch(FetchDescriptor<PurchaseCheck>())
         #expect(items.first?.linkedPurchaseCheckId == checks.first?.id)
     }
+
+    @Test func checkPieceIncludesSimilarItemsWhenClosetHasMatches() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let existing = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil)
+        context.insert(existing)
+        try context.save()
+
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime, confidence: 0.9))
+        let viewModel = PurchaseCheckViewModel(classifier: classifier, verdictGenerator: FakeVerdictGenerator(verdict: PurchaseVerdict(motivo: "x", recomendacao: "y")), modelContext: context)
+
+        let result = await viewModel.checkPiece(makeSolidColorImage(), orientation: .up)
+
+        #expect(result?.similarItems.count == 1)
+    }
+
+    @Test func loadHistoryComputesStatsAndRecentChecks() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime, confidence: 0.9))
+        let viewModel = PurchaseCheckViewModel(classifier: classifier, verdictGenerator: FakeVerdictGenerator(verdict: PurchaseVerdict(motivo: "x", recomendacao: "y")), modelContext: context)
+
+        viewModel.recordDecision(imageData: Data([0x01]), category: .tops, dominantColor: .lime, matchesColorimetry: true, fillsGap: true, verdictText: "x", decision: .comprou)
+        viewModel.recordDecision(imageData: Data([0x02]), category: .bottoms, dominantColor: .navy, matchesColorimetry: false, fillsGap: nil, verdictText: "y", decision: .naoComprou)
+
+        #expect(viewModel.checkedCount == 2)
+        #expect(viewModel.boughtCount == 1)
+        #expect(viewModel.passedCount == 1)
+        #expect(viewModel.recentChecks.count == 2)
+    }
 }
