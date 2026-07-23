@@ -32,4 +32,32 @@ struct VisionClothingClassifierTests {
         let result = try await classifier.classify(image, orientation: .up)
         #expect(abs(result.dominantColor.red - 200.0 / 255.0) < 0.05)
     }
+
+    // Image: left half red (mask white), right half green (mask black).
+    // With the mask, dominant color must read red, not the 50/50 average.
+    @Test func classifyWithMaskSamplesColorThroughMask() async throws {
+        let size = 16
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bytesPerRow = size * 4
+        func make(_ fill: (Int) -> (UInt8, UInt8, UInt8)) -> CGImage {
+            var data = [UInt8](repeating: 0, count: size * size * 4)
+            for row in 0..<size {
+                for col in 0..<size {
+                    let o = row * bytesPerRow + col * 4
+                    let (r, g, b) = fill(col)
+                    data[o] = r; data[o + 1] = g; data[o + 2] = b; data[o + 3] = 255
+                }
+            }
+            return CGContext(data: &data, width: size, height: size, bitsPerComponent: 8,
+                             bytesPerRow: bytesPerRow, space: colorSpace,
+                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!.makeImage()!
+        }
+        let image = make { $0 < size / 2 ? (200, 0, 0) : (0, 200, 0) }
+        let mask = make { $0 < size / 2 ? (255, 255, 255) : (0, 0, 0) }
+
+        let classifier = VisionClothingClassifier()
+        let result = try await classifier.classify(image, orientation: .up, mask: mask)
+        #expect(abs(result.dominantColor.red - 200.0 / 255.0) < 0.05)
+        #expect(result.dominantColor.green < 0.05)
+    }
 }

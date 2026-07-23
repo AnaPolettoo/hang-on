@@ -33,7 +33,7 @@ final class ClosetViewModel {
         defer { isProcessing = false }
 
         do {
-            return try await classifier.classify(image, orientation: orientation)
+            return try await classifier.classify(image, orientation: orientation, mask: nil)
         } catch {
             errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
             return nil

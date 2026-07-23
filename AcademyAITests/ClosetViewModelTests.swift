@@ -8,12 +8,12 @@ import ImageIO
 
 private struct FakeClothingClassifier: ClothingClassifying {
     let result: ClothingClassification
-    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation) async throws -> ClothingClassification { result }
+    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation, mask: CGImage? = nil) async throws -> ClothingClassification { result }
 }
 
 private struct FailingClothingClassifier: ClothingClassifying {
     struct TestError: Error {}
-    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation) async throws -> ClothingClassification { throw TestError() }
+    func classify(_ image: CGImage, orientation: CGImagePropertyOrientation, mask: CGImage? = nil) async throws -> ClothingClassification { throw TestError() }
 }
 
 private func makeSolidColorImage(size: Int = 8) -> CGImage {
