@@ -24,10 +24,16 @@ enum ImageCropRectMapper {
         let width = cropRect.width / scale
         let height = cropRect.height / scale
 
+        let rawRight = relativeX + width
+        let rawBottom = relativeY + height
+
         let clampedX = max(0, min(relativeX, imageSize.width))
         let clampedY = max(0, min(relativeY, imageSize.height))
-        let clampedWidth = max(0, min(width, imageSize.width - clampedX))
-        let clampedHeight = max(0, min(height, imageSize.height - clampedY))
+        let clampedRight = max(0, min(rawRight, imageSize.width))
+        let clampedBottom = max(0, min(rawBottom, imageSize.height))
+
+        let clampedWidth = max(0, clampedRight - clampedX)
+        let clampedHeight = max(0, clampedBottom - clampedY)
 
         return CGRect(x: clampedX, y: clampedY, width: clampedWidth, height: clampedHeight)
     }

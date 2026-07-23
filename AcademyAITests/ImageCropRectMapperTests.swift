@@ -38,4 +38,15 @@ struct ImageCropRectMapperTests {
         )
         #expect(result == CGRect(x: 0, y: 0, width: 200, height: 200))
     }
+
+    @Test func handlesNegativeOriginWithPartialOverflow() {
+        // Regression test for single-edge overflow: cropRect extends past left edge only.
+        // cropRect at x=-20 with width=50 should intersect [0, 200] as [0, 30] (width 30).
+        let result = ImageCropRectMapper.pixelRect(
+            cropRect: CGRect(x: -20, y: 50, width: 50, height: 50),
+            containerSize: CGSize(width: 200, height: 200),
+            imageSize: CGSize(width: 200, height: 200)
+        )
+        #expect(result == CGRect(x: 0, y: 50, width: 30, height: 50))
+    }
 }
