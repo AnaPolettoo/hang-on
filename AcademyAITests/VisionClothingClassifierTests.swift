@@ -60,4 +60,14 @@ struct VisionClothingClassifierTests {
         #expect(abs(result.dominantColor.red - 200.0 / 255.0) < 0.05)
         #expect(result.dominantColor.green < 0.05)
     }
+
+    // Skipped in sandboxed/virtualized CI environments without Neural Engine/GPU passthrough
+    // (see the file's other tests for the same known limitation) — run on a real device or a
+    // GPU-accelerated Simulator.
+    @Test func classifyReportsTopConfidenceInValidRange() async throws {
+        let classifier = VisionClothingClassifier()
+        let image = makeSolidColorImage(red: 200, green: 40, blue: 40)
+        let result = try await classifier.classify(image, orientation: .up)
+        #expect(result.confidence >= 0 && result.confidence <= 1)
+    }
 }

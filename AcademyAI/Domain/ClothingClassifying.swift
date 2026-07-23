@@ -5,6 +5,17 @@ import ImageIO
 struct ClothingClassification: Equatable {
     let category: ClothingCategory
     let dominantColor: ClosetColor
+    /// Vision's top raw classification confidence (0-1), before category-keyword
+    /// mapping. Feature 3 (REQ-3.2) gates on this to catch a bad store-photo read
+    /// (uncontrolled background/lighting) without re-running Vision. Defaults to 1
+    /// so existing call sites/tests that don't care about confidence are unaffected.
+    let confidence: Float
+
+    init(category: ClothingCategory, dominantColor: ClosetColor, confidence: Float = 1.0) {
+        self.category = category
+        self.dominantColor = dominantColor
+        self.confidence = confidence
+    }
 }
 
 protocol ClothingClassifying {
@@ -30,7 +41,10 @@ struct VisionClothingClassifier: ClothingClassifying {
         let handler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
         try handler.perform([request])
 
-        let identifiers = (request.results ?? [])
+        let results = request.results ?? []
+        let confidence = results.first?.confidence ?? 0
+
+        let identifiers = results
             .filter { $0.confidence > 0.1 }
             .map(\.identifier)
 
@@ -46,6 +60,6 @@ struct VisionClothingClassifier: ClothingClassifying {
             dominantColor = FaceColorSampler.averageColor(in: image, region: region ?? Self.fullImageRegion)
         }
 
-        return ClothingClassification(category: category, dominantColor: dominantColor)
+        return ClothingClassification(category: category, dominantColor: dominantColor, confidence: confidence)
     }
 }
