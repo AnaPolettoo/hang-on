@@ -87,6 +87,11 @@ struct PurchaseCheckView: View {
             showCamera = true
             viewModel.pendingAutoLaunchCamera = false
         }
+        .onAppear {
+            guard viewModel.pendingAutoLaunchCamera else { return }
+            showCamera = true
+            viewModel.pendingAutoLaunchCamera = false
+        }
     }
 
     private var idleCard: some View {
