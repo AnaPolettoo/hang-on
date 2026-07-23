@@ -27,6 +27,7 @@ struct PurchaseCheckView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
+                greeting
                 ctaCard
                 statsRow
                 if !viewModel.recentChecks.isEmpty {
@@ -139,6 +140,20 @@ struct PurchaseCheckView: View {
     private var initials: String {
         guard let name = viewModel.profileName, let first = name.first else { return "?" }
         return String(first).uppercased()
+    }
+
+    private var greeting: some View {
+        Text("Hi, \(viewModel.profileName ?? "there")")
+            .font(Theme.Font.largeTitle)
+            .foregroundStyle(Theme.Color.ink)
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(Theme.Color.ink)
+                    .frame(height: 2)
+                    .offset(y: 3)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
     }
 
     private var ctaCard: some View {
