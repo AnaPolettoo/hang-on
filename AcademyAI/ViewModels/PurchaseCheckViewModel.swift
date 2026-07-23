@@ -93,7 +93,8 @@ final class PurchaseCheckViewModel {
                 category: classification.category,
                 color: classification.dominantColor,
                 matchesColorimetry: matches,
-                fillsGap: fillsGap
+                fillsGap: fillsGap,
+                similarItemsCount: similarItems.count
             )
 
             return ProcessedPurchaseCheck(

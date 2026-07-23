@@ -17,7 +17,7 @@ private struct StubBackgroundRemover: BackgroundRemoving {
 
 private struct FakeVerdictGenerator: PurchaseVerdictGenerating {
     let verdict: PurchaseVerdict
-    func generateVerdict(category: ClothingCategory, color: ClosetColor, matchesColorimetry: Bool?, fillsGap: Bool?) async throws -> PurchaseVerdict { verdict }
+    func generateVerdict(category: ClothingCategory, color: ClosetColor, matchesColorimetry: Bool?, fillsGap: Bool?, similarItemsCount: Int) async throws -> PurchaseVerdict { verdict }
 }
 
 private func makeSolidColorImage(size: Int = 8) -> CGImage {

@@ -2,10 +2,16 @@ import Testing
 @testable import AcademyAI
 
 struct PurchaseRecommendationTests {
-    @Test func offPaletteIsSkipItRegardlessOfGap() {
-        #expect(PurchaseRecommendation.evaluate(matchesColorimetry: false, fillsGap: true) == .skipIt)
+    @Test func offPaletteWithARealGapIsWorthItNotSkip() {
+        #expect(PurchaseRecommendation.evaluate(matchesColorimetry: false, fillsGap: true) == .worthIt)
+    }
+
+    @Test func offPaletteWithUnknownGapIsWorthItNotSkip() {
+        #expect(PurchaseRecommendation.evaluate(matchesColorimetry: false, fillsGap: nil) == .worthIt)
+    }
+
+    @Test func offPaletteAndDuplicateIsSkipIt() {
         #expect(PurchaseRecommendation.evaluate(matchesColorimetry: false, fillsGap: false) == .skipIt)
-        #expect(PurchaseRecommendation.evaluate(matchesColorimetry: false, fillsGap: nil) == .skipIt)
     }
 
     @Test func onPaletteButDuplicateIsAlreadyOwned() {

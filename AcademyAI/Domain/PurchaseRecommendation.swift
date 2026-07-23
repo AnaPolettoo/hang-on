@@ -6,9 +6,11 @@ enum PurchaseRecommendation: Equatable {
     case skipIt
 
     static func evaluate(matchesColorimetry: Bool?, fillsGap: Bool?) -> PurchaseRecommendation {
-        if matchesColorimetry == false { return .skipIt }
-        if fillsGap == false { return .alreadyOwned }
-        return .worthIt
+        // A color mismatch alone no longer forces a skip — a real gap (fillsGap == true,
+        // or nil when the closet's still empty) can outweigh being off-palette. Skip is
+        // reserved for the confirmed-worst case: wrong color AND a duplicate already owned.
+        guard fillsGap == false else { return .worthIt }
+        return matchesColorimetry == false ? .skipIt : .alreadyOwned
     }
 
     var title: String {

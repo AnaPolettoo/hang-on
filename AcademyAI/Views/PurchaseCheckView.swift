@@ -7,7 +7,7 @@ struct PurchaseCheckView: View {
     @State private var showActionSheet = false
     @State private var showCamera = false
     @State private var showLibrary = false
-    @State private var pendingCropImage: UIImage?
+    @State private var pendingLibraryImage: UIImage?
     @State private var pendingVerdict: PendingVerdict?
 
     struct PendingVerdict: Identifiable, Hashable {
@@ -78,26 +78,21 @@ struct PurchaseCheckView: View {
             PhotoLibraryPickerView(
                 onPick: { image in
                     showLibrary = false
-                    pendingCropImage = uprightImage(from: image)
+                    pendingLibraryImage = uprightImage(from: image)
                 },
                 onCancel: { showLibrary = false }
             )
         }
         .fullScreenCover(isPresented: Binding(
-            get: { pendingCropImage != nil },
-            set: { isPresented in if !isPresented { pendingCropImage = nil } }
+            get: { pendingLibraryImage != nil },
+            set: { isPresented in if !isPresented { pendingLibraryImage = nil } }
         )) {
-            if let pendingCropImage {
-                NavigationStack {
-                    CropPhotoView(
-                        image: pendingCropImage,
-                        onCrop: { cropped in
-                            self.pendingCropImage = nil
-                            Task { await process(cropped) }
-                        },
-                        onCancel: { self.pendingCropImage = nil }
-                    )
-                }
+            if let pendingLibraryImage {
+                processingView
+                    .task {
+                        await process(pendingLibraryImage)
+                        self.pendingLibraryImage = nil
+                    }
             }
         }
         .navigationDestination(item: $pendingVerdict) { verdict in
@@ -132,20 +127,12 @@ struct PurchaseCheckView: View {
         Button {
             // Open profile in a future update.
         } label: {
-            Text(initials)
-                .font(Theme.Font.subheadline)
+            Image(systemName: "person.fill")
                 .foregroundStyle(Theme.Color.ink)
-                .frame(width: 40, height: 40)
-                .background(Theme.Color.accentBorder)
-                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
-                .clipShape(Circle())
         }
+        .buttonStyle(.borderedProminent)
+        .tint(.pinkCustom)
         .accessibilityLabel("Profile")
-    }
-
-    private var initials: String {
-        guard let name = viewModel.profileName, let first = name.first else { return "?" }
-        return String(first).uppercased()
     }
 
     private var greeting: some View {
@@ -283,6 +270,21 @@ struct PurchaseCheckView: View {
             .font(Theme.Font.caption)
         }
         .padding(12)
+    }
+
+    private var processingView: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .tint(Theme.Color.cream)
+                .controlSize(.large)
+            Text("Checking the piece against your palette and closet…")
+                .font(Theme.Font.subheadline)
+                .foregroundStyle(Theme.Color.cream.opacity(0.8))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.Color.ink.ignoresSafeArea())
     }
 
     private func uprightImage(from image: UIImage) -> UIImage {
