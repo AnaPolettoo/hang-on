@@ -64,6 +64,7 @@ struct AddPieceView: View {
         .background(Theme.Color.cream.ignoresSafeArea())
         .navigationTitle("Add a Piece")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
         .confirmationDialog("Add a Piece", isPresented: $showActionSheet, titleVisibility: .visible) {
             Button("Take Photo") { showCamera = true }
             Button("Choose from Library") { showLibrary = true }
