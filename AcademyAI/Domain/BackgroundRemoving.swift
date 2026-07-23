@@ -2,7 +2,7 @@ import Vision
 import CoreImage
 import CoreGraphics
 
-struct BackgroundRemovalResult: Equatable {
+struct BackgroundRemovalResult {
     let image: CGImage   // subject cropped and centered on a square cream canvas
     let mask: CGImage    // grayscale foreground mask, same frame/size as `image`
 }
@@ -54,9 +54,10 @@ struct VisionBackgroundRemover: BackgroundRemoving {
         let square = CGRect(x: 0, y: 0, width: side, height: side)
 
         func compose(_ subject: CIImage, over background: CIImage) -> CGImage? {
-            // Re-origin subject to (0,0) then shift to canvas center.
+            // Shift subject to canvas center. (subject.extent.origin is always (0,0) here —
+            // CIImage(cvPixelBuffer:) and CIColorMatrix output both originate at zero —
+            // so no re-origin translate is needed before this.)
             let placed = subject
-                .transformed(by: CGAffineTransform(translationX: -subject.extent.origin.x, y: -subject.extent.origin.y))
                 .transformed(by: CGAffineTransform(translationX: dx, y: dy))
             let composited = placed.composited(over: background.cropped(to: square))
             return context.createCGImage(composited, from: square)

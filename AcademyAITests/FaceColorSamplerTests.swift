@@ -124,4 +124,16 @@ struct FaceColorSamplerTests {
         #expect(abs(color.red - 200.0 / 255.0) < 0.05)
         #expect(color.green < 0.05)
     }
+
+    // Fully-black mask means zero foreground pixels; must hit the `count == 0` guard
+    // and fall back to black rather than dividing by zero.
+    @Test func averageColorWithEmptyMaskReturnsBlack() {
+        let image = makeSolidColorImage(red: 200, green: 20, blue: 20)
+        let mask = makeSolidColorImage(red: 0, green: 0, blue: 0)
+
+        let color = FaceColorSampler.averageColor(in: image, mask: mask)
+        #expect(color.red == 0)
+        #expect(color.green == 0)
+        #expect(color.blue == 0)
+    }
 }

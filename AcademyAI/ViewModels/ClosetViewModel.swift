@@ -4,7 +4,7 @@ import CoreGraphics
 import ImageIO
 import Observation
 
-struct ProcessedPhoto: Equatable {
+struct ProcessedPhoto {
     let image: CGImage
     let classification: ClothingClassification
 }
