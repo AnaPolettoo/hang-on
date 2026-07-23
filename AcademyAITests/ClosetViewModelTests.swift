@@ -16,6 +16,11 @@ private struct FailingClothingClassifier: ClothingClassifying {
     func classify(_ image: CGImage, orientation: CGImagePropertyOrientation, mask: CGImage? = nil) async throws -> ClothingClassification { throw TestError() }
 }
 
+private struct StubBackgroundRemover: BackgroundRemoving {
+    let result: BackgroundRemovalResult?
+    func removeBackground(from image: CGImage) async throws -> BackgroundRemovalResult? { result }
+}
+
 private func makeSolidColorImage(size: Int = 8) -> CGImage {
     let colorSpace = CGColorSpaceCreateDeviceRGB()
     var pixelData = [UInt8](repeating: 0, count: size * size * 4)
@@ -35,23 +40,35 @@ private func makeSolidColorImage(size: Int = 8) -> CGImage {
 
 @MainActor
 struct ClosetViewModelTests {
-    @Test func classifyReturnsClassificationWithoutSaving() async throws {
+    @Test func processPhotoReturnsClassificationWithoutSaving() async throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
-        let viewModel = ClosetViewModel(classifier: classifier, modelContext: ModelContext(container))
+        let viewModel = ClosetViewModel(classifier: classifier, backgroundRemover: StubBackgroundRemover(result: nil), modelContext: ModelContext(container))
 
-        let result = await viewModel.classify(image: makeSolidColorImage(), orientation: .up)
+        let result = await viewModel.processPhoto(makeSolidColorImage(), orientation: .up)
 
-        #expect(result?.category == .tops)
+        #expect(result?.classification.category == .tops)
         #expect(viewModel.errorMessage == nil)
         #expect(viewModel.items.isEmpty)
     }
 
-    @Test func classifySetsErrorMessageOnFailure() async throws {
+    @Test func processPhotoFallsBackToOriginalImageWhenNoBackgroundRemoved() async throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
-        let viewModel = ClosetViewModel(classifier: FailingClothingClassifier(), modelContext: ModelContext(container))
+        let classifier = FakeClothingClassifier(result: ClothingClassification(category: .tops, dominantColor: .lime))
+        let viewModel = ClosetViewModel(classifier: classifier, backgroundRemover: StubBackgroundRemover(result: nil), modelContext: ModelContext(container))
+        let original = makeSolidColorImage()
 
-        let result = await viewModel.classify(image: makeSolidColorImage(), orientation: .up)
+        let result = await viewModel.processPhoto(original, orientation: .up)
+
+        // Removal returned nil → the processed image is the (upright) original.
+        #expect(result?.image.width == original.width)
+    }
+
+    @Test func processPhotoSetsErrorMessageOnClassificationFailure() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let viewModel = ClosetViewModel(classifier: FailingClothingClassifier(), backgroundRemover: StubBackgroundRemover(result: nil), modelContext: ModelContext(container))
+
+        let result = await viewModel.processPhoto(makeSolidColorImage(), orientation: .up)
 
         #expect(result == nil)
         #expect(viewModel.errorMessage != nil)

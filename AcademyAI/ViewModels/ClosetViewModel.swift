@@ -4,6 +4,11 @@ import CoreGraphics
 import ImageIO
 import Observation
 
+struct ProcessedPhoto: Equatable {
+    let image: CGImage
+    let classification: ClothingClassification
+}
+
 @MainActor
 @Observable
 final class ClosetViewModel {
@@ -13,10 +18,16 @@ final class ClosetViewModel {
     var errorMessage: String?
 
     private let classifier: ClothingClassifying
+    private let backgroundRemover: BackgroundRemoving
     private let modelContext: ModelContext
 
-    init(classifier: ClothingClassifying = VisionClothingClassifier(), modelContext: ModelContext) {
+    init(
+        classifier: ClothingClassifying = VisionClothingClassifier(),
+        backgroundRemover: BackgroundRemoving = VisionBackgroundRemover(),
+        modelContext: ModelContext
+    ) {
         self.classifier = classifier
+        self.backgroundRemover = backgroundRemover
         self.modelContext = modelContext
         loadItems()
     }
@@ -34,6 +45,29 @@ final class ClosetViewModel {
 
         do {
             return try await classifier.classify(image, orientation: orientation, mask: nil)
+        } catch {
+            errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
+            return nil
+        }
+    }
+
+    func processPhoto(_ image: CGImage, orientation: CGImagePropertyOrientation) async -> ProcessedPhoto? {
+        isProcessing = true
+        errorMessage = nil
+        defer { isProcessing = false }
+
+        // Bake orientation once; everything downstream (removal, classify, the saved
+        // image) then works in `.up` space, so the composite never comes out sideways.
+        let upright = ImageOrientation.upright(image, orientation: orientation)
+
+        // Background removal is a best-effort enhancement: if Vision finds no subject
+        // (or throws), fall back to the upright original — never block the flow.
+        let removal = try? await backgroundRemover.removeBackground(from: upright)
+        let finalImage = removal?.image ?? upright
+
+        do {
+            let classification = try await classifier.classify(finalImage, orientation: .up, mask: removal?.mask)
+            return ProcessedPhoto(image: finalImage, classification: classification)
         } catch {
             errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
             return nil
