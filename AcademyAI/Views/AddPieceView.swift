@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import SwiftData
 
 struct AddPieceView: View {
     let viewModel: ClosetViewModel
@@ -12,6 +13,7 @@ struct AddPieceView: View {
     @State private var reviewImageData: Data?
     @State private var selectedColorSwatch: ClothingColorSwatch?
     @State private var selectedCategory: ClothingCategory?
+    @State private var sessionAddedItems: [ClothingItem] = []
 
     private let colorColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .bottoms, .shoes]
@@ -27,6 +29,9 @@ struct AddPieceView: View {
                     if let reviewImage {
                         reviewCard(reviewImage)
                     } else {
+                        if !sessionAddedItems.isEmpty {
+                            sessionAddedRow
+                        }
                         addPhotoCard
                         addMoreButton
                     }
@@ -135,6 +140,41 @@ struct AddPieceView: View {
             }
             .buttonStyle(.closetAccent)
             Spacer()
+        }
+    }
+
+    private var sessionAddedRow: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Added this session · \(sessionAddedItems.count)")
+                .font(Theme.Font.caption)
+                .foregroundStyle(Theme.Color.ink.opacity(0.55))
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(sessionAddedItems) { item in
+                        sessionThumbnail(item)
+                    }
+                }
+            }
+        }
+    }
+
+    private func sessionThumbnail(_ item: ClothingItem) -> some View {
+        ZStack {
+            Theme.Color.cream
+
+            if let uiImage = UIImage(data: item.imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(4)
+            }
+        }
+        .frame(width: 64, height: 85.3)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Theme.Color.ink.opacity(0.18), lineWidth: 1)
         }
     }
 
@@ -268,6 +308,9 @@ struct AddPieceView: View {
         guard let imageData = reviewImageData, let colorSwatch = selectedColorSwatch, let category = selectedCategory else { return }
         viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
         guard viewModel.errorMessage == nil else { return }
+        if let savedItem = viewModel.items.first {
+            sessionAddedItems.append(savedItem)
+        }
         reviewImage = nil
         reviewImageData = nil
         selectedColorSwatch = nil
