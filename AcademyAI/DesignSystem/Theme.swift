@@ -104,3 +104,25 @@ struct AccentButtonStyle: ButtonStyle {
 extension ButtonStyle where Self == AccentButtonStyle {
     static var closetAccent: AccentButtonStyle { AccentButtonStyle() }
 }
+
+/// A pill-shaped, solid-border secondary button, matching the Figma "OutlineBtn" component
+/// (node 2097:3234) — full ink border and ink text, no fill. Distinct from `DashedButtonStyle`,
+/// which uses a dashed stroke and muted text.
+struct OutlineButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Theme.Font.button)
+            .foregroundStyle(Theme.Color.ink)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 17)
+            .overlay(
+                Capsule()
+                    .stroke(Theme.Color.ink, lineWidth: 2)
+            )
+            .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+extension ButtonStyle where Self == OutlineButtonStyle {
+    static var closetOutline: OutlineButtonStyle { OutlineButtonStyle() }
+}

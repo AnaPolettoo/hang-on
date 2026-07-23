@@ -10,36 +10,48 @@ struct PurchaseCheckView: View {
     @State private var pendingCropImage: UIImage?
     @State private var pendingVerdict: PendingVerdict?
 
-    struct PendingVerdict {
+    struct PendingVerdict: Identifiable {
+        let id = UUID()
         let displayImage: UIImage
         let imageData: Data
         let category: ClothingCategory
         let dominantColor: ClosetColor
         let matchesColorimetry: Bool?
         let fillsGap: Bool?
+        let similarItems: [UIImage]
+        let similarItemsTotalCount: Int
         let motivo: String
         let recomendacao: String
     }
 
     var body: some View {
-        VStack {
-            if let pendingVerdict {
-                verdictCard(pendingVerdict)
-            } else {
-                idleCard
-            }
+        ScrollView {
+            VStack(spacing: 24) {
+                greeting
+                ctaCard
+                statsRow
+                if !viewModel.recentChecks.isEmpty {
+                    recentChecksSection
+                }
 
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .font(Theme.Font.caption)
-                    .foregroundStyle(Theme.Color.inkMuted)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(Theme.Font.caption)
+                        .foregroundStyle(Theme.Color.inkMuted)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                }
             }
+            .padding(.top, 8)
+            .padding(.bottom, 24)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Color.cream.ignoresSafeArea())
-        .navigationTitle("Check")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                avatarButton
+            }
+        }
         .confirmationDialog("Check a Piece", isPresented: $showActionSheet, titleVisibility: .visible) {
             Button("Take Photo") { showCamera = true }
             Button("Choose from Library") { showLibrary = true }
@@ -82,6 +94,22 @@ struct PurchaseCheckView: View {
                 }
             }
         }
+        .navigationDestination(item: $pendingVerdict) { verdict in
+            PurchaseCheckVerdictView(
+                displayImage: verdict.displayImage,
+                itemTitle: "\(ClothingColorSwatch.nearest(to: verdict.dominantColor).displayName) \(verdict.category.displayNoun)",
+                colorSwatch: ClothingColorSwatch.nearest(to: verdict.dominantColor),
+                category: verdict.category,
+                matchesColorimetry: verdict.matchesColorimetry,
+                fillsGap: verdict.fillsGap,
+                similarItemImages: verdict.similarItems,
+                similarItemsTotalCount: verdict.similarItemsTotalCount,
+                motivo: verdict.motivo,
+                recomendacao: verdict.recomendacao,
+                onPass: { recordDecision(.naoComprou, verdict: verdict) },
+                onBuy: { recordDecision(.comprou, verdict: verdict) }
+            )
+        }
         .onChange(of: viewModel.pendingAutoLaunchCamera) { _, shouldLaunch in
             guard shouldLaunch else { return }
             showCamera = true
@@ -94,56 +122,161 @@ struct PurchaseCheckView: View {
         }
     }
 
-    private var idleCard: some View {
-        VStack(spacing: 16) {
-            Spacer()
-            Text("Fotografe uma peça que está cogitando comprar e a gente diz na hora se ela combina com você.")
-                .font(Theme.Font.body)
-                .foregroundStyle(Theme.Color.inkMuted)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-
-            Button("Check a Piece") { showActionSheet = true }
-                .buttonStyle(.closetPrimary)
-                .padding(.horizontal, 24)
-                .disabled(viewModel.isProcessing)
-
-            if viewModel.isProcessing {
-                ProgressView().tint(Theme.Color.ink)
-            }
-            Spacer()
+    private var avatarButton: some View {
+        Button {
+            // Open profile in a future update.
+        } label: {
+            Text(initials)
+                .font(Theme.Font.subheadline)
+                .foregroundStyle(Theme.Color.ink)
+                .frame(width: 40, height: 40)
+                .background(Theme.Color.accentBorder)
+                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+                .clipShape(Circle())
         }
+        .accessibilityLabel("Profile")
     }
 
-    private func verdictCard(_ verdict: PendingVerdict) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Image(uiImage: verdict.displayImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 220)
-                    .background(Color(hex: "F6F2EA"))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+    private var initials: String {
+        guard let name = viewModel.profileName, let first = name.first else { return "?" }
+        return String(first).uppercased()
+    }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(verdict.motivo)
-                        .font(Theme.Font.body)
-                        .foregroundStyle(Theme.Color.ink)
-                    Text(verdict.recomendacao)
-                        .font(Theme.Font.body)
-                        .foregroundStyle(Theme.Color.ink)
-                }
+    private var greeting: some View {
+        Text("Hi, \(viewModel.profileName ?? "there")")
+            .font(Theme.Font.largeTitle)
+            .foregroundStyle(Theme.Color.ink)
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(Theme.Color.ink)
+                    .frame(height: 2)
+                    .offset(y: 3)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
+    }
 
-                HStack(spacing: 12) {
-                    Button("Não comprei") { recordDecision(.naoComprou, verdict: verdict) }
-                        .buttonStyle(.closetDashed)
-                    Button("Comprei") { recordDecision(.comprou, verdict: verdict) }
+    private var ctaCard: some View {
+        VStack(spacing: 0) {
+            ZStack(alignment: .top) {
+                VStack(spacing: 8) {
+                    Text("Should you buy it?")
+                        .font(Theme.Font.sectionTitle)
+                        .foregroundStyle(Theme.Color.ink)
+                    Text("Snap a piece before you buy — I'll check it against your palette and closet.")
+                        .font(Theme.Font.subheadline)
+                        .foregroundStyle(Theme.Color.inkMuted)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                    Button("Check a piece") { showActionSheet = true }
                         .buttonStyle(.closetPrimary)
+                        .disabled(viewModel.isProcessing)
+                }
+                .padding(.top, 48)
+                .padding(.bottom, 22)
+                .padding(.horizontal, 26)
+                .background(Color(hex: "F6F2EA"))
+                .overlay(RoundedRectangle(cornerRadius: 26).stroke(Theme.Color.ink, lineWidth: 2))
+                .clipShape(RoundedRectangle(cornerRadius: 26))
+                .padding(.top, 30)
+
+                Image(systemName: "camera.viewfinder")
+                    .font(.system(size: 28))
+                    .foregroundStyle(Theme.Color.ink)
+                    .frame(width: 60, height: 60)
+                    .background(Theme.Color.cream)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+            }
+
+            if viewModel.isProcessing {
+                ProgressView().tint(Theme.Color.ink).padding(.top, 16)
+            }
+        }
+        .padding(.horizontal, 24)
+    }
+
+    private var statsRow: some View {
+        HStack(spacing: 12) {
+            Text("\(viewModel.checkedCount) checked")
+            Text("·").foregroundStyle(Theme.Color.ink.opacity(0.35))
+            Text("\(viewModel.boughtCount) bought")
+            Text("·").foregroundStyle(Theme.Color.ink.opacity(0.35))
+            Text("\(viewModel.passedCount) passed")
+        }
+        .font(Theme.Font.caption)
+        .foregroundStyle(Theme.Color.ink.opacity(0.6))
+    }
+
+    private var recentChecksSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("RECENT CHECKS")
+                .font(Theme.Font.caption)
+                .foregroundStyle(Theme.Color.inkMuted)
+                .tracking(0.5)
+                .padding(.leading, 4)
+
+            VStack(spacing: 0) {
+                ForEach(Array(viewModel.recentChecks.enumerated()), id: \.element.id) { index, check in
+                    recentCheckRow(check)
+                    if index < viewModel.recentChecks.count - 1 {
+                        Divider().background(Theme.Color.ink.opacity(0.1))
+                    }
                 }
             }
-            .padding()
+            .background(Color(hex: "F6F2EA"))
+            .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Color.ink, lineWidth: 2))
+            .clipShape(RoundedRectangle(cornerRadius: 18))
         }
+        .padding(.horizontal, 24)
+    }
+
+    private func recentCheckRow(_ check: PurchaseCheck) -> some View {
+        let recommendation = PurchaseRecommendation.evaluate(matchesColorimetry: check.matchesColorimetry, fillsGap: check.fillsGap)
+        let title = "\(ClothingColorSwatch.nearest(to: check.dominantColor).displayName) \(check.category.displayNoun)"
+
+        return HStack(spacing: 12) {
+            Group {
+                if let uiImage = UIImage(data: check.imageData) {
+                    Image(uiImage: uiImage).resizable().scaledToFill()
+                } else {
+                    Theme.Color.ink.opacity(0.06)
+                }
+            }
+            .frame(width: 44, height: 64)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(Theme.Font.body)
+                    .foregroundStyle(Theme.Color.ink)
+                Text("\(recommendation.glyphPrefix) \(recommendation.title)")
+                    .font(Theme.Font.caption)
+                    .foregroundStyle(Theme.Color.inkMuted)
+            }
+
+            Spacer(minLength: 0)
+
+            Group {
+                switch check.decision {
+                case .comprou:
+                    Text("Bought")
+                        .foregroundStyle(Theme.Color.cream)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 2)
+                        .background(Theme.Color.ink)
+                        .clipShape(Capsule())
+                case .naoComprou:
+                    Text("Passed")
+                        .foregroundStyle(Theme.Color.ink)
+                        .padding(.horizontal, 13)
+                        .padding(.vertical, 3)
+                        .overlay(Capsule().stroke(Theme.Color.ink, lineWidth: 1))
+                }
+            }
+            .font(Theme.Font.caption)
+        }
+        .padding(12)
     }
 
     private func uprightImage(from image: UIImage) -> UIImage {
@@ -154,7 +287,7 @@ struct PurchaseCheckView: View {
 
     private func process(_ image: UIImage) async {
         guard let cgImage = image.cgImage else {
-            viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+            viewModel.errorMessage = "Couldn't process the photo. Try again."
             return
         }
         let orientation = CGImagePropertyOrientation(image.imageOrientation)
@@ -162,7 +295,7 @@ struct PurchaseCheckView: View {
 
         let displayImage = UIImage(cgImage: processed.image)
         guard let imageData = displayImage.pngData() else {
-            viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+            viewModel.errorMessage = "Couldn't process the photo. Try again."
             return
         }
 
@@ -173,6 +306,8 @@ struct PurchaseCheckView: View {
             dominantColor: processed.classification.dominantColor,
             matchesColorimetry: processed.matchesColorimetry,
             fillsGap: processed.fillsGap,
+            similarItems: processed.similarItems.prefix(3).compactMap { UIImage(data: $0.imageData) },
+            similarItemsTotalCount: processed.similarItems.count,
             motivo: processed.motivo,
             recomendacao: processed.recomendacao
         )

@@ -26,4 +26,16 @@ struct GapAnalyzerTests {
         let existing = ClothingItem(imageData: Data(), category: .bottoms, dominantColor: ClothingColorSwatch.red.color, matchesColorimetry: nil)
         #expect(GapAnalyzer.fillsGap(candidateCategory: .tops, candidateColor: ClothingColorSwatch.red.color, existingItems: [existing]) == true)
     }
+
+    @Test func similarItemsReturnsEmptyWhenClosetIsEmpty() {
+        #expect(GapAnalyzer.similarItems(candidateCategory: .tops, candidateColor: .lime, existingItems: []).isEmpty)
+    }
+
+    @Test func similarItemsMatchesSameCategoryAndNearestColor() {
+        let matching = ClothingItem(imageData: Data(), category: .tops, dominantColor: ClothingColorSwatch.red.color, matchesColorimetry: nil)
+        let differentCategory = ClothingItem(imageData: Data(), category: .bottoms, dominantColor: ClothingColorSwatch.red.color, matchesColorimetry: nil)
+        let differentColor = ClothingItem(imageData: Data(), category: .tops, dominantColor: ClothingColorSwatch.navy.color, matchesColorimetry: nil)
+        let result = GapAnalyzer.similarItems(candidateCategory: .tops, candidateColor: ClothingColorSwatch.red.color, existingItems: [matching, differentCategory, differentColor])
+        #expect(result.map(\.persistentModelID) == [matching.persistentModelID])
+    }
 }

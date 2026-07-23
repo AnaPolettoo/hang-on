@@ -6,7 +6,7 @@ extension Notification.Name {
 }
 
 struct CheckPurchaseIntent: AppIntent {
-    static var title: LocalizedStringResource = "Essa peça vale a pena comprar?"
+    static var title: LocalizedStringResource = "Is this piece worth buying?"
     static var openAppWhenRun: Bool = true
 
     @MainActor
@@ -20,7 +20,7 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: CheckPurchaseIntent(),
-            phrases: ["Essa peça vale a pena comprar? \(.applicationName)"],
+            phrases: ["Is this piece worth buying in \(.applicationName)?"],
             shortTitle: "Check a Piece",
             systemImageName: "camera.viewfinder"
         )

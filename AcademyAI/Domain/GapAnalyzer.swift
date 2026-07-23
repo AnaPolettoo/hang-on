@@ -14,4 +14,17 @@ enum GapAnalyzer {
         }
         return !isDuplicate
     }
+
+    /// Existing pieces sharing both the candidate's category and its nearest
+    /// `ClothingColorSwatch` — the same match rule `fillsGap` uses, but returning
+    /// the items themselves (for the Verdict screen's thumbnail row) instead of
+    /// collapsing them to a Bool. Empty (not nil) when the closet has pieces but
+    /// none match — nil-vs-empty ambiguity isn't needed here since the caller
+    /// already has `fillsGap` for the "closet is empty" signal.
+    static func similarItems(candidateCategory: ClothingCategory, candidateColor: ClosetColor, existingItems: [ClothingItem]) -> [ClothingItem] {
+        let candidateSwatch = ClothingColorSwatch.nearest(to: candidateColor)
+        return existingItems.filter { item in
+            item.category == candidateCategory && ClothingColorSwatch.nearest(to: item.dominantColor) == candidateSwatch
+        }
+    }
 }

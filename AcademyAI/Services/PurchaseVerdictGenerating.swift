@@ -25,14 +25,14 @@ struct FoundationModelsPurchaseVerdictGenerator: PurchaseVerdictGenerating {
         let colorName = ClothingColorSwatch.nearest(to: color).displayName
 
         let paletteFact = matchesColorimetry.map {
-            $0 ? "a peça combina com a paleta de cores da pessoa" : "a peça foge da paleta de cores da pessoa"
-        } ?? "a colorimetria da pessoa ainda não foi feita, então não dá pra saber se combina com a paleta"
+            $0 ? "the piece matches the person's color palette" : "the piece falls outside the person's color palette"
+        } ?? "the person hasn't done their colorimetry yet, so we can't tell if it matches their palette"
 
         let gapFact = fillsGap.map {
-            $0 ? "ela preencheria uma lacuna real do guarda-roupa" : "ela duplicaria uma peça parecida que a pessoa já tem"
-        } ?? "o guarda-roupa da pessoa ainda está vazio, então não dá pra saber se preenche uma lacuna"
+            $0 ? "it would fill a real gap in their wardrobe" : "it would duplicate a similar piece they already own"
+        } ?? "the person's closet is still empty, so we can't tell if it fills a gap"
 
-        let prompt = "Uma pessoa está cogitando comprar uma peça de \(category.rawValue) na cor \(colorName). \(paletteFact.capitalized). \(gapFact.capitalized). Dê um veredito de estilista, curto e caloroso, sem nunca bloquear a decisão de compra."
+        let prompt = "A person is considering buying a \(category.rawValue) piece in \(colorName). \(paletteFact.capitalized). \(gapFact.capitalized). Give a short, warm stylist's verdict, never blocking the purchase decision."
 
         let response = try await session.respond(to: prompt, generating: PurchaseVerdictText.self)
         return PurchaseVerdict(motivo: response.content.motivo, recomendacao: response.content.recomendacao)

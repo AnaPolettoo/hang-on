@@ -56,7 +56,7 @@ final class ClosetViewModel {
             let classification = try await classifier.classify(finalImage, orientation: .up, mask: removal?.mask)
             return ProcessedPhoto(image: finalImage, classification: classification)
         } catch {
-            errorMessage = "Não conseguimos identificar a peça. Tenta de novo com mais luz."
+            errorMessage = "We couldn't identify the piece. Try again with more light."
             return nil
         }
     }
@@ -83,7 +83,7 @@ final class ClosetViewModel {
             try modelContext.save()
             loadItems()
         } catch {
-            errorMessage = "Não foi possível salvar a peça. Tenta de novo."
+            errorMessage = "Couldn't save the piece. Try again."
         }
     }
 }
