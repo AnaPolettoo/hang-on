@@ -35,4 +35,20 @@ struct ClothingItemTests {
         let fetched = try context.fetch(FetchDescriptor<ClothingItem>())
         #expect(fetched.first?.matchesColorimetry == nil)
     }
+
+    @Test func linkedPurchaseCheckIdDefaultsToNilAndRoundTrips() throws {
+        let container = try ModelContainer(for: ClothingItem.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+
+        let unlinked = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil)
+        context.insert(unlinked)
+
+        let checkId = UUID()
+        let linked = ClothingItem(imageData: Data(), category: .shoes, dominantColor: .wine, matchesColorimetry: nil, acquiredViaPurchaseCheck: true, linkedPurchaseCheckId: checkId)
+        context.insert(linked)
+        try context.save()
+
+        #expect(unlinked.linkedPurchaseCheckId == nil)
+        #expect(linked.linkedPurchaseCheckId == checkId)
+    }
 }
