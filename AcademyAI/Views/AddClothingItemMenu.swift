@@ -54,7 +54,7 @@ struct AddClothingItemMenu: View {
 
     private func process(_ image: UIImage) {
         guard let cgImage = image.cgImage else {
-            viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+            viewModel.errorMessage = "Couldn't process the photo. Try again."
             return
         }
         Task {
@@ -62,7 +62,7 @@ struct AddClothingItemMenu: View {
             // Low-confidence/failed identification still shouldn't block saving (REQ-2.2).
             let displayImage = processed.map { UIImage(cgImage: $0.image) } ?? image
             guard let imageData = displayImage.jpegData(compressionQuality: 0.85) else {
-                viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+                viewModel.errorMessage = "Couldn't process the photo. Try again."
                 return
             }
             let colorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey

@@ -321,7 +321,7 @@ struct AddPieceView: View {
     
     private func process(_ image: UIImage) async {
         guard let cgImage = image.cgImage else {
-            viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
+            viewModel.errorMessage = "Couldn't process the photo. Try again."
             return
         }
         let processed = await viewModel.processPhoto(cgImage, orientation: CGImagePropertyOrientation(image.imageOrientation))
