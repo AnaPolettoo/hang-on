@@ -331,7 +331,7 @@ struct AddPieceView: View {
         // failed), keep the original photo so the person can still review and fix it.
         let displayImage = processed.map { UIImage(cgImage: $0.image) } ?? image
         reviewImage = displayImage
-        reviewImageData = displayImage.jpegData(compressionQuality: 0.85)
+        reviewImageData = displayImage.pngData()
         selectedColorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
         selectedCategory = processed.map { reviewableCategories.contains($0.classification.category) ? $0.classification.category : .other } ?? .other
     }

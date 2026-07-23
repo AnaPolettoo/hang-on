@@ -3,7 +3,7 @@ import CoreImage
 import CoreGraphics
 
 struct BackgroundRemovalResult {
-    let image: CGImage   // subject cropped and centered on a square cream canvas
+    let image: CGImage   // subject cropped and centered on a square canvas, transparent outside it
     let mask: CGImage    // grayscale foreground mask, same frame/size as `image`
 }
 
@@ -12,8 +12,6 @@ protocol BackgroundRemoving {
 }
 
 struct VisionBackgroundRemover: BackgroundRemoving {
-    // Theme.Color.cream (hex FDFBF7). Domain must not import SwiftUI, so it's a literal.
-    private static let cream = CIColor(red: 0.99216, green: 0.98431, blue: 0.96863)
     private static let padding: CGFloat = 0.12 // 12% of the subject's larger side, each side
 
     private let context = CIContext()
@@ -53,21 +51,20 @@ struct VisionBackgroundRemover: BackgroundRemoving {
         let dx = (side - w) / 2, dy = (side - h) / 2
         let square = CGRect(x: 0, y: 0, width: side, height: side)
 
-        func compose(_ subject: CIImage, over background: CIImage) -> CGImage? {
+        func place(_ subject: CIImage) -> CGImage? {
             // Shift subject to canvas center. (subject.extent.origin is always (0,0) here —
             // CIImage(cvPixelBuffer:) and CIColorMatrix output both originate at zero —
-            // so no re-origin translate is needed before this.)
+            // so no re-origin translate is needed before this.) Cropping to a square
+            // larger than the subject's extent pads with transparent pixels, not an
+            // opaque fill — the saved image keeps real alpha, no background baked in.
             let placed = subject
                 .transformed(by: CGAffineTransform(translationX: dx, y: dy))
-            let composited = placed.composited(over: background.cropped(to: square))
-            return context.createCGImage(composited, from: square)
+                .cropped(to: square)
+            return context.createCGImage(placed, from: square)
         }
 
-        let creamBg = CIImage(color: Self.cream)
-        let blackBg = CIImage(color: CIColor(red: 0, green: 0, blue: 0))
-
-        guard let finalImage = compose(foreground, over: creamBg),
-              let finalMask = compose(grayMask, over: blackBg) else {
+        guard let finalImage = place(foreground),
+              let finalMask = place(grayMask) else {
             return nil
         }
 

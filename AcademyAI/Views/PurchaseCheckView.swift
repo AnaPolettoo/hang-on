@@ -161,7 +161,7 @@ struct PurchaseCheckView: View {
         guard let processed = await viewModel.checkPiece(cgImage, orientation: orientation) else { return }
 
         let displayImage = UIImage(cgImage: processed.image)
-        guard let imageData = displayImage.jpegData(compressionQuality: 0.85) else {
+        guard let imageData = displayImage.pngData() else {
             viewModel.errorMessage = "Não foi possível processar a foto. Tenta de novo."
             return
         }
