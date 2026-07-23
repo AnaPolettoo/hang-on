@@ -45,15 +45,9 @@ struct ClosetView: View {
     }
 
     var body: some View {
-        // Previously this content sat inside an outer ZStack alongside the
-        // background color and the floating button, which buries the ScrollView
-        // (populatedState) a level deeper than NavigationStack's UIKit bridge
-        // expects — the native large-title-collapse-on-scroll tracking needs the
-        // scroll view to be a direct-enough descendant to detect. Using
-        // .background/.overlay instead of ZStack keeps the conditional content
-        // (ScrollView or plain VStack) as the actual body, which is what let the
-        // title render/collapse correctly in the populated state.
-        Group {
+        VStack(spacing: 0) {
+            header
+
             if viewModel.items.isEmpty {
                 emptyState
             } else {
@@ -66,16 +60,36 @@ struct ClosetView: View {
                 addPieceFloatingButton
             }
         }
-        .navigationTitle("My Closet")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                profileButton
-            }
-        }
+        // Native `.large` title reliably goes blank on a real device once the
+        // closet has items and the populated ScrollView is on screen — confirmed
+        // twice now, across two different body structures (a prior commit had
+        // already diagnosed and fixed this exact combination before this file was
+        // touched again this session). A hand-drawn header sidesteps the native
+        // rendering bug entirely instead of chasing another structural variant.
+        .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $showAddPiece) {
             AddPieceView(viewModel: viewModel)
         }
+    }
+
+    private var header: some View {
+        HStack {
+            Text("My Closet")
+                .font(Theme.Font.largeTitle)
+                .foregroundStyle(Theme.Color.ink)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Theme.Color.ink)
+                        .frame(height: 2)
+                        .offset(y: 4)
+                }
+
+            Spacer()
+
+            profileButton
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
     }
 
     private var addPieceFloatingButton: some View {

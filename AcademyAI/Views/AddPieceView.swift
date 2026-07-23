@@ -5,6 +5,8 @@ import SwiftData
 struct AddPieceView: View {
     let viewModel: ClosetViewModel
 
+    @Environment(\.dismiss) private var dismiss
+
     @State private var showActionSheet = false
     @State private var showCamera = false
     @State private var showLibrary = false
@@ -22,7 +24,7 @@ struct AddPieceView: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("For pieces you already own. Add a photo and we'll guess its color and type — fix anything that's off, then save.")
+                    Text("For pieces you already own.")
                         .font(Theme.Font.caption)
                         .foregroundStyle(Theme.Color.inkMuted)
 
@@ -33,7 +35,6 @@ struct AddPieceView: View {
                             sessionAddedRow
                         }
                         addPhotoCard
-                        addMoreButton
                     }
 
                     if let errorMessage = viewModel.errorMessage {
@@ -54,9 +55,7 @@ struct AddPieceView: View {
                 .padding(.bottom, 90)
             }
 
-            if reviewImage != nil {
-                doneBar
-            }
+            doneBar
         }
         .background(Theme.Color.cream.ignoresSafeArea())
         .navigationTitle("Add a Piece")
@@ -130,17 +129,6 @@ struct AddPieceView: View {
         }
         .buttonStyle(.plain)
         .disabled(viewModel.isProcessing)
-    }
-
-    private var addMoreButton: some View {
-        HStack {
-            Spacer()
-            Button("+ Add more") {
-                showActionSheet = true
-            }
-            .buttonStyle(.closetAccent)
-            Spacer()
-        }
     }
 
     private var sessionAddedRow: some View {
@@ -276,7 +264,14 @@ struct AddPieceView: View {
 
     private var doneBar: some View {
         Button("Done") {
-            addThisPiece()
+            // Review state: save this piece and loop back to the ready state
+            // (the same screen, ready for another). Ready state: nothing to save —
+            // Done just leaves, like the back chevron.
+            if reviewImage != nil {
+                addThisPiece()
+            } else {
+                dismiss()
+            }
         }
         .buttonStyle(.closetPrimary)
         .padding(.horizontal, 24)
