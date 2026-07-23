@@ -6,12 +6,12 @@ import SwiftData
 
 struct ClosetView: View {
     let viewModel: ClosetViewModel
-
+    
     @State private var showAddPiece = false
-
+    
     private let horizontalPadding: CGFloat = 24
     private let gridSpacing: CGFloat = 8
-
+    
     private var thumbnailColumns: [GridItem] {
         Array(
             repeating: GridItem(
@@ -21,7 +21,7 @@ struct ClosetView: View {
             count: 4
         )
     }
-
+    
     private var groupedItems: [
         (category: ClothingCategory, items: [ClothingItem])
     ] {
@@ -32,94 +32,73 @@ struct ClosetView: View {
             .shoes,
             .other
         ]
-
+        
         return order.compactMap { category in
             let items = viewModel.items.filter {
                 $0.category == category
             }
-
+            
             return items.isEmpty
-                ? nil
-                : (category, items)
+            ? nil
+            : (category, items)
         }
     }
-
+    
     var body: some View {
-        VStack(spacing: 0) {
-            header
-
+        ZStack {
             if viewModel.items.isEmpty {
                 emptyState
             } else {
                 populatedState
             }
         }
-        .background(Theme.Color.cream.ignoresSafeArea())
-        // Native `.large` title reliably goes blank once the closet has items —
-        // confirmed exhaustively: ZStack wrapping, Group+background/overlay,
-        // ScrollView (with and without contentMargins/scrollIndicators), List
-        // with proper row styling, live empty->populated transition, and a cold
-        // launch straight into a populated closet all reproduce the identical
-        // failure. The one constant across every failing case is "the closet has
-        // items"; the one constant across every working case is "it doesn't." That
-        // rules out ScrollView vs List and transition timing as the cause — this
-        // is a native rendering bug in this iOS build, not something fixable from
-        // the SwiftUI side. A hand-drawn header sidesteps it entirely.
-        .toolbar(.hidden, for: .navigationBar)
+        .navigationTitle("My Closet")
+        .navigationBarTitleDisplayMode(.automatic)
+        .toolbar {
+            if !viewModel.items.isEmpty{
+                ToolbarItem(placement: .primaryAction) {
+                    addPieceButton
+                }
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                profileButton
+            }
+        }
         .navigationDestination(isPresented: $showAddPiece) {
             AddPieceView(viewModel: viewModel)
         }
+        .background(.backgroundCustom)
     }
-
-    private var header: some View {
-        HStack {
-            Text("My Closet")
-                .font(Theme.Font.largeTitle)
-                .foregroundStyle(Theme.Color.ink)
-                .overlay(alignment: .bottom) {
-                    Rectangle()
-                        .fill(Theme.Color.ink)
-                        .frame(height: 2)
-                        .offset(y: 4)
-                }
-
-            Spacer()
-
-            profileButton
-            addPieceButton
-        }
-        .padding(.horizontal, 24)
-        .padding(.top, 8)
-    }
-
+    
     private var addPieceButton: some View {
         Button {
             showAddPiece = true
         } label: {
             Image(systemName: "plus")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(Theme.Color.ink)
-                .frame(width: 36, height: 36)
+                .foregroundStyle(Theme.Color.cream)
         }
+        .buttonStyle(.borderedProminent)
+        .tint(Theme.Color.ink)
         .accessibilityLabel("Add a piece")
     }
-
+    
     private var profileButton: some View {
         Button {
             // Abrir perfil futuramente
         } label: {
-            Image(systemName: "person.crop.circle")
-                .font(.system(size: 22, weight: .regular))
+            Image(systemName: "person.fill")
                 .foregroundStyle(Theme.Color.ink)
-                .frame(width: 36, height: 36)
         }
+        .buttonStyle(.borderedProminent)
+        .tint(.pinkCustom)
         .accessibilityLabel("Profile")
     }
-
+    
     private var emptyState: some View {
         VStack(spacing: 16) {
             Spacer()
-
+            
             VStack(spacing: 4) {
                 Image("ClosetEmptyHanger")
                     .renderingMode(.template)
@@ -127,7 +106,7 @@ struct ClosetView: View {
                     .scaledToFit()
                     .frame(width: 54, height: 54)
                     .foregroundStyle(Theme.Color.ink)
-
+                
                 VStack(spacing: 12) {
                     Text("Your closet is empty")
                         .font(Theme.Font.sectionTitle)
@@ -138,7 +117,7 @@ struct ClosetView: View {
                                 .frame(height: 2)
                                 .offset(y: 3)
                         }
-
+                    
                     Text("It fills itself as you go")
                         .font(Theme.Font.subheadline)
                         .foregroundStyle(
@@ -147,18 +126,21 @@ struct ClosetView: View {
                         .multilineTextAlignment(.center)
                 }
             }
-
+            
             Button("+ Add a piece") {
                 showAddPiece = true
             }
             .buttonStyle(.closetPrimary)
-
+            
             Spacer()
         }
         .padding(.horizontal, 32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+        )
     }
-
+    
     private var populatedState: some View {
         ScrollView {
             LazyVStack(
@@ -173,7 +155,7 @@ struct ClosetView: View {
                 }
             }
             .padding(.top, 12)
-            .padding(.bottom, 120)
+            .padding(.bottom, 24)
         }
         .contentMargins(
             .horizontal,
@@ -182,14 +164,14 @@ struct ClosetView: View {
         )
         .scrollIndicators(.hidden)
     }
-
+    
     private func categorySection(
         _ group: (
             category: ClothingCategory,
             items: [ClothingItem]
         )
     ) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(
                 "\(group.category.rawValue.uppercased()) · \(group.items.count)"
             )
@@ -197,7 +179,7 @@ struct ClosetView: View {
             .foregroundStyle(
                 Theme.Color.ink.opacity(0.55)
             )
-
+            
             LazyVGrid(
                 columns: thumbnailColumns,
                 alignment: .leading,
@@ -208,20 +190,23 @@ struct ClosetView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
     }
-
+    
     private func itemTile(
         _ item: ClothingItem
     ) -> some View {
         ZStack {
-            Theme.Color.cream
-
+            Color.itemBackground
+            
             if let uiImage = UIImage(data: item.imageData) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .padding(6)
+                    .padding(4)
             } else {
                 Theme.Color.ink
                     .opacity(0.06)
@@ -245,23 +230,62 @@ struct ClosetView: View {
             )
         }
     }
-
 }
 
-#Preview("Empty Closet") {
+@MainActor
+private func makePopulatedClosetPreview() -> some View {
     let configuration = ModelConfiguration(
         isStoredInMemoryOnly: true
     )
-
+    
     let container = try! ModelContainer(
         for: ClothingItem.self,
         configurations: configuration
     )
-
+    
+    let context = container.mainContext
+    
+    let placeholderImageData = UIImage(
+        systemName: "tshirt.fill"
+    )?.pngData() ?? Data()
+    
+    let categories: [ClothingCategory] = [
+        .tops,
+        .tops,
+        .tops,
+        .tops,
+        .tops,
+        .outerwear,
+        .outerwear,
+        .bottoms,
+        .bottoms,
+        .bottoms,
+        .shoes,
+        .shoes,
+        .other
+    ]
+    
+    for category in categories {
+        let item = ClothingItem(
+            imageData: placeholderImageData, category: category,
+            dominantColor: .coral,
+            matchesColorimetry: true
+        )
+        
+        context.insert(item)
+    }
+    
     let viewModel = ClosetViewModel(
-        modelContext: container.mainContext
+        modelContext: context
     )
+    
+    return NavigationStack {
+        ClosetView(viewModel: viewModel)
+    }
+    .modelContainer(container)
+}
 
-    ClosetView(viewModel: viewModel)
-        .modelContainer(container)
+#Preview("Populated Closet") {
+    makePopulatedClosetPreview()
+    
 }

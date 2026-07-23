@@ -21,7 +21,6 @@ struct AcademyAIApp: App {
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor(Theme.Color.cream)
         appearance.largeTitleTextAttributes = [
             .font: UIFont(name: "PatrickHand-Regular", size: 30) ?? .systemFont(ofSize: 30, weight: .bold),
             .foregroundColor: UIColor(Theme.Color.ink)
