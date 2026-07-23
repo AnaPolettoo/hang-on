@@ -10,7 +10,7 @@ struct PurchaseCheckView: View {
     @State private var pendingCropImage: UIImage?
     @State private var pendingVerdict: PendingVerdict?
 
-    struct PendingVerdict: Identifiable {
+    struct PendingVerdict: Identifiable, Hashable {
         let id = UUID()
         let displayImage: UIImage
         let imageData: Data
@@ -22,6 +22,12 @@ struct PurchaseCheckView: View {
         let similarItemsTotalCount: Int
         let motivo: String
         let recomendacao: String
+
+        // `.navigationDestination(item:)` requires Hashable, not just Identifiable.
+        // Equality/hash by `id` alone — the struct's own UUID already uniquely
+        // identifies a given verdict, and several fields (UIImage) aren't Hashable.
+        static func == (lhs: PendingVerdict, rhs: PendingVerdict) -> Bool { lhs.id == rhs.id }
+        func hash(into hasher: inout Hasher) { hasher.combine(id) }
     }
 
     var body: some View {
