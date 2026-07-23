@@ -11,6 +11,7 @@ final class ClothingItem {
     private var dominantColorData: Data
     var matchesColorimetry: Bool?
     var acquiredViaPurchaseCheck: Bool
+    var linkedPurchaseCheckId: UUID?
     var dateAdded: Date
 
     var dominantColor: ClosetColor {
@@ -24,6 +25,7 @@ final class ClothingItem {
         dominantColor: ClosetColor,
         matchesColorimetry: Bool?,
         acquiredViaPurchaseCheck: Bool = false,
+        linkedPurchaseCheckId: UUID? = nil,
         dateAdded: Date = .now
     ) {
         self.imageData = imageData
@@ -31,6 +33,7 @@ final class ClothingItem {
         self.dominantColorData = Self.encodeColor(dominantColor)
         self.matchesColorimetry = matchesColorimetry
         self.acquiredViaPurchaseCheck = acquiredViaPurchaseCheck
+        self.linkedPurchaseCheckId = linkedPurchaseCheckId
         self.dateAdded = dateAdded
     }
 
