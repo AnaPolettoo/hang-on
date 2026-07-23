@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TabBarShell: View {
     let closetViewModel: ClosetViewModel
+    let purchaseCheckViewModel: PurchaseCheckViewModel
 
     @State private var selectedTab: AppTab = .closet
 
@@ -9,7 +10,7 @@ struct TabBarShell: View {
         TabView(selection: $selectedTab) {
             Tab(AppTab.check.title, image: AppTab.check.iconName, value: AppTab.check) {
                 NavigationStack {
-                    ComingSoonView(title: AppTab.check.title)
+                    PurchaseCheckView(viewModel: purchaseCheckViewModel)
                 }
             }
             Tab(AppTab.analysis.title, image: AppTab.analysis.iconName, value: AppTab.analysis) {
@@ -24,5 +25,9 @@ struct TabBarShell: View {
             }
         }
         .tint(Theme.Color.ink)
+        .onReceive(NotificationCenter.default.publisher(for: .checkPurchaseIntentTriggered)) { _ in
+            selectedTab = .check
+            purchaseCheckViewModel.pendingAutoLaunchCamera = true
+        }
     }
 }
