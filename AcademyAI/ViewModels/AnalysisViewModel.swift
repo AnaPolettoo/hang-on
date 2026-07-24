@@ -27,12 +27,20 @@ final class AnalysisViewModel {
 
     var categoryCounts: [WardrobeAnalyzer.CategoryCount] { WardrobeAnalyzer.categoryCounts(items: items) }
 
-    var gapCategory: ClothingCategory? { WardrobeAnalyzer.gapCategory(items: items) }
+    var gapInsight: WardrobeAnalyzer.GapInsight? { WardrobeAnalyzer.gapInsight(items: items) }
 
     var suggestedSwatches: [ClothingColorSwatch] {
-        guard gapCategory != nil, let profile else { return [] }
+        guard gapInsight != nil, let profile else { return [] }
         return WardrobeAnalyzer.suggestedSwatches(recommendedColors: profile.recommendedColors)
     }
 
     var offPaletteItems: [ClothingItem] { items.filter { $0.matchesColorimetry == false } }
+
+    /// First letter of up to the first two words of the profile name, for the
+    /// header avatar ("Ana Carolina" -> "AC"); "?" when there's no name yet.
+    var profileInitials: String {
+        guard let name = profile?.name, !name.isEmpty else { return "?" }
+        let letters = name.split(separator: " ").prefix(2).compactMap(\.first)
+        return String(letters).uppercased()
+    }
 }

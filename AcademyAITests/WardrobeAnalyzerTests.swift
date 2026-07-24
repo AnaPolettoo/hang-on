@@ -41,18 +41,18 @@ struct WardrobeAnalyzerTests {
         #expect(WardrobeAnalyzer.percentInPalette(items: items) == 0.5)
     }
 
-    // MARK: - gapCategory
+    // MARK: - gapInsight
 
-    @Test func gapCategoryIsNilWhenClosetIsEmpty() {
-        #expect(WardrobeAnalyzer.gapCategory(items: []) == nil)
+    @Test func gapInsightIsNilWhenClosetIsEmpty() {
+        #expect(WardrobeAnalyzer.gapInsight(items: []) == nil)
     }
 
-    @Test func gapCategoryIsNilWhenLeadingCategoryHasFewerThanTwoItems() {
+    @Test func gapInsightIsNilWhenLeadingCategoryHasFewerThanTwoItems() {
         let items = [ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil)]
-        #expect(WardrobeAnalyzer.gapCategory(items: items) == nil)
+        #expect(WardrobeAnalyzer.gapInsight(items: items) == nil)
     }
 
-    @Test func gapCategoryIsNilWhenAllEligibleCategoriesAreBalanced() {
+    @Test func gapInsightIsNilWhenAllEligibleCategoriesAreBalanced() {
         let items = ClothingCategory.allCases
             .filter { $0 != .other }
             .flatMap { category in
@@ -61,22 +61,23 @@ struct WardrobeAnalyzerTests {
                     ClothingItem(imageData: Data(), category: category, dominantColor: .wine, matchesColorimetry: nil)
                 ]
             }
-        #expect(WardrobeAnalyzer.gapCategory(items: items) == nil)
+        #expect(WardrobeAnalyzer.gapInsight(items: items) == nil)
     }
 
-    @Test func gapCategoryReturnsMostUnderRepresentedEligibleCategory() {
+    @Test func gapInsightReturnsMostUnderRepresentedEligibleCategoryWithLeadingCategory() {
         let items =
             Array(repeating: ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil), count: 3) +
             Array(repeating: ClothingItem(imageData: Data(), category: .outerwear, dominantColor: .lime, matchesColorimetry: nil), count: 3) +
             [ClothingItem(imageData: Data(), category: .shoes, dominantColor: .lime, matchesColorimetry: nil)]
-        #expect(WardrobeAnalyzer.gapCategory(items: items) == .bottoms)
+        let insight = WardrobeAnalyzer.gapInsight(items: items)
+        #expect(insight == .init(gapCategory: .bottoms, gapCount: 0, leadingCategory: .tops, leadingCount: 3))
     }
 
-    @Test func gapCategoryIgnoresOtherCategoryEntirely() {
+    @Test func gapInsightIgnoresOtherCategoryEntirely() {
         let items =
             Array(repeating: ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil), count: 3) +
             Array(repeating: ClothingItem(imageData: Data(), category: .other, dominantColor: .lime, matchesColorimetry: nil), count: 5)
-        #expect(WardrobeAnalyzer.gapCategory(items: items) == .bottoms)
+        #expect(WardrobeAnalyzer.gapInsight(items: items)?.gapCategory == .bottoms)
     }
 
     // MARK: - suggestedSwatches

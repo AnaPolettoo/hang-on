@@ -7,19 +7,40 @@ struct AnalysisView: View {
     let viewModel: AnalysisViewModel
 
     private let horizontalPadding: CGFloat = 24
+    private let cardCornerRadius: CGFloat = 18
 
     var body: some View {
-        ZStack {
+        Group {
             if viewModel.items.isEmpty {
                 emptyState
             } else {
                 populatedState
             }
         }
-        .navigationTitle("Analysis")
-        .navigationBarTitleDisplayMode(.automatic)
+        .navigationTitle("Wardrobe")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                avatarButton
+            }
+        }
         .background(Theme.Color.cream)
         .onAppear { viewModel.loadItems() }
+    }
+
+    private var avatarButton: some View {
+        Button {
+            // Open profile in a future update
+        } label: {
+            Text(viewModel.profileInitials)
+                .font(Theme.Font.subheadline)
+                .foregroundStyle(Theme.Color.ink)
+                .frame(width: 44, height: 44)
+                .background(Theme.Color.accentBorder)
+                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+                .clipShape(Circle())
+        }
+        .accessibilityLabel("Profile")
     }
 
     private var emptyState: some View {
@@ -42,110 +63,183 @@ struct AnalysisView: View {
 
     private var populatedState: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 30) {
-                summarySection
+            VStack(alignment: .leading, spacing: 20) {
+                statsRow
                 categorySection
-                if viewModel.gapCategory != nil, !viewModel.suggestedSwatches.isEmpty {
-                    worthBuyingNextSection
+                if let insight = viewModel.gapInsight {
+                    worthBuyingNextSection(insight)
                 }
                 if !viewModel.offPaletteItems.isEmpty {
                     offPaletteSection
                 }
             }
-            .padding(.top, 12)
+            .padding(.top, Theme.Layout.spacingXS)
             .padding(.bottom, 24)
         }
         .contentMargins(.horizontal, horizontalPadding, for: .scrollContent)
         .scrollIndicators(.hidden)
     }
 
-    private var summarySection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("\(viewModel.totalCount) pieces catalogued")
-                .font(Theme.Font.sectionTitle)
+    // MARK: - Stats
+
+    private var statsRow: some View {
+        HStack(spacing: 12) {
+            statCard(value: "\(viewModel.totalCount)", label: "pieces")
+            statCard(
+                value: viewModel.percentInPalette.map { "\(Int(($0 * 100).rounded()))%" } ?? "—",
+                label: "in your palette"
+            )
+        }
+    }
+
+    private func statCard(value: String, label: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(value)
+                .font(Theme.Font.statNumber)
                 .foregroundStyle(Theme.Color.ink)
-            if let percentInPalette = viewModel.percentInPalette {
-                Text("\(Int((percentInPalette * 100).rounded()))% in your palette")
+            Text(label)
+                .font(Theme.Font.micro)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground(cornerRadius: cardCornerRadius)
+    }
+
+    // MARK: - By Category
+
+    private var categorySection: some View {
+        let counts = viewModel.categoryCounts.filter { $0.category != .other }
+        let maxCount = max(counts.map(\.count).max() ?? 0, 1)
+        return VStack(alignment: .leading, spacing: 12) {
+            Text("BY CATEGORY")
+                .font(Theme.Font.micro)
+                .tracking(0.5)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(counts, id: \.category) { entry in
+                    categoryRow(entry, maxCount: maxCount)
+                }
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cardBackground(cornerRadius: cardCornerRadius)
+        }
+    }
+
+    private func categoryRow(_ entry: WardrobeAnalyzer.CategoryCount, maxCount: Int) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(entry.category.pluralDisplayName.capitalized)
+                    .font(Theme.Font.subheadline)
+                    .foregroundStyle(Theme.Color.ink)
+                Spacer()
+                Text("\(entry.count)")
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.ink.opacity(0.6))
             }
-        }
-    }
-
-    private var categorySection: some View {
-        let maxCount = max(viewModel.categoryCounts.map(\.count).max() ?? 0, 1)
-        return VStack(alignment: .leading, spacing: 12) {
-            Text("BY CATEGORY")
-                .font(Theme.Font.subheadline)
-                .foregroundStyle(Theme.Color.ink.opacity(0.55))
-            VStack(alignment: .leading, spacing: 10) {
-                ForEach(viewModel.categoryCounts, id: \.category) { entry in
-                    HStack {
-                        Text(entry.category.pluralDisplayName.capitalized)
-                            .font(Theme.Font.body)
-                            .foregroundStyle(Theme.Color.ink)
-                        Spacer()
-                        Text("\(entry.count)")
-                            .font(Theme.Font.body)
-                            .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            GeometryReader { geometry in
+                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                    .fill(Theme.Color.ink.opacity(0.1))
+                    .overlay(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 3, style: .continuous)
+                            .fill(Theme.Color.ink)
+                            .frame(width: geometry.size.width * CGFloat(entry.count) / CGFloat(maxCount))
                     }
-                    GeometryReader { geometry in
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .fill(Theme.Color.ink.opacity(0.15))
-                            .overlay(alignment: .leading) {
-                                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                    .fill(Theme.Color.ink)
-                                    .frame(width: geometry.size.width * CGFloat(entry.count) / CGFloat(maxCount))
-                            }
-                    }
-                    .frame(height: 6)
-                }
             }
+            .frame(height: 6)
         }
     }
 
-    private var worthBuyingNextSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+    // MARK: - Worth buying next
+
+    private func worthBuyingNextSection(_ insight: WardrobeAnalyzer.GapInsight) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
             Text("WORTH BUYING NEXT")
-                .font(Theme.Font.subheadline)
-                .foregroundStyle(Theme.Color.ink.opacity(0.55))
-            if let gapCategory = viewModel.gapCategory {
-                VStack(alignment: .leading, spacing: 6) {
+                .font(Theme.Font.micro)
+                .tracking(0.5)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            Text("\(insight.gapCategory.pluralDisplayName.capitalized) are your gap")
+                .font(Theme.Font.button)
+                .foregroundStyle(Theme.Color.ink)
+                .padding(.top, 4)
+            Text("You have \(insight.leadingCount) \(insight.leadingCategory.pluralDisplayName) but only \(insight.gapCount) \(insight.gapCategory.pluralDisplayName). Time to balance your closet.")
+                .font(Theme.Font.caption)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+                .padding(.top, 8)
+            if !viewModel.suggestedSwatches.isEmpty {
+                HStack(spacing: 8) {
                     ForEach(viewModel.suggestedSwatches, id: \.self) { swatch in
-                        Text("\(swatch.displayName) \(gapCategory.displayNoun)")
-                            .font(Theme.Font.body)
+                        Text("\(swatch.displayName) \(insight.gapCategory.displayNoun)")
+                            .font(Theme.Font.micro)
                             .foregroundStyle(Theme.Color.ink)
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 3)
+                            .background(swiftUIColor(swatch.color))
+                            .overlay(Capsule().stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1))
+                            .clipShape(Capsule())
                     }
                 }
+                .padding(.top, 12)
             }
         }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground(cornerRadius: cardCornerRadius)
     }
+
+    // MARK: - Off your palette
 
     private var offPaletteSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("OFF YOUR PALETTE")
-                .font(Theme.Font.subheadline)
-                .foregroundStyle(Theme.Color.ink.opacity(0.55))
-            ForEach(viewModel.offPaletteItems) { item in
-                HStack(spacing: 12) {
-                    ZStack {
-                        Color.itemBackground
-                        if let uiImage = UIImage(data: item.imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
-                                .padding(2)
-                        }
-                    }
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-
-                    Text(item.category.displayNoun)
-                        .font(Theme.Font.body)
-                        .foregroundStyle(Theme.Color.ink)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("OFF YOUR PALETTE · \(viewModel.offPaletteItems.count)")
+                .font(Theme.Font.micro)
+                .tracking(0.5)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
+                ForEach(viewModel.offPaletteItems) { item in
+                    offPaletteTile(item)
                 }
             }
         }
+    }
+
+    private func offPaletteTile(_ item: ClothingItem) -> some View {
+        ZStack {
+            Color.itemBackground
+            if let uiImage = UIImage(data: item.imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+            }
+        }
+        .aspectRatio(0.75, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1)
+        }
+        .clipped()
+    }
+
+    private func swiftUIColor(_ color: ClosetColor) -> Color {
+        Color(red: color.red, green: color.green, blue: color.blue)
+    }
+}
+
+private extension View {
+    /// The "grey/94" card treatment shared by every panel on this screen: item
+    /// background fill, 2px ink border, matching corner radius.
+    func cardBackground(cornerRadius: CGFloat) -> some View {
+        self
+            .background(Color.itemBackground)
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(Theme.Color.ink, lineWidth: 2)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
     }
 }
 
@@ -165,7 +259,7 @@ private func makePopulatedAnalysisPreview() -> some View {
         context.insert(ClothingItem(imageData: placeholderImageData, category: category, dominantColor: color, matchesColorimetry: matches))
     }
     context.insert(UserColorimetryProfile(
-        name: nil, skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+        name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
         season: .autumn, recommendedColors: [.lime, .wine, .beige], avoidColors: []
     ))
 

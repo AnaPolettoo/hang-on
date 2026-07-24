@@ -27,18 +27,30 @@ enum WardrobeAnalyzer {
         return Double(matching) / Double(scored.count)
     }
 
-    /// The most under-represented category among `gapEligibleCategories`, or
-    /// `nil` when there isn't enough data to call it a real imbalance (REQ-4.3
-    /// / acceptance criterion: "só aparece quando há dado suficiente"): the
-    /// leading category needs at least 2 pieces, and counts must actually differ.
-    static func gapCategory(items: [ClothingItem]) -> ClothingCategory? {
+    struct GapInsight: Equatable {
+        let gapCategory: ClothingCategory
+        let gapCount: Int
+        let leadingCategory: ClothingCategory
+        let leadingCount: Int
+    }
+
+    /// The most under-represented category among `gapEligibleCategories`,
+    /// paired with the leading (best-stocked) category, for the "Worth buying
+    /// next" copy ("You have {leadingCount} {leadingCategory} but only
+    /// {gapCount} {gapCategory}"). `nil` when there isn't enough data to call
+    /// it a real imbalance (REQ-4.3 / acceptance criterion: "só aparece quando
+    /// há dado suficiente"): the leading category needs at least 2 pieces, and
+    /// counts must actually differ.
+    static func gapInsight(items: [ClothingItem]) -> GapInsight? {
         let counts = gapEligibleCategories.map { category in
             (category, items.filter { $0.category == category }.count)
         }
-        guard let maxCount = counts.map(\.1).max(), maxCount >= 2 else { return nil }
-        let minCount = counts.map(\.1).min()!
-        guard maxCount != minCount else { return nil }
-        return counts.first { $0.1 == minCount }?.0
+        guard let leadingCount = counts.map(\.1).max(), leadingCount >= 2 else { return nil }
+        let gapCount = counts.map(\.1).min()!
+        guard leadingCount != gapCount else { return nil }
+        guard let leadingCategory = counts.first(where: { $0.1 == leadingCount })?.0,
+              let gapCategory = counts.first(where: { $0.1 == gapCount })?.0 else { return nil }
+        return GapInsight(gapCategory: gapCategory, gapCount: gapCount, leadingCategory: leadingCategory, leadingCount: leadingCount)
     }
 
     /// Up to `limit` distinct example colors from the palette's recommended

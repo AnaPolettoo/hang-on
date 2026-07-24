@@ -23,9 +23,10 @@ struct AnalysisViewModelTests {
 
         #expect(viewModel.totalCount == 0)
         #expect(viewModel.percentInPalette == nil)
-        #expect(viewModel.gapCategory == nil)
+        #expect(viewModel.gapInsight == nil)
         #expect(viewModel.suggestedSwatches.isEmpty)
         #expect(viewModel.offPaletteItems.isEmpty)
+        #expect(viewModel.profileInitials == "?")
     }
 
     @Test func categoryCountsMatchesLoadedItems() throws {
@@ -63,8 +64,23 @@ struct AnalysisViewModelTests {
 
         let viewModel = AnalysisViewModel(modelContext: context)
 
-        #expect(viewModel.gapCategory != nil)
+        #expect(viewModel.gapInsight != nil)
         #expect(viewModel.suggestedSwatches.isEmpty)
+    }
+
+    @Test func profileInitialsUsesFirstLetterOfFirstTwoNameWords() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let profile = UserColorimetryProfile(
+            name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+            season: .autumn, recommendedColors: [], avoidColors: []
+        )
+        context.insert(profile)
+        try context.save()
+
+        let viewModel = AnalysisViewModel(modelContext: context)
+
+        #expect(viewModel.profileInitials == "AC")
     }
 
     @Test func suggestedSwatchesUsesProfileRecommendedColorsWhenGapExists() throws {

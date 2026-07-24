@@ -20,6 +20,7 @@ enum Theme {
         private static let familyName = "PatrickHand-Regular"
 
         static let display = SwiftUI.Font.custom(familyName, size: 44)
+        static let statNumber = SwiftUI.Font.custom(familyName, size: 36)
         static let largeTitle = SwiftUI.Font.custom(familyName, size: 30)
         static let sectionTitle = SwiftUI.Font.custom(familyName, size: 24)
         static let title = SwiftUI.Font.custom(familyName, size: 19)
@@ -27,6 +28,7 @@ enum Theme {
         static let body = SwiftUI.Font.custom(familyName, size: 16)
         static let subheadline = SwiftUI.Font.custom(familyName, size: 15)
         static let caption = SwiftUI.Font.custom(familyName, size: 14)
+        static let micro = SwiftUI.Font.custom(familyName, size: 13)
     }
 
     enum Layout {
