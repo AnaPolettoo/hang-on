@@ -14,6 +14,15 @@ struct ProcessedPhoto {
 final class ClosetViewModel {
     var items: [ClothingItem] = []
     var profileName: String?
+
+    /// First letter of up to the first two words of the profile name, for the
+    /// header avatar ("Ana Carolina" -> "AC"); "?" when there's no name yet.
+    var profileInitials: String {
+        guard let profileName, !profileName.isEmpty else { return "?" }
+        let letters = profileName.split(separator: " ").prefix(2).compactMap(\.first)
+        return String(letters).uppercased()
+    }
+
     var isProcessing = false
     var errorMessage: String?
 
