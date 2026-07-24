@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PaletteResultView: View {
     let viewModel: PaletteResultViewModel
+    var ctaLabel: String = "Start Checking"
     let onStartChecking: () -> Void
 
     var body: some View {
@@ -40,7 +41,7 @@ struct PaletteResultView: View {
 
                 Spacer()
 
-                Button("Start Checking", action: onStartChecking)
+                Button(ctaLabel, action: onStartChecking)
                     .buttonStyle(.closetPrimary)
             }
             .padding()
