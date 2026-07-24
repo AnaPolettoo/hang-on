@@ -124,7 +124,7 @@ struct PurchaseCheckViewModelTests {
         let viewModel = PurchaseCheckViewModel(classifier: classifier, verdictGenerator: FakeVerdictGenerator(verdict: PurchaseVerdict(motivo: "x", recomendacao: "y")), modelContext: context)
 
         viewModel.recordDecision(imageData: Data([0x01]), category: .tops, dominantColor: .lime, matchesColorimetry: true, fillsGap: true, verdictText: "x", decision: .comprou)
-        viewModel.recordDecision(imageData: Data([0x02]), category: .bottoms, dominantColor: .navy, matchesColorimetry: false, fillsGap: nil, verdictText: "y", decision: .naoComprou)
+        viewModel.recordDecision(imageData: Data([0x02]), category: .bottoms, dominantColor: ClothingColorSwatch.navy.color, matchesColorimetry: false, fillsGap: nil, verdictText: "y", decision: .naoComprou)
 
         #expect(viewModel.checkedCount == 2)
         #expect(viewModel.boughtCount == 1)

@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import SwiftData
 @testable import AcademyAI
 
 struct GapAnalyzerTests {
