@@ -75,7 +75,7 @@ struct FindYourColorsViewModelTests {
         let context = ModelContext(container)
         let existing = UserColorimetryProfile(
             name: "Ana", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .winter, recommendedColors: [.icyBlue], avoidColors: [.golden]
+            season: .lightSpring, recommendedColors: [.icyBlue], avoidColors: [.golden]
         )
         context.insert(existing)
         try context.save()
@@ -93,6 +93,6 @@ struct FindYourColorsViewModelTests {
         let saved = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
         #expect(saved.count == 1)
         #expect(saved.first?.persistentModelID == existingID)
-        #expect(saved.first?.season != .winter)
+        #expect(saved.first?.season != .lightSpring)
     }
 }

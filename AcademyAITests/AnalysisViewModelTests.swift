@@ -88,7 +88,7 @@ struct AnalysisViewModelTests {
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn, recommendedColors: [], avoidColors: []
+            season: .warmAutumn, recommendedColors: [], avoidColors: []
         )
         context.insert(profile)
         try context.save()
@@ -106,7 +106,7 @@ struct AnalysisViewModelTests {
         }
         let profile = UserColorimetryProfile(
             name: nil, skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn, recommendedColors: [.lime, .wine], avoidColors: []
+            season: .warmAutumn, recommendedColors: [.lime, .wine], avoidColors: []
         )
         context.insert(profile)
         try context.save()

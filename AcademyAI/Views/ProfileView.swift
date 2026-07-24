@@ -60,7 +60,7 @@ struct ProfileView: View {
     private var paletteSection: some View {
         VStack(spacing: 12) {
             if let season = viewModel.season {
-                Text("MY PALETTE — \(seasonTitle(season))".uppercased())
+                Text("MY PALETTE — \(season.displayName)".uppercased())
                     .font(Theme.Font.micro)
                     .tracking(0.5)
                     .foregroundStyle(Theme.Color.ink.opacity(0.6))
@@ -126,15 +126,6 @@ struct ProfileView: View {
         .buttonStyle(.plain)
     }
 
-    private func seasonTitle(_ season: Season) -> String {
-        switch season {
-        case .spring: return "Warm Spring"
-        case .summer: return "Cool Summer"
-        case .autumn: return "Warm Autumn"
-        case .winter: return "Cool Winter"
-        }
-    }
-
     private func swiftUIColor(_ color: ClosetColor) -> Color {
         Color(red: color.red, green: color.green, blue: color.blue)
     }
@@ -175,7 +166,7 @@ private func makeProfilePreview() -> some View {
 
     context.insert(UserColorimetryProfile(
         name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-        season: .autumn, recommendedColors: [.lime, .wine, .beige, .mauve], avoidColors: []
+        season: .warmAutumn, recommendedColors: [.lime, .wine, .beige, .mauve], avoidColors: []
     ))
     for _ in 0..<26 {
         context.insert(ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: true))

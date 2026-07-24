@@ -10,7 +10,7 @@ struct PaletteResultView: View {
             Theme.Color.cream.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 16) {
-                Text(seasonTitle)
+                Text(viewModel.season.displayName)
                     .font(Theme.Font.largeTitle)
                     .foregroundStyle(Theme.Color.ink)
                     .titleUnderline(offset: 4)
@@ -40,15 +40,6 @@ struct PaletteResultView: View {
                     .buttonStyle(.closetPrimary)
             }
             .padding()
-        }
-    }
-
-    private var seasonTitle: String {
-        switch viewModel.season {
-        case .spring: return "Warm Spring"
-        case .summer: return "Cool Summer"
-        case .autumn: return "Warm Autumn"
-        case .winter: return "Cool Winter"
         }
     }
 
