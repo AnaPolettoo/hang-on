@@ -6,6 +6,10 @@ struct ClothingCategoryMapperTests {
         #expect(ClothingCategoryMapper.category(forIdentifiers: ["jersey", "sweater"]) == .tops)
     }
 
+    @Test func mapsDressIdentifierToDresses() {
+        #expect(ClothingCategoryMapper.category(forIdentifiers: ["sundress", "gown"]) == .dresses)
+    }
+
     @Test func mapsJeanIdentifierToBottoms() {
         #expect(ClothingCategoryMapper.category(forIdentifiers: ["jean", "denim"]) == .bottoms)
     }

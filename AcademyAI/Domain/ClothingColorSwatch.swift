@@ -41,6 +41,15 @@ enum ClothingColorSwatch: String, CaseIterable {
         }
     }
 
+    /// Colors that read as neutral in fashion — they pair with almost anything,
+    /// so a piece in one of these is worth keeping even when it's off-palette.
+    var isNeutral: Bool {
+        switch self {
+        case .cream, .white, .black, .grey, .taupe, .navy, .brown: return true
+        case .indigo, .red, .yellow, .teal, .pink: return false
+        }
+    }
+
     static func nearest(to color: ClosetColor) -> ClothingColorSwatch {
         allCases.min { squaredDistance($0.color, color) < squaredDistance($1.color, color) }!
     }

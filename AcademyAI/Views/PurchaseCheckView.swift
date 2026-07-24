@@ -52,11 +52,6 @@ struct PurchaseCheckView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Color.cream.ignoresSafeArea())
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                avatarButton
-            }
-        }
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(
                 cameraDevice: .rear,
@@ -137,28 +132,11 @@ struct PurchaseCheckView: View {
         .disabled(viewModel.isProcessing)
     }
 
-    private var avatarButton: some View {
-        Button {
-            // Open profile in a future update.
-        } label: {
-            Image(systemName: "person.fill")
-                .foregroundStyle(Theme.Color.ink)
-        }
-        .buttonStyle(.borderedProminent)
-        .tint(.pinkCustom)
-        .accessibilityLabel("Profile")
-    }
-
     private var greeting: some View {
         Text("Hi, \(viewModel.profileName ?? "there")")
             .font(Theme.Font.largeTitle)
             .foregroundStyle(Theme.Color.ink)
-            .overlay(alignment: .bottom) {
-                Rectangle()
-                    .fill(Theme.Color.ink)
-                    .frame(height: 2)
-                    .offset(y: 3)
-            }
+            .titleUnderline()
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 24)
     }

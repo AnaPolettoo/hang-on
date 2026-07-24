@@ -54,6 +54,21 @@ struct AnalysisViewModelTests {
         #expect(viewModel.offPaletteItems.map(\.persistentModelID) == [offPalette.persistentModelID])
     }
 
+    @Test func neutralPiecesSeparatesFromOffPaletteByColor() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let neutral = ClothingItem(imageData: Data(), category: .tops, dominantColor: .deepBlack, matchesColorimetry: false)
+        let offPalette = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: false)
+        context.insert(neutral)
+        context.insert(offPalette)
+        try context.save()
+
+        let viewModel = AnalysisViewModel(modelContext: context)
+
+        #expect(viewModel.neutralPieces.map(\.persistentModelID) == [neutral.persistentModelID])
+        #expect(viewModel.offPaletteItems.map(\.persistentModelID) == [offPalette.persistentModelID])
+    }
+
     @Test func suggestedSwatchesEmptyWithoutProfileEvenWithGap() throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)

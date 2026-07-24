@@ -13,12 +13,7 @@ struct PaletteResultView: View {
                 Text(seasonTitle)
                     .font(Theme.Font.largeTitle)
                     .foregroundStyle(Theme.Color.ink)
-                    .overlay(alignment: .bottomLeading) {
-                        Rectangle()
-                            .fill(Theme.Color.ink)
-                            .frame(height: 2)
-                            .offset(y: 4)
-                    }
+                    .titleUnderline(offset: 4)
                     .padding(.top, 8)
 
                 ForEach(Array(viewModel.recommended.enumerated()), id: \.offset) { _, color in
@@ -83,9 +78,8 @@ struct PaletteResultView: View {
         Color(red: color.red, green: color.green, blue: color.blue)
     }
 
-    /// Cream text over dark/saturated swatches, ink text over light ones — by relative luminance.
+    /// Cream text over dark/saturated swatches, ink text over light ones.
     private func textColor(for color: ClosetColor) -> Color {
-        let luminance = 0.299 * color.red + 0.587 * color.green + 0.114 * color.blue
-        return luminance > 0.6 ? Theme.Color.ink : Theme.Color.cream
+        color.isDark ? Theme.Color.cream : Theme.Color.ink
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 enum ClothingCategory: String, Codable, CaseIterable {
-    case tops, bottoms, outerwear, shoes, other
+    case tops, bottoms, outerwear, dresses, shoes, other
 
     /// Singular noun for item titles ("Teal " + displayNoun -> "Teal Top").
     var displayNoun: String {
@@ -9,6 +9,7 @@ enum ClothingCategory: String, Codable, CaseIterable {
         case .tops: return "Top"
         case .bottoms: return "Bottoms"
         case .outerwear: return "Jacket"
+        case .dresses: return "Dress"
         case .shoes: return "Shoes"
         case .other: return "Piece"
         }
@@ -20,6 +21,7 @@ enum ClothingCategory: String, Codable, CaseIterable {
         case .tops: return "tops"
         case .bottoms: return "bottoms"
         case .outerwear: return "jackets"
+        case .dresses: return "dresses"
         case .shoes: return "shoes"
         case .other: return "pieces"
         }

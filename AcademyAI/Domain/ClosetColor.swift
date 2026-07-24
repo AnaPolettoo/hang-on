@@ -4,6 +4,11 @@ struct ClosetColor: Codable, Equatable {
     let red: Double
     let green: Double
     let blue: Double
+
+    /// Relative luminance (perceptual weights), used to pick readable text over this color as a fill.
+    var isDark: Bool {
+        (0.299 * red + 0.587 * green + 0.114 * blue) <= 0.6
+    }
 }
 
 extension ClosetColor {

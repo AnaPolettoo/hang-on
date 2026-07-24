@@ -18,7 +18,7 @@ struct AddPieceView: View {
     @State private var pendingConfirmImage: UIImage?
     
     private let colorColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .bottoms, .shoes]
+    private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .dresses, .bottoms, .shoes]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -137,8 +137,12 @@ struct AddPieceView: View {
     // up anchored right at this card, not as an unrelated sheet from the bottom.
     private var addPhotoCard: some View {
         Menu {
-            Button("Take Photo") { showCamera = true }
-            Button("Choose from Library") { showLibrary = true }
+            Button { showCamera = true } label: {
+                Label("Take Photo", systemImage: "camera")
+            }
+            Button { showLibrary = true } label: {
+                Label("Choose from Library", systemImage: "photo.on.rectangle")
+            }
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 20)

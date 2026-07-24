@@ -5,10 +5,6 @@ import SwiftData
 
 struct AnalysisView: View {
     let viewModel: AnalysisViewModel
-    let profileViewModel: ProfileViewModel
-    let modelContext: ModelContext
-
-    @State private var showProfile = false
 
     private let horizontalPadding: CGFloat = 24
     private let cardCornerRadius: CGFloat = 18
@@ -23,31 +19,9 @@ struct AnalysisView: View {
         }
         .navigationTitle("Wardrobe")
         .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                avatarButton
-            }
-        }
+        .nativeTitleUnderline()
         .background(Theme.Color.cream)
         .onAppear { viewModel.loadItems() }
-        .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
-            ProfileView(viewModel: profileViewModel, modelContext: modelContext)
-        }
-    }
-
-    private var avatarButton: some View {
-        Button {
-            showProfile = true
-        } label: {
-            Text(viewModel.profileInitials)
-                .font(Theme.Font.subheadline)
-                .foregroundStyle(Theme.Color.ink)
-                .frame(width: 44, height: 44)
-                .background(Theme.Color.accentBorder)
-                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
-                .clipShape(Circle())
-        }
-        .accessibilityLabel("Profile")
     }
 
     private var emptyState: some View {
@@ -75,6 +49,9 @@ struct AnalysisView: View {
                 categorySection
                 if let insight = viewModel.gapInsight {
                     worthBuyingNextSection(insight)
+                }
+                if !viewModel.neutralPieces.isEmpty {
+                    neutralPiecesSection
                 }
                 if !viewModel.offPaletteItems.isEmpty {
                     offPaletteSection
@@ -180,7 +157,7 @@ struct AnalysisView: View {
                     ForEach(viewModel.suggestedSwatches, id: \.self) { swatch in
                         Text("\(swatch.displayName) \(insight.gapCategory.displayNoun)")
                             .font(Theme.Font.micro)
-                            .foregroundStyle(Theme.Color.ink)
+                            .foregroundStyle(swatch.color.isDark ? Theme.Color.cream : Theme.Color.ink)
                             .padding(.horizontal, 13)
                             .padding(.vertical, 3)
                             .background(swiftUIColor(swatch.color))
@@ -195,6 +172,25 @@ struct AnalysisView: View {
         .padding(.vertical, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardBackground(cornerRadius: cardCornerRadius)
+    }
+
+    // MARK: - Neutral pieces
+
+    private var neutralPiecesSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("NEUTRAL PIECES · \(viewModel.neutralPieces.count)")
+                .font(Theme.Font.micro)
+                .tracking(0.5)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            Text("Not in your palette, but neutrals pair with everything.")
+                .font(Theme.Font.caption)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
+                ForEach(viewModel.neutralPieces) { item in
+                    offPaletteTile(item)
+                }
+            }
+        }
     }
 
     // MARK: - Off your palette
@@ -219,16 +215,16 @@ struct AnalysisView: View {
             if let uiImage = UIImage(data: item.imageData) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
+                    .padding(4)
             }
         }
         .aspectRatio(0.75, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Theme.Color.ink.opacity(0.18), lineWidth: 1)
         }
-        .clipped()
     }
 
     private func swiftUIColor(_ color: ClosetColor) -> Color {
@@ -271,8 +267,7 @@ private func makePopulatedAnalysisPreview() -> some View {
     ))
 
     let viewModel = AnalysisViewModel(modelContext: context)
-    let profileViewModel = ProfileViewModel(modelContext: context)
-    return NavigationStack { AnalysisView(viewModel: viewModel, profileViewModel: profileViewModel, modelContext: context) }
+    return NavigationStack { AnalysisView(viewModel: viewModel) }
         .modelContainer(container)
 }
 
@@ -284,7 +279,6 @@ private func makePopulatedAnalysisPreview() -> some View {
     let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: configuration)
     let viewModel = AnalysisViewModel(modelContext: container.mainContext)
-    let profileViewModel = ProfileViewModel(modelContext: container.mainContext)
-    return NavigationStack { AnalysisView(viewModel: viewModel, profileViewModel: profileViewModel, modelContext: container.mainContext) }
+    return NavigationStack { AnalysisView(viewModel: viewModel) }
         .modelContainer(container)
 }

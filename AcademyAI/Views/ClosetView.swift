@@ -31,6 +31,7 @@ struct ClosetView: View {
         let order: [ClothingCategory] = [
             .tops,
             .outerwear,
+            .dresses,
             .bottoms,
             .shoes,
             .other
@@ -56,7 +57,8 @@ struct ClosetView: View {
             }
         }
         .navigationTitle("My Closet")
-        .navigationBarTitleDisplayMode(.automatic)
+        .navigationBarTitleDisplayMode(.large)
+        .nativeTitleUnderline()
         .toolbar {
             if !viewModel.items.isEmpty{
                 ToolbarItem(placement: .primaryAction) {
@@ -120,12 +122,7 @@ struct ClosetView: View {
                     Text("Your closet is empty")
                         .font(Theme.Font.sectionTitle)
                         .foregroundStyle(Theme.Color.ink)
-                        .overlay(alignment: .bottom) {
-                            Rectangle()
-                                .fill(Theme.Color.ink)
-                                .frame(height: 2)
-                                .offset(y: 3)
-                        }
+                        .titleUnderline()
                     
                     Text("It fills itself as you go")
                         .font(Theme.Font.subheadline)
@@ -173,7 +170,7 @@ struct ClosetView: View {
         )
         .scrollIndicators(.hidden)
     }
-    
+
     private func categorySection(
         _ group: (
             category: ClothingCategory,

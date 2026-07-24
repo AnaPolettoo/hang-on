@@ -34,7 +34,16 @@ final class AnalysisViewModel {
         return WardrobeAnalyzer.suggestedSwatches(recommendedColors: profile.recommendedColors)
     }
 
-    var offPaletteItems: [ClothingItem] { items.filter { $0.matchesColorimetry == false } }
+    /// Off-palette pieces in a non-neutral color — genuinely worth reconsidering.
+    var offPaletteItems: [ClothingItem] {
+        items.filter { $0.matchesColorimetry == false && !ClothingColorSwatch.nearest(to: $0.dominantColor).isNeutral }
+    }
+
+    /// Off-palette pieces in a neutral color (black, white, grey, cream, taupe, navy, brown) —
+    /// not in the palette, but still worth keeping since neutrals pair with everything.
+    var neutralPieces: [ClothingItem] {
+        items.filter { $0.matchesColorimetry == false && ClothingColorSwatch.nearest(to: $0.dominantColor).isNeutral }
+    }
 
     /// First letter of up to the first two words of the profile name, for the
     /// header avatar ("Ana Carolina" -> "AC"); "?" when there's no name yet.

@@ -6,6 +6,7 @@ enum ClothingCategoryMapper {
     // unordered Dictionary iteration.
     private static let keywordsByCategory: [(ClothingCategory, [String])] = [
         (.tops, ["shirt", "jersey", "sweater", "sweatshirt", "cardigan", "blouse", "hoodie", "top"]),
+        (.dresses, ["dress", "gown", "sundress"]),
         (.bottoms, ["jean", "trouser", "pant", "skirt", "short", "legging"]),
         (.outerwear, ["coat", "jacket", "blazer", "parka", "windbreaker", "vest"]),
         (.shoes, ["sneaker", "shoe", "boot", "sandal", "heel", "loafer", "slipper"])

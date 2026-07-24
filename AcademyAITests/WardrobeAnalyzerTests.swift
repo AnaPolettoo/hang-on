@@ -16,6 +16,7 @@ struct WardrobeAnalyzerTests {
             .init(category: .tops, count: 2),
             .init(category: .bottoms, count: 0),
             .init(category: .outerwear, count: 0),
+            .init(category: .dresses, count: 0),
             .init(category: .shoes, count: 0),
             .init(category: .other, count: 0)
         ])

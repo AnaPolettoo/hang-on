@@ -19,7 +19,7 @@ struct TabBarShell: View {
             }
             Tab(AppTab.analysis.title, image: AppTab.analysis.iconName, value: AppTab.analysis) {
                 NavigationStack {
-                    AnalysisView(viewModel: analysisViewModel, profileViewModel: profileViewModel, modelContext: modelContext)
+                    AnalysisView(viewModel: analysisViewModel)
                 }
             }
             Tab(AppTab.closet.title, image: AppTab.closet.iconName, value: AppTab.closet) {
@@ -28,7 +28,7 @@ struct TabBarShell: View {
                 }
             }
         }
-        .tint(Theme.Color.ink)
+        .tint(Theme.Color.accentBorder)
         .onReceive(NotificationCenter.default.publisher(for: .checkPurchaseIntentTriggered)) { _ in
             selectedTab = .check
             purchaseCheckViewModel.pendingAutoLaunchCamera = true
