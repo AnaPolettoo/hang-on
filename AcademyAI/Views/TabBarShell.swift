@@ -1,9 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct TabBarShell: View {
     let closetViewModel: ClosetViewModel
     let purchaseCheckViewModel: PurchaseCheckViewModel
     let analysisViewModel: AnalysisViewModel
+    let profileViewModel: ProfileViewModel
+    let modelContext: ModelContext
 
     @State private var selectedTab: AppTab = .closet
 
@@ -16,12 +19,12 @@ struct TabBarShell: View {
             }
             Tab(AppTab.analysis.title, image: AppTab.analysis.iconName, value: AppTab.analysis) {
                 NavigationStack {
-                    AnalysisView(viewModel: analysisViewModel)
+                    AnalysisView(viewModel: analysisViewModel, profileViewModel: profileViewModel, modelContext: modelContext)
                 }
             }
             Tab(AppTab.closet.title, image: AppTab.closet.iconName, value: AppTab.closet) {
                 NavigationStack {
-                    ClosetView(viewModel: closetViewModel)
+                    ClosetView(viewModel: closetViewModel, profileViewModel: profileViewModel, modelContext: modelContext)
                 }
             }
         }

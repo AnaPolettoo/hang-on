@@ -5,6 +5,10 @@ import SwiftData
 
 struct AnalysisView: View {
     let viewModel: AnalysisViewModel
+    let profileViewModel: ProfileViewModel
+    let modelContext: ModelContext
+
+    @State private var showProfile = false
 
     private let horizontalPadding: CGFloat = 24
     private let cardCornerRadius: CGFloat = 18
@@ -26,11 +30,14 @@ struct AnalysisView: View {
         }
         .background(Theme.Color.cream)
         .onAppear { viewModel.loadItems() }
+        .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
+            ProfileView(viewModel: profileViewModel, modelContext: modelContext)
+        }
     }
 
     private var avatarButton: some View {
         Button {
-            // Open profile in a future update
+            showProfile = true
         } label: {
             Text(viewModel.profileInitials)
                 .font(Theme.Font.subheadline)
@@ -246,7 +253,7 @@ private extension View {
 @MainActor
 private func makePopulatedAnalysisPreview() -> some View {
     let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: configuration)
+    let container = try! ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: configuration)
     let context = container.mainContext
 
     let placeholderImageData = UIImage(systemName: "tshirt.fill")?.pngData() ?? Data()
@@ -264,7 +271,8 @@ private func makePopulatedAnalysisPreview() -> some View {
     ))
 
     let viewModel = AnalysisViewModel(modelContext: context)
-    return NavigationStack { AnalysisView(viewModel: viewModel) }
+    let profileViewModel = ProfileViewModel(modelContext: context)
+    return NavigationStack { AnalysisView(viewModel: viewModel, profileViewModel: profileViewModel, modelContext: context) }
         .modelContainer(container)
 }
 
@@ -274,8 +282,9 @@ private func makePopulatedAnalysisPreview() -> some View {
 
 #Preview("Empty Analysis") {
     let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: configuration)
+    let container = try! ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: configuration)
     let viewModel = AnalysisViewModel(modelContext: container.mainContext)
-    return NavigationStack { AnalysisView(viewModel: viewModel) }
+    let profileViewModel = ProfileViewModel(modelContext: container.mainContext)
+    return NavigationStack { AnalysisView(viewModel: viewModel, profileViewModel: profileViewModel, modelContext: container.mainContext) }
         .modelContainer(container)
 }

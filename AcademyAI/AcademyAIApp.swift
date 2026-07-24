@@ -57,6 +57,7 @@ private struct RootView: View {
     @State private var closetViewModel: ClosetViewModel
     @State private var purchaseCheckViewModel: PurchaseCheckViewModel
     @State private var analysisViewModel: AnalysisViewModel
+    @State private var profileViewModel: ProfileViewModel
     private let modelContext: ModelContext
 
     init(modelContext: ModelContext) {
@@ -64,11 +65,12 @@ private struct RootView: View {
         _closetViewModel = State(initialValue: ClosetViewModel(modelContext: modelContext))
         _purchaseCheckViewModel = State(initialValue: PurchaseCheckViewModel(modelContext: modelContext))
         _analysisViewModel = State(initialValue: AnalysisViewModel(modelContext: modelContext))
+        _profileViewModel = State(initialValue: ProfileViewModel(modelContext: modelContext))
     }
 
     var body: some View {
         if hasCompletedOnboarding {
-            TabBarShell(closetViewModel: closetViewModel, purchaseCheckViewModel: purchaseCheckViewModel, analysisViewModel: analysisViewModel)
+            TabBarShell(closetViewModel: closetViewModel, purchaseCheckViewModel: purchaseCheckViewModel, analysisViewModel: analysisViewModel, profileViewModel: profileViewModel, modelContext: modelContext)
                 .onAppear { closetViewModel.loadItems() }
         } else {
             OnboardingCoordinatorView(modelContext: modelContext, onCompleted: {

@@ -6,8 +6,11 @@ import SwiftData
 
 struct ClosetView: View {
     let viewModel: ClosetViewModel
-    
+    let profileViewModel: ProfileViewModel
+    let modelContext: ModelContext
+
     @State private var showAddPiece = false
+    @State private var showProfile = false
     
     private let horizontalPadding: CGFloat = 24
     private let gridSpacing: CGFloat = 8
@@ -69,6 +72,9 @@ struct ClosetView: View {
             AddPieceView(viewModel: viewModel)
         }
         .background(.backgroundCustom)
+        .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
+            ProfileView(viewModel: profileViewModel, modelContext: modelContext)
+        }
     }
     
     private var addPieceButton: some View {
@@ -85,13 +91,16 @@ struct ClosetView: View {
     
     private var profileButton: some View {
         Button {
-            // Abrir perfil futuramente
+            showProfile = true
         } label: {
-            Image(systemName: "person.fill")
+            Text(viewModel.profileInitials)
+                .font(Theme.Font.subheadline)
                 .foregroundStyle(Theme.Color.ink)
+                .frame(width: 44, height: 44)
+                .background(Theme.Color.accentBorder)
+                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+                .clipShape(Circle())
         }
-        .buttonStyle(.borderedProminent)
-        .tint(.pinkCustom)
         .accessibilityLabel("Profile")
     }
     
@@ -239,7 +248,7 @@ private func makePopulatedClosetPreview() -> some View {
     )
     
     let container = try! ModelContainer(
-        for: ClothingItem.self,
+        for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self,
         configurations: configuration
     )
     
@@ -278,9 +287,10 @@ private func makePopulatedClosetPreview() -> some View {
     let viewModel = ClosetViewModel(
         modelContext: context
     )
-    
+    let profileViewModel = ProfileViewModel(modelContext: context)
+
     return NavigationStack {
-        ClosetView(viewModel: viewModel)
+        ClosetView(viewModel: viewModel, profileViewModel: profileViewModel, modelContext: context)
     }
     .modelContainer(container)
 }
