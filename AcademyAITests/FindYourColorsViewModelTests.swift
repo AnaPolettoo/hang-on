@@ -69,4 +69,30 @@ struct FindYourColorsViewModelTests {
         let saved = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
         #expect(saved.isEmpty)
     }
+
+    @Test func processSelfieUpdatesExistingProfileInPlaceInsteadOfDuplicating() async throws {
+        let container = try ModelContainer(for: UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let existing = UserColorimetryProfile(
+            name: "Ana", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+            season: .winter, recommendedColors: [.icyBlue], avoidColors: [.golden]
+        )
+        context.insert(existing)
+        try context.save()
+        let existingID = existing.persistentModelID
+
+        let fullRegion = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let detector = FakeFaceRegionDetector(regionsToReturn: FaceRegions(skinRegion: fullRegion, eyeRegion: fullRegion, hairRegion: fullRegion))
+        let generator = FakePaletteExplanationGenerator()
+        let viewModel = FindYourColorsViewModel(regionDetector: detector, explanationGenerator: generator, modelContext: context)
+        let image = makeSolidColorImage(red: 180, green: 100, blue: 70) // warm tone
+
+        await viewModel.processSelfie(image, name: "Ana")
+
+        #expect(viewModel.errorMessage == nil)
+        let saved = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
+        #expect(saved.count == 1)
+        #expect(saved.first?.persistentModelID == existingID)
+        #expect(saved.first?.season != .winter)
+    }
 }

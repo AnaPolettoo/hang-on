@@ -44,16 +44,27 @@ final class FindYourColorsViewModel {
             let avoid = SeasonPalette.avoidColors(for: season)
             let explanation = try await explanationGenerator.generateExplanation(season: season, recommendedColors: recommended)
 
-            let profile = UserColorimetryProfile(
-                name: name,
-                skinToneSample: skin,
-                eyeColorSample: eye,
-                hairColorSample: hair,
-                season: season,
-                recommendedColors: recommended,
-                avoidColors: avoid
-            )
-            modelContext.insert(profile)
+            let existingProfile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
+            if let existingProfile {
+                existingProfile.name = name
+                existingProfile.skinToneSample = skin
+                existingProfile.eyeColorSample = eye
+                existingProfile.hairColorSample = hair
+                existingProfile.season = season
+                existingProfile.recommendedColors = recommended
+                existingProfile.avoidColors = avoid
+            } else {
+                let profile = UserColorimetryProfile(
+                    name: name,
+                    skinToneSample: skin,
+                    eyeColorSample: eye,
+                    hairColorSample: hair,
+                    season: season,
+                    recommendedColors: recommended,
+                    avoidColors: avoid
+                )
+                modelContext.insert(profile)
+            }
             try modelContext.save()
 
             result = (season, recommended, avoid, explanation)
