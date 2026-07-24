@@ -56,17 +56,19 @@ private struct RootView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var closetViewModel: ClosetViewModel
     @State private var purchaseCheckViewModel: PurchaseCheckViewModel
+    @State private var analysisViewModel: AnalysisViewModel
     private let modelContext: ModelContext
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         _closetViewModel = State(initialValue: ClosetViewModel(modelContext: modelContext))
         _purchaseCheckViewModel = State(initialValue: PurchaseCheckViewModel(modelContext: modelContext))
+        _analysisViewModel = State(initialValue: AnalysisViewModel(modelContext: modelContext))
     }
 
     var body: some View {
         if hasCompletedOnboarding {
-            TabBarShell(closetViewModel: closetViewModel, purchaseCheckViewModel: purchaseCheckViewModel)
+            TabBarShell(closetViewModel: closetViewModel, purchaseCheckViewModel: purchaseCheckViewModel, analysisViewModel: analysisViewModel)
                 .onAppear { closetViewModel.loadItems() }
         } else {
             OnboardingCoordinatorView(modelContext: modelContext, onCompleted: {

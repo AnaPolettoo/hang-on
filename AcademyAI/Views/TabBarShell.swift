@@ -3,6 +3,7 @@ import SwiftUI
 struct TabBarShell: View {
     let closetViewModel: ClosetViewModel
     let purchaseCheckViewModel: PurchaseCheckViewModel
+    let analysisViewModel: AnalysisViewModel
 
     @State private var selectedTab: AppTab = .closet
 
@@ -15,7 +16,7 @@ struct TabBarShell: View {
             }
             Tab(AppTab.analysis.title, image: AppTab.analysis.iconName, value: AppTab.analysis) {
                 NavigationStack {
-                    ComingSoonView(title: AppTab.analysis.title)
+                    AnalysisView(viewModel: analysisViewModel)
                 }
             }
             Tab(AppTab.closet.title, image: AppTab.closet.iconName, value: AppTab.closet) {
