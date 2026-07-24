@@ -44,7 +44,7 @@ final class FindYourColorsViewModel {
             let avoid = SeasonPalette.avoidColors(for: season)
             let explanation = try await explanationGenerator.generateExplanation(season: season, recommendedColors: recommended)
 
-            let existingProfile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
+            let existingProfile = try modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
             if let existingProfile {
                 existingProfile.name = name
                 existingProfile.skinToneSample = skin
