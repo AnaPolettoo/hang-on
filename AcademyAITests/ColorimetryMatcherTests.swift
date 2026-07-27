@@ -25,11 +25,12 @@ struct ColorimetryMatcherTests {
             recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
             avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
-        // A clear medium blue: squared-distance to avoid's .slate (~0.0425) is far
-        // below the distance to recommended's nearest color, .mauve (~0.263) — not
-        // ambiguous the way `.icyBlue` is (which sits closer to `.beige`, a light
-        // neutral, than to any autumn avoid color).
-        let coolBlue = ClosetColor(red: 0.35, green: 0.45, blue: 0.75)
+        // A light, pastel cool blue: squared-distance to avoid's .powderBlue (~0.015)
+        // is far below the distance to recommended's nearest color, .sage (~0.142) —
+        // not ambiguous the way a *dark* blue would be (RGB distance conflates
+        // darkness with hue, so a navy reads deceptively close to dark recommended
+        // colors like .forest purely because both are dark).
+        let coolBlue = ClosetColor(red: 0.60, green: 0.75, blue: 0.92)
         #expect(ColorimetryMatcher.matches(color: coolBlue, profile: profile) == false)
     }
 }
