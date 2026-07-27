@@ -36,6 +36,14 @@ struct SeasonPaletteTests {
         #expect(palette.contains(ClosetColor.camel))
         #expect(palette.contains(ClosetColor.golden))
     }
+
+    @Test func everyRecommendedColorAcrossEverySeasonHasADisplayName() {
+        for season in Season.allCases {
+            for color in SeasonPalette.recommendedColors(for: season) {
+                #expect(SeasonPalette.displayName(for: color) != "Color", "missing display name for a color used by \(season)")
+            }
+        }
+    }
 }
 
 private extension ClosetColor {
