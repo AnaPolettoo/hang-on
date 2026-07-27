@@ -10,13 +10,8 @@ import SwiftData
 
 @main
 struct AcademyAIApp: App {
-    let modelContainer: ModelContainer = {
-        do {
-            return try ModelContainer(for: UserColorimetryProfile.self, ClothingItem.self, PurchaseCheck.self)
-        } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
-        }
-    }()
+    // Shared with the App Intents, which read the same store without the app's UI.
+    let modelContainer = AppModelContainer.shared
 
     init() {
         let appearance = UINavigationBarAppearance()
