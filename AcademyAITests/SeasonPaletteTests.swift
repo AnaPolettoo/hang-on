@@ -8,19 +8,36 @@ struct SeasonPaletteTests {
         }
     }
 
-    @Test func avoidColorsMatchOppositeSeasonRecommended() {
+    @Test func everySeasonHasFourAvoidColors() {
         for season in Season.allCases {
-            let avoid = SeasonPalette.avoidColors(for: season)
-            let oppositeRecommended = SeasonPalette.recommendedColors(for: season.opposite)
-            #expect(avoid == oppositeRecommended)
+            #expect(SeasonPalette.avoidColors(for: season).count == 4)
         }
     }
 
-    @Test func autumnPaletteMatchesProductPersona() {
-        let autumn = SeasonPalette.recommendedColors(for: .autumn)
-        #expect(autumn.contains(ClosetColor.lime))
-        #expect(autumn.contains(ClosetColor.wine))
-        #expect(autumn.contains(ClosetColor.beige))
-        #expect(autumn.contains(ClosetColor.mauve))
+    @Test func recommendedAndAvoidNeverOverlap() {
+        for season in Season.allCases {
+            let recommended = Set(SeasonPalette.recommendedColors(for: season).map(\.key))
+            let avoid = Set(SeasonPalette.avoidColors(for: season).map(\.key))
+            #expect(recommended.isDisjoint(with: avoid))
+        }
     }
+
+    @Test func everySeasonHasItsOwnRecommendedPalette() {
+        let palettes = Season.allCases.map { season in
+            Set(SeasonPalette.recommendedColors(for: season).map(\.key))
+        }
+        #expect(Set(palettes).count == Season.allCases.count)
+    }
+
+    @Test func warmAutumnPaletteMatchesProductPersona() {
+        let palette = SeasonPalette.recommendedColors(for: .warmAutumn)
+        #expect(palette.contains(ClosetColor.rust))
+        #expect(palette.contains(ClosetColor.olive))
+        #expect(palette.contains(ClosetColor.camel))
+        #expect(palette.contains(ClosetColor.golden))
+    }
+}
+
+private extension ClosetColor {
+    var key: String { "\(red)-\(green)-\(blue)" }
 }

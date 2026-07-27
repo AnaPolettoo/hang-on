@@ -10,7 +10,29 @@ private struct FakeFaceRegionDetector: FaceRegionDetecting {
 
 private struct FakePaletteExplanationGenerator: PaletteExplanationGenerating {
     var stubbedText = "You look great in warm, earthy tones."
-    func generateExplanation(season: Season, recommendedColors: [ClosetColor]) async throws -> String { stubbedText }
+    func generateExplanation(
+        season: Season,
+        axes: ColorimetryAxes,
+        recommendedColors: [ClosetColor],
+        avoidColors: [ClosetColor]
+    ) async throws -> String { stubbedText }
+}
+
+@MainActor
+private final class RecordingPaletteExplanationGenerator: PaletteExplanationGenerating {
+    var receivedAxes: ColorimetryAxes?
+    var receivedAvoidColors: [ClosetColor] = []
+
+    func generateExplanation(
+        season: Season,
+        axes: ColorimetryAxes,
+        recommendedColors: [ClosetColor],
+        avoidColors: [ClosetColor]
+    ) async throws -> String {
+        receivedAxes = axes
+        receivedAvoidColors = avoidColors
+        return "stub"
+    }
 }
 
 private func makeSolidColorImage(red: UInt8, green: UInt8, blue: UInt8, size: Int = 8) -> CGImage {
@@ -75,7 +97,7 @@ struct FindYourColorsViewModelTests {
         let context = ModelContext(container)
         let existing = UserColorimetryProfile(
             name: "Ana", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .winter, recommendedColors: [.icyBlue], avoidColors: [.golden]
+            season: .lightSpring, recommendedColors: [.icyBlue], avoidColors: [.golden]
         )
         context.insert(existing)
         try context.save()
@@ -93,6 +115,25 @@ struct FindYourColorsViewModelTests {
         let saved = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
         #expect(saved.count == 1)
         #expect(saved.first?.persistentModelID == existingID)
-        #expect(saved.first?.season != .winter)
+        #expect(saved.first?.season != .lightSpring)
+    }
+
+    @Test func viewModelPassesAxesAndAvoidColorsToTheExplanationGenerator() async throws {
+        let container = try ModelContainer(for: UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let fullRegion = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let detector = FakeFaceRegionDetector(regionsToReturn: FaceRegions(skinRegion: fullRegion, eyeRegion: fullRegion, hairRegion: fullRegion))
+        let recorder = RecordingPaletteExplanationGenerator()
+        let viewModel = FindYourColorsViewModel(regionDetector: detector, explanationGenerator: recorder, modelContext: context)
+
+        await viewModel.processSelfie(makeSolidColorImage(red: 180, green: 100, blue: 70), name: nil)
+
+        #expect(viewModel.errorMessage == nil)
+        // Os eixos entregues ao gerador têm que ser os mesmos que produziram a
+        // subestação — não uma segunda derivação divergente.
+        let season = try #require(viewModel.result?.season)
+        let axes = try #require(recorder.receivedAxes)
+        #expect(SeasonClassifier.season(for: axes) == season)
+        #expect(recorder.receivedAvoidColors == SeasonPalette.avoidColors(for: season))
     }
 }

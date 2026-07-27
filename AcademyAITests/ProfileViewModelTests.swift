@@ -11,7 +11,7 @@ struct ProfileViewModelTests {
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn, recommendedColors: [.lime, .wine, .beige, .mauve, .coral], avoidColors: []
+            season: .warmAutumn, recommendedColors: [.lime, .wine, .beige, .mauve, .coral], avoidColors: []
         )
         context.insert(profile)
         try context.save()
@@ -19,7 +19,7 @@ struct ProfileViewModelTests {
         let viewModel = ProfileViewModel(modelContext: context)
 
         #expect(viewModel.profileName == "Ana Carolina")
-        #expect(viewModel.season == .autumn)
+        #expect(viewModel.season == .warmAutumn)
         #expect(viewModel.paletteSwatches == [.lime, .wine, .beige, .mauve])
     }
 
@@ -42,7 +42,7 @@ struct ProfileViewModelTests {
         let context = ModelContext(container)
         context.insert(UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn, recommendedColors: [], avoidColors: []
+            season: .warmAutumn, recommendedColors: [], avoidColors: []
         ))
         try context.save()
 
@@ -66,7 +66,7 @@ struct ProfileViewModelTests {
 
         context.insert(UserColorimetryProfile(
             name: "Ana", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .winter, recommendedColors: [], avoidColors: []
+            season: .coolWinter, recommendedColors: [], avoidColors: []
         ))
         try context.save()
         viewModel.loadProfile()

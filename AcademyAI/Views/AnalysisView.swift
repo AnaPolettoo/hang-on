@@ -263,7 +263,7 @@ private func makePopulatedAnalysisPreview() -> some View {
     }
     context.insert(UserColorimetryProfile(
         name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-        season: .autumn, recommendedColors: [.lime, .wine, .beige], avoidColors: []
+        season: .warmAutumn, recommendedColors: [.lime, .wine, .beige], avoidColors: []
     ))
 
     let viewModel = AnalysisViewModel(modelContext: context)

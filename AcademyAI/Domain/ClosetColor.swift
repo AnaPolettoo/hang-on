@@ -32,4 +32,21 @@ extension ClosetColor {
     static let emerald = ClosetColor(red: 0.0, green: 0.5, blue: 0.4)
     static let trueRed = ClosetColor(red: 0.80, green: 0.05, blue: 0.10)
     static let deepBlack = ClosetColor(red: 0.05, green: 0.05, blue: 0.05)
+
+    // Added for the 12-subseason palettes: the four-per-season set above only
+    // covered the coarse seasons.
+    static let warmIvory = ClosetColor(red: 0.97, green: 0.93, blue: 0.84)
+    static let brightAqua = ClosetColor(red: 0.20, green: 0.85, blue: 0.82)
+    static let rust = ClosetColor(red: 0.65, green: 0.30, blue: 0.12)
+    static let olive = ClosetColor(red: 0.44, green: 0.44, blue: 0.20)
+    static let camel = ClosetColor(red: 0.76, green: 0.60, blue: 0.38)
+    static let sage = ClosetColor(red: 0.62, green: 0.68, blue: 0.55)
+    static let mustard = ClosetColor(red: 0.83, green: 0.69, blue: 0.22)
+    static let forest = ClosetColor(red: 0.10, green: 0.32, blue: 0.20)
+    static let dustyRose = ClosetColor(red: 0.80, green: 0.60, blue: 0.60)
+    static let plum = ClosetColor(red: 0.45, green: 0.25, blue: 0.42)
+    static let powderBlue = ClosetColor(red: 0.70, green: 0.82, blue: 0.90)
+    static let royalBlue = ClosetColor(red: 0.15, green: 0.28, blue: 0.68)
+    static let charcoal = ClosetColor(red: 0.20, green: 0.20, blue: 0.22)
+    static let hotPink = ClosetColor(red: 0.92, green: 0.25, blue: 0.55)
 }

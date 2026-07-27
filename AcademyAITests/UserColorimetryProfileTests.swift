@@ -15,9 +15,9 @@ struct UserColorimetryProfileTests {
             skinToneSample: ClosetColor(red: 0.7, green: 0.5, blue: 0.4),
             eyeColorSample: ClosetColor(red: 0.3, green: 0.2, blue: 0.1),
             hairColorSample: ClosetColor(red: 0.15, green: 0.08, blue: 0.05),
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         context.insert(profile)
         try context.save()
@@ -25,7 +25,7 @@ struct UserColorimetryProfileTests {
         let fetched = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
         #expect(fetched.count == 1)
         #expect(fetched.first?.name == "Ana")
-        #expect(fetched.first?.season == .autumn)
+        #expect(fetched.first?.season == .warmAutumn)
         #expect(fetched.first?.recommendedColors.count == 4)
     }
 }

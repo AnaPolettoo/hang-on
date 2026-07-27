@@ -39,10 +39,16 @@ final class FindYourColorsViewModel {
             let eye = FaceColorSampler.averageColor(in: image, region: regions.eyeRegion)
             let hair = FaceColorSampler.averageColor(in: image, region: regions.hairRegion)
 
-            let season = SeasonClassifier.classify(skinTone: skin, eyeColor: eye, hairColor: hair)
+            let axes = ColorimetryAxes.from(skinTone: skin, eyeColor: eye, hairColor: hair)
+            let season = SeasonClassifier.season(for: axes)
             let recommended = SeasonPalette.recommendedColors(for: season)
             let avoid = SeasonPalette.avoidColors(for: season)
-            let explanation = try await explanationGenerator.generateExplanation(season: season, recommendedColors: recommended)
+            let explanation = try await explanationGenerator.generateExplanation(
+                season: season,
+                axes: axes,
+                recommendedColors: recommended,
+                avoidColors: avoid
+            )
 
             let existingProfile = try modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
             if let existingProfile {

@@ -10,9 +10,9 @@ struct ColorimetryMatcherTests {
         let profile = UserColorimetryProfile(
             name: nil,
             skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         #expect(ColorimetryMatcher.matches(color: .lime, profile: profile) == true)
     }
@@ -21,9 +21,9 @@ struct ColorimetryMatcherTests {
         let profile = UserColorimetryProfile(
             name: nil,
             skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         // A clear medium blue: squared-distance to avoid's .slate (~0.0425) is far
         // below the distance to recommended's nearest color, .mauve (~0.263) — not

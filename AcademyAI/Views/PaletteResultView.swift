@@ -10,7 +10,7 @@ struct PaletteResultView: View {
             Theme.Color.cream.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 16) {
-                Text(seasonTitle)
+                Text(viewModel.season.displayName)
                     .font(Theme.Font.largeTitle)
                     .foregroundStyle(Theme.Color.ink)
                     .titleUnderline(offset: 4)
@@ -43,15 +43,6 @@ struct PaletteResultView: View {
         }
     }
 
-    private var seasonTitle: String {
-        switch viewModel.season {
-        case .spring: return "Warm Spring"
-        case .summer: return "Cool Summer"
-        case .autumn: return "Warm Autumn"
-        case .winter: return "Cool Winter"
-        }
-    }
-
     private func colorName(for color: ClosetColor) -> String {
         switch color {
         case .lime: return "Lime — everyday base"
@@ -70,6 +61,20 @@ struct PaletteResultView: View {
         case .emerald: return "Emerald"
         case .trueRed: return "True Red"
         case .deepBlack: return "Black"
+        case .warmIvory: return "Warm Ivory"
+        case .brightAqua: return "Bright Aqua"
+        case .rust: return "Rust"
+        case .olive: return "Olive"
+        case .camel: return "Camel"
+        case .sage: return "Sage"
+        case .mustard: return "Mustard"
+        case .forest: return "Forest"
+        case .dustyRose: return "Dusty Rose"
+        case .plum: return "Plum"
+        case .powderBlue: return "Powder Blue"
+        case .royalBlue: return "Royal Blue"
+        case .charcoal: return "Charcoal"
+        case .hotPink: return "Hot Pink"
         default: return "Color"
         }
     }

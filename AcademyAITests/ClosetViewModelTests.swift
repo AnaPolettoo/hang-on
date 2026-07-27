@@ -79,9 +79,9 @@ struct ClosetViewModelTests {
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: nil, skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         context.insert(profile)
         try context.save()
@@ -128,9 +128,9 @@ struct ClosetViewModelTests {
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         context.insert(profile)
         try context.save()
@@ -155,9 +155,9 @@ struct ClosetViewModelTests {
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .autumn,
-            recommendedColors: SeasonPalette.recommendedColors(for: .autumn),
-            avoidColors: SeasonPalette.avoidColors(for: .autumn)
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
         )
         context.insert(profile)
         try context.save()
