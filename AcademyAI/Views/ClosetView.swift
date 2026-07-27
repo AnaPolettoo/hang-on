@@ -11,7 +11,8 @@ struct ClosetView: View {
 
     @State private var showAddPiece = false
     @State private var showProfile = false
-    
+    @State private var pendingDeleteItem: ClothingItem?
+
     private let horizontalPadding: CGFloat = 24
     private let gridSpacing: CGFloat = 8
     
@@ -76,6 +77,26 @@ struct ClosetView: View {
         .background(.backgroundCustom)
         .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
             ProfileView(viewModel: profileViewModel, modelContext: modelContext)
+        }
+        .confirmationDialog(
+            pendingDeleteItem.map {
+                "Delete \(ClothingColorSwatch.nearest(to: $0.dominantColor).displayName) \($0.category.displayNoun)?"
+            } ?? "Delete this piece?",
+            isPresented: Binding(
+                get: { pendingDeleteItem != nil },
+                set: { if !$0 { pendingDeleteItem = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                if let item = pendingDeleteItem {
+                    viewModel.deleteItem(item)
+                }
+                pendingDeleteItem = nil
+            }
+            Button("Cancel", role: .cancel) {
+                pendingDeleteItem = nil
+            }
         }
     }
     
@@ -234,6 +255,11 @@ struct ClosetView: View {
                 Theme.Color.ink.opacity(0.18),
                 lineWidth: 1
             )
+        }
+        .contextMenu {
+            Button("Delete", systemImage: "trash", role: .destructive) {
+                pendingDeleteItem = item
+            }
         }
     }
 }
