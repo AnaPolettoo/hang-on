@@ -6,7 +6,7 @@ extension Notification.Name {
     static let checkPurchaseIntentTriggered = Notification.Name("checkPurchaseIntentTriggered")
 }
 
-enum ClosetIntentError: Error, CustomLocalizedStringResourceConvertible {
+enum ClosetIntentError: Error, Equatable, CustomLocalizedStringResourceConvertible {
     case noColorimetryProfile
     case emptyCloset
 
@@ -37,6 +37,63 @@ struct CheckPurchaseIntent: AppIntent {
     }
 }
 
+/// What the intents actually compute, split out from the `AppIntent` shells so
+/// it can be exercised against an in-memory store — an `AppIntent` is built by
+/// the system and can't be handed a test container.
+enum IntentAnswers {
+    struct Palette: Equatable {
+        /// Returned as the Shortcut's value, so a shortcut can branch on it.
+        let season: String
+        /// What the person hears.
+        let spoken: String
+    }
+
+    static func palette(context: ModelContext) throws -> Palette {
+        guard let profile = try context.fetch(FetchDescriptor<UserColorimetryProfile>()).first else {
+            throw ClosetIntentError.noColorimetryProfile
+        }
+        let season = profile.season.displayName
+        let colors = profile.recommendedColors
+            .map { ClothingColorSwatch.nearest(to: $0).displayName.lowercased() }
+        return Palette(
+            season: season,
+            spoken: colors.isEmpty
+                ? "You're a \(season)."
+                : "You're a \(season). Your colors are \(listPhrase(colors))."
+        )
+    }
+
+    struct ClosetSummary: Equatable {
+        let pieces: Int
+        let spoken: String
+    }
+
+    static func closetSummary(context: ModelContext) throws -> ClosetSummary {
+        let items = try context.fetch(FetchDescriptor<ClothingItem>())
+        guard !items.isEmpty else { throw ClosetIntentError.emptyCloset }
+
+        let pieces = items.count
+        let noun = pieces == 1 ? "piece" : "pieces"
+
+        // `nil` when nothing has been scored against a palette yet (colorimetry
+        // not done) — say the count alone rather than inventing a percentage.
+        guard let inPalette = WardrobeAnalyzer.percentInPalette(items: items) else {
+            return ClosetSummary(pieces: pieces, spoken: "You have \(pieces) \(noun) in your closet.")
+        }
+        let percent = Int((inPalette * 100).rounded())
+        return ClosetSummary(
+            pieces: pieces,
+            spoken: "You have \(pieces) \(noun), and \(percent) percent of them are in your palette."
+        )
+    }
+
+    static func listPhrase(_ items: [String]) -> String {
+        guard let last = items.last else { return "" }
+        guard items.count > 1 else { return last }
+        return items.dropLast().joined(separator: ", ") + " and " + last
+    }
+}
+
 /// Answers in place — no app launch. That's what makes it usable as a step
 /// inside a larger Shortcut, instead of only as a way to open the app.
 struct MyPaletteIntent: AppIntent {
@@ -49,27 +106,8 @@ struct MyPaletteIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
-        let context = ModelContext(AppModelContainer.shared)
-        guard let profile = try context.fetch(FetchDescriptor<UserColorimetryProfile>()).first else {
-            throw ClosetIntentError.noColorimetryProfile
-        }
-
-        let season = profile.season.displayName
-        let colors = profile.recommendedColors
-            .map { ClothingColorSwatch.nearest(to: $0).displayName.lowercased() }
-        let spoken = colors.isEmpty
-            ? "You're a \(season)."
-            : "You're a \(season). Your colors are \(Self.listPhrase(colors))."
-
-        // The returned value is the subseason alone, so a Shortcut can branch on
-        // it; the dialog is the part a person hears.
-        return .result(value: season, dialog: IntentDialog(stringLiteral: spoken))
-    }
-
-    static func listPhrase(_ items: [String]) -> String {
-        guard let last = items.last else { return "" }
-        guard items.count > 1 else { return last }
-        return items.dropLast().joined(separator: ", ") + " and " + last
+        let answer = try IntentAnswers.palette(context: ModelContext(AppModelContainer.shared))
+        return .result(value: answer.season, dialog: IntentDialog(stringLiteral: answer.spoken))
     }
 }
 
@@ -85,27 +123,8 @@ struct WardrobeSummaryIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<Int> & ProvidesDialog {
-        let context = ModelContext(AppModelContainer.shared)
-        let items = try context.fetch(FetchDescriptor<ClothingItem>())
-        guard !items.isEmpty else { throw ClosetIntentError.emptyCloset }
-
-        let pieces = items.count
-        let noun = pieces == 1 ? "piece" : "pieces"
-
-        // `nil` when nothing has been scored against a palette yet (colorimetry
-        // not done) — say the count alone rather than inventing a percentage.
-        guard let inPalette = WardrobeAnalyzer.percentInPalette(items: items) else {
-            return .result(
-                value: pieces,
-                dialog: IntentDialog(stringLiteral: "You have \(pieces) \(noun) in your closet.")
-            )
-        }
-
-        let percent = Int((inPalette * 100).rounded())
-        return .result(
-            value: pieces,
-            dialog: IntentDialog(stringLiteral: "You have \(pieces) \(noun), and \(percent) percent of them are in your palette.")
-        )
+        let answer = try IntentAnswers.closetSummary(context: ModelContext(AppModelContainer.shared))
+        return .result(value: answer.pieces, dialog: IntentDialog(stringLiteral: answer.spoken))
     }
 }
 
