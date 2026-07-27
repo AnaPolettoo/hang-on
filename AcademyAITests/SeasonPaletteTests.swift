@@ -2,9 +2,9 @@ import Testing
 @testable import AcademyAI
 
 struct SeasonPaletteTests {
-    @Test func everySeasonHasFourRecommendedColors() {
+    @Test func everySeasonHasEightRecommendedColors() {
         for season in Season.allCases {
-            #expect(SeasonPalette.recommendedColors(for: season).count == 4)
+            #expect(SeasonPalette.recommendedColors(for: season).count == 8)
         }
     }
 

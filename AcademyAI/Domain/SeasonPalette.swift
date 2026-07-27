@@ -3,21 +3,21 @@ import Foundation
 enum SeasonPalette {
     static func recommendedColors(for season: Season) -> [ClosetColor] {
         switch season {
-        case .warmSpring: return [.coral, .golden, .turquoise, .warmIvory]
-        case .lightSpring: return [.peach, .warmIvory, .coral, .brightAqua]
-        case .clearSpring: return [.turquoise, .trueRed, .brightAqua, .golden]
+        case .warmSpring: return [.coral, .golden, .turquoise, .warmIvory, .brightAqua, .lime, .mustard, .peach]
+        case .lightSpring: return [.peach, .warmIvory, .coral, .brightAqua, .golden, .turquoise, .lime, .camel]
+        case .clearSpring: return [.turquoise, .trueRed, .brightAqua, .golden, .coral, .lime, .hotPink, .warmIvory]
 
-        case .coolSummer: return [.softBlue, .dustyRose, .plum, .slate]
-        case .lightSummer: return [.powderBlue, .dustyRose, .lavender, .roseGray]
-        case .softSummer: return [.roseGray, .sage, .slate, .lavender]
+        case .coolSummer: return [.softBlue, .dustyRose, .plum, .slate, .lavender, .roseGray, .icyBlue, .emerald]
+        case .lightSummer: return [.powderBlue, .dustyRose, .lavender, .roseGray, .softBlue, .icyBlue, .mauve, .slate]
+        case .softSummer: return [.roseGray, .sage, .slate, .lavender, .dustyRose, .plum, .powderBlue, .mauve]
 
-        case .warmAutumn: return [.rust, .olive, .camel, .golden]
-        case .softAutumn: return [.camel, .sage, .mauve, .beige]
-        case .deepAutumn: return [.rust, .forest, .wine, .mustard]
+        case .warmAutumn: return [.rust, .olive, .camel, .golden, .mustard, .forest, .sage, .warmIvory]
+        case .softAutumn: return [.camel, .sage, .mauve, .beige, .olive, .dustyRose, .forest, .rust]
+        case .deepAutumn: return [.rust, .forest, .wine, .mustard, .olive, .camel, .charcoal, .golden]
 
-        case .coolWinter: return [.trueRed, .royalBlue, .emerald, .deepBlack]
-        case .clearWinter: return [.trueRed, .brightAqua, .hotPink, .deepBlack]
-        case .deepWinter: return [.wine, .forest, .royalBlue, .charcoal]
+        case .coolWinter: return [.trueRed, .royalBlue, .emerald, .deepBlack, .charcoal, .plum, .slate, .icyBlue]
+        case .clearWinter: return [.trueRed, .brightAqua, .hotPink, .deepBlack, .royalBlue, .emerald, .icyBlue, .charcoal]
+        case .deepWinter: return [.wine, .forest, .royalBlue, .charcoal, .plum, .deepBlack, .slate, .emerald]
         }
     }
 

@@ -73,7 +73,7 @@ struct FindYourColorsViewModelTests {
         let saved = try context.fetch(FetchDescriptor<UserColorimetryProfile>())
         #expect(saved.count == 1)
         #expect(saved.first?.name == "Ana")
-        #expect(saved.first?.recommendedColors.count == 4)
+        #expect(saved.first?.recommendedColors.count == 8)
     }
 
     @Test func processSelfieSetsErrorWhenNoFaceDetected() async throws {

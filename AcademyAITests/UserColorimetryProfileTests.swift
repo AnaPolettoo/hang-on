@@ -26,6 +26,6 @@ struct UserColorimetryProfileTests {
         #expect(fetched.count == 1)
         #expect(fetched.first?.name == "Ana")
         #expect(fetched.first?.season == .warmAutumn)
-        #expect(fetched.first?.recommendedColors.count == 4)
+        #expect(fetched.first?.recommendedColors.count == 8)
     }
 }
