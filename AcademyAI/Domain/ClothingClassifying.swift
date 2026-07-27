@@ -11,11 +11,20 @@ struct ClothingClassification: Equatable {
     /// (uncontrolled background/lighting) without re-running Vision. Defaults to 1
     /// so existing call sites/tests that don't care about confidence are unaffected.
     let confidence: Float
+    /// True when no single color covers enough of the garment. Shown to the person;
+    /// never used to decide palette match or wardrobe gap.
+    let isPatterned: Bool
 
-    init(category: ClothingCategory, dominantColor: ClosetColor, confidence: Float = 1.0) {
+    init(
+        category: ClothingCategory,
+        dominantColor: ClosetColor,
+        confidence: Float = 1.0,
+        isPatterned: Bool = false
+    ) {
         self.category = category
         self.dominantColor = dominantColor
         self.confidence = confidence
+        self.isPatterned = isPatterned
     }
 }
 
@@ -65,14 +74,19 @@ struct VisionClothingClassifier: ClothingClassifying {
 
         // With a foreground mask, sample color only over the garment's pixels.
         // Without one, fall back to the saliency bounding box (previous behavior).
-        let dominantColor: ClosetColor
+        let colorSample: GarmentColorSample
         if let mask {
-            dominantColor = FaceColorSampler.averageColor(in: image, mask: mask)
+            colorSample = GarmentColorSampler.sample(in: image, mask: mask)
         } else {
             let region = try? regionDetector.detectRegion(in: image, orientation: orientation)
-            dominantColor = FaceColorSampler.averageColor(in: image, region: region ?? Self.fullImageRegion)
+            colorSample = GarmentColorSampler.sample(in: image, region: region ?? Self.fullImageRegion)
         }
 
-        return ClothingClassification(category: category, dominantColor: dominantColor, confidence: confidence)
+        return ClothingClassification(
+            category: category,
+            dominantColor: colorSample.dominantColor,
+            confidence: confidence,
+            isPatterned: colorSample.isPatterned
+        )
     }
 }
