@@ -61,9 +61,11 @@ struct VisionClothingClassifierTests {
         #expect(result.dominantColor.green < 0.05)
     }
 
-    // Skipped in sandboxed/virtualized CI environments without Neural Engine/GPU passthrough
-    // (see the file's other tests for the same known limitation) — run on a real device or a
-    // GPU-accelerated Simulator.
+    // Skipped in sandboxed/virtualized CI environments without Neural Engine/GPU
+    // passthrough: VNCoreMLRequest over GarmentCategoryClassifier throws
+    // "Could not create inference context" (Domain com.apple.Vision Code=9)
+    // before this can even assert. Run on a real device or a properly
+    // GPU-accelerated Simulator to verify.
     @Test func classifyReportsTopConfidenceInValidRange() async throws {
         let classifier = VisionClothingClassifier()
         let image = makeSolidColorImage(red: 200, green: 40, blue: 40)
