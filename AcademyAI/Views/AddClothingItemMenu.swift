@@ -75,7 +75,12 @@ struct AddClothingItemMenu: View {
             }
             let colorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
             let category = processed?.classification.category ?? .other
-            viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
+            viewModel.saveItem(
+                imageData: imageData,
+                category: category,
+                colorSwatch: colorSwatch,
+                isPatterned: processed?.classification.isPatterned ?? false
+            )
             if viewModel.errorMessage == nil { onAdded() }
         }
     }

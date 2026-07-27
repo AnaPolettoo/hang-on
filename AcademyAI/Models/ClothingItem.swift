@@ -10,6 +10,7 @@ final class ClothingItem {
     var category: ClothingCategory
     private var dominantColorData: Data
     var matchesColorimetry: Bool?
+    var isPatterned: Bool = false
     var acquiredViaPurchaseCheck: Bool
     var linkedPurchaseCheckId: UUID?
     var dateAdded: Date
@@ -24,6 +25,7 @@ final class ClothingItem {
         category: ClothingCategory,
         dominantColor: ClosetColor,
         matchesColorimetry: Bool?,
+        isPatterned: Bool = false,
         acquiredViaPurchaseCheck: Bool = false,
         linkedPurchaseCheckId: UUID? = nil,
         dateAdded: Date = .now
@@ -32,6 +34,7 @@ final class ClothingItem {
         self.category = category
         self.dominantColorData = Self.encodeColor(dominantColor)
         self.matchesColorimetry = matchesColorimetry
+        self.isPatterned = isPatterned
         self.acquiredViaPurchaseCheck = acquiredViaPurchaseCheck
         self.linkedPurchaseCheckId = linkedPurchaseCheckId
         self.dateAdded = dateAdded
