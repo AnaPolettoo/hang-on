@@ -1,10 +1,18 @@
 import Foundation
 
-/// The 12 named colors offered on the Add-Piece review screen (Figma node
-/// 2091:10110), so a person corrects Vision's detected color to one of a
-/// small, recognizable set instead of an arbitrary continuous RGB value.
+/// The named colors offered on the Add-Piece review screen, so a person corrects
+/// the detected color to one of a small, recognizable set instead of an arbitrary
+/// continuous RGB value.
+///
+/// The first twelve come from the Figma file (node 2091:10110). The last five were
+/// added after measuring real garment photos: the original set had no light blue,
+/// green, orange or purple, so a sky-blue shirt resolved to `grey` and baby-blue
+/// jeans to `cream`. Across 200 pieces, 10% sat more than 0.25 (RGB distance) from
+/// any swatch, and the distribution was lopsided — `navy` absorbed a quarter of
+/// everything while `red` and `yellow` took one piece each.
 enum ClothingColorSwatch: String, CaseIterable {
     case cream, brown, indigo, navy, white, red, taupe, grey, yellow, teal, pink, black
+    case lightBlue, green, olive, orange, purple
 
     var displayName: String {
         switch self {
@@ -20,6 +28,11 @@ enum ClothingColorSwatch: String, CaseIterable {
         case .teal: return "Teal"
         case .pink: return "Pink"
         case .black: return "Black"
+        case .lightBlue: return "Light Blue"
+        case .green: return "Green"
+        case .olive: return "Olive"
+        case .orange: return "Orange"
+        case .purple: return "Purple"
         }
     }
 
@@ -38,6 +51,12 @@ enum ClothingColorSwatch: String, CaseIterable {
         case .teal: return ClosetColor(red: 0.165, green: 0.502, blue: 0.502)      // 2A8080
         case .pink: return ClosetColor(red: 0.910, green: 0.627, blue: 0.690)      // E8A0B0
         case .black: return ClosetColor(red: 0.102, green: 0.102, blue: 0.102)     // 1A1A1A
+        // Added after measuring real garment photos — see the type's doc comment.
+        case .lightBlue: return ClosetColor(red: 0.659, green: 0.784, blue: 0.878) // A8C8E0
+        case .green: return ClosetColor(red: 0.290, green: 0.486, blue: 0.306)     // 4A7C4E
+        case .olive: return ClosetColor(red: 0.420, green: 0.420, blue: 0.227)     // 6B6B3A
+        case .orange: return ClosetColor(red: 0.851, green: 0.447, blue: 0.173)    // D9722C
+        case .purple: return ClosetColor(red: 0.420, green: 0.306, blue: 0.620)    // 6B4E9E
         }
     }
 
@@ -45,17 +64,42 @@ enum ClothingColorSwatch: String, CaseIterable {
     /// so a piece in one of these is worth keeping even when it's off-palette.
     var isNeutral: Bool {
         switch self {
-        case .cream, .white, .black, .grey, .taupe, .navy, .brown: return true
-        case .indigo, .red, .yellow, .teal, .pink: return false
+        case .cream, .white, .black, .grey, .taupe, .navy, .brown, .olive: return true
+        case .indigo, .red, .yellow, .teal, .pink, .lightBlue, .green, .orange, .purple: return false
         }
     }
 
+    /// Nearest by CIELAB distance, not RGB. Euclidean distance in RGB weighs
+    /// lightness so heavily that it confuses "light" with "similar" — beige
+    /// resolved to `pink` and sky blue to `grey`, because both pairs are equally
+    /// bright. Lab separates lightness from hue the way the eye does.
     static func nearest(to color: ClosetColor) -> ClothingColorSwatch {
-        allCases.min { squaredDistance($0.color, color) < squaredDistance($1.color, color) }!
+        let target = lab(color)
+        return allCases.min {
+            squaredDistance(lab($0.color), target) < squaredDistance(lab($1.color), target)
+        }!
     }
 
-    private static func squaredDistance(_ a: ClosetColor, _ b: ClosetColor) -> Double {
-        let dr = a.red - b.red, dg = a.green - b.green, db = a.blue - b.blue
-        return dr * dr + dg * dg + db * db
+    private static func squaredDistance(_ a: (Double, Double, Double), _ b: (Double, Double, Double)) -> Double {
+        let d0 = a.0 - b.0, d1 = a.1 - b.1, d2 = a.2 - b.2
+        return d0 * d0 + d1 * d1 + d2 * d2
+    }
+
+    /// sRGB -> CIELAB, D65 white point.
+    private static func lab(_ color: ClosetColor) -> (Double, Double, Double) {
+        func linear(_ channel: Double) -> Double {
+            channel > 0.04045 ? pow((channel + 0.055) / 1.055, 2.4) : channel / 12.92
+        }
+        let r = linear(color.red), g = linear(color.green), b = linear(color.blue)
+
+        let x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047
+        let y = 0.2126 * r + 0.7152 * g + 0.0722 * b
+        let z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
+
+        func f(_ t: Double) -> Double {
+            t > 0.008856 ? pow(t, 1.0 / 3.0) : 7.787 * t + 16.0 / 116.0
+        }
+        let fx = f(x), fy = f(y), fz = f(z)
+        return (116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz))
     }
 }
