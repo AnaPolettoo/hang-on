@@ -147,4 +147,82 @@ struct ClosetViewModelTests {
 
         #expect(viewModel.items.map(\.category) == [.bottoms, .tops])
     }
+
+    @Test func deleteItemRemovesItFromStoreAndList() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+
+        viewModel.deleteItem(item)
+
+        #expect(viewModel.items.isEmpty)
+        #expect(try context.fetch(FetchDescriptor<ClothingItem>()).isEmpty)
+    }
+
+    @Test func deleteItemLeavesOtherItemsUntouched() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        viewModel.saveItem(imageData: Data([0x02]), category: .bottoms, colorSwatch: .navy)
+        let toDelete = try #require(viewModel.items.first { $0.category == .tops })
+
+        viewModel.deleteItem(toDelete)
+
+        #expect(viewModel.items.count == 1)
+        #expect(viewModel.items.first?.category == .bottoms)
+    }
+
+    @Test func deleteItemLeavesLinkedPurchaseCheckIntact() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let check = PurchaseCheck(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: true, fillsGap: nil, verdictText: "x", decision: .comprou)
+        context.insert(check)
+        let item = ClothingItem(
+            imageData: Data([0x01]), category: .tops, dominantColor: .lime, matchesColorimetry: true,
+            acquiredViaPurchaseCheck: true, linkedPurchaseCheckId: check.id
+        )
+        context.insert(item)
+        try context.save()
+        let viewModel = ClosetViewModel(modelContext: context)
+
+        viewModel.deleteItem(item)
+
+        #expect(try context.fetch(FetchDescriptor<PurchaseCheck>()).count == 1)
+        #expect(viewModel.items.isEmpty)
+    }
+
+    @Test func deleteItemRecalculatesPercentInPalette() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow) // no profile -> matchesColorimetry nil
+        let offPaletteItem = ClothingItem(imageData: Data([0x02]), category: .bottoms, dominantColor: .royalBlue, matchesColorimetry: false)
+        let onPaletteItem = ClothingItem(imageData: Data([0x03]), category: .shoes, dominantColor: .lime, matchesColorimetry: true)
+        context.insert(offPaletteItem)
+        context.insert(onPaletteItem)
+        try context.save()
+        viewModel.loadItems()
+        #expect(WardrobeAnalyzer.percentInPalette(items: viewModel.items) == 0.5)
+
+        viewModel.deleteItem(offPaletteItem)
+
+        #expect(WardrobeAnalyzer.percentInPalette(items: viewModel.items) == 1.0)
+    }
+
+    @Test func deleteItemClearsPriorErrorMessageOnSuccess() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(classifier: FailingClothingClassifier(), modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        _ = await viewModel.processPhoto(makeSolidColorImage(), orientation: .up) // leaves errorMessage != nil
+        #expect(viewModel.errorMessage != nil)
+
+        viewModel.deleteItem(item)
+
+        #expect(viewModel.errorMessage == nil)
+    }
 }
