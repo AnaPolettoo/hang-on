@@ -8,7 +8,8 @@ struct ColorimetryAxes: Equatable {
     let isWarm: Bool
     /// Overall depth, averaged across skin and hair.
     let isLight: Bool
-    /// Skin saturation: high reads as clear/vivid, low as soft/muted.
+    /// Skin saturation. Feeds the veredict text only — see `intensity` for why it
+    /// is not part of the band that picks the subseason.
     let chroma: Double
     /// Largest luminance gap among skin, eye and hair.
     let contrast: Double
@@ -23,13 +24,27 @@ struct ColorimetryAxes: Equatable {
     // isn't red land far outside the range and read as cool, which is correct.
     private static let warmHueRange = 20.0...70.0
     private static let lightnessThreshold = 0.55
-    private static let vividThreshold = 0.40
-    private static let mutedThreshold = 0.25
+    private static let vividThreshold = 0.35
+    private static let mutedThreshold = 0.22
 
-    /// Chroma and contrast pull in the same direction in real colorimetry: the
-    /// "clear/bright" types are high in both, the "soft/muted" types low in both.
+    /// Contrast alone, deliberately — `chroma` is kept for the veredict text but
+    /// stays out of this band.
+    ///
+    /// Folding chroma in here was measured against realistic skin tones and made
+    /// three subseasons unreachable (`lightSpring`, `warmAutumn`, `softAutumn`),
+    /// while deep skin collapsed onto `deepAutumn` alone. The reason is that
+    /// chroma and undertone are not independent: "warm" in RGB *means* golden —
+    /// green and blue well under red — which is high saturation by construction,
+    /// so warm skin measured 0.26-0.78 chroma against 0.18-0.37 for cool skin and
+    /// never landed in the muted band. Saturation also climbs with skin depth,
+    /// pushing deep skin to "vivid" regardless of the person's actual contrast.
+    ///
+    /// Contrast — the luminance spread across skin, eyes and hair — is what
+    /// actually separates clear/bright types from soft ones, and it doesn't track
+    /// undertone. With it alone, all twelve subseasons are reachable and every
+    /// skin tone can reach at least three.
     var intensity: Double {
-        (chroma + contrast) / 2
+        contrast
     }
 
     var band: IntensityBand {

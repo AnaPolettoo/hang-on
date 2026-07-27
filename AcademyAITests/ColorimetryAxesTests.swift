@@ -61,31 +61,38 @@ struct ColorimetryAxesTests {
         #expect(abs(axes.contrast - 0.378) < 0.005)
     }
 
-    @Test func bandSplitsIntensityIntoThree() {
-        let vivid = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.60, contrast: 0.40)
+    @Test func bandSplitsContrastIntoThree() {
+        let vivid = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.60, contrast: 0.50)
         #expect(vivid.band == .vivid)
 
-        let balanced = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.40, contrast: 0.24)
+        let balanced = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.40, contrast: 0.28)
         #expect(balanced.band == .balanced)
 
-        let muted = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.20, contrast: 0.18)
+        let muted = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.20, contrast: 0.10)
         #expect(muted.band == .muted)
+    }
+
+    // Croma ficou de fora da banda de propósito: ele acompanha o undertone
+    // (pele quente é dourada, logo mais saturada em RGB), e incluí-lo tornava
+    // três subestações inalcançáveis para pessoas reais.
+    @Test func bandIgnoresChroma() {
+        let lowChroma = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.05, contrast: 0.50)
+        let highChroma = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.95, contrast: 0.50)
+        #expect(lowChroma.band == highChroma.band)
     }
 
     // Fronteiras: `vivid` exige `>`, `muted` exige `<`, então os dois valores
     // de corte exatos pertencem à banda `balanced`.
-    @Test func intensityExactlyOnEitherThresholdIsBalanced() {
-        let atVividCut = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.40, contrast: 0.40)
-        #expect(atVividCut.intensity == 0.40)
+    @Test func contrastExactlyOnEitherThresholdIsBalanced() {
+        let atVividCut = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.40, contrast: 0.35)
         #expect(atVividCut.band == .balanced)
 
-        let atMutedCut = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.25, contrast: 0.25)
-        #expect(atMutedCut.intensity == 0.25)
+        let atMutedCut = ColorimetryAxes(isWarm: true, isLight: true, chroma: 0.25, contrast: 0.22)
         #expect(atMutedCut.band == .balanced)
     }
 
     @Test func plainLanguageSummaryHasNoNumbers() {
-        let axes = ColorimetryAxes(isWarm: true, isLight: false, chroma: 0.60, contrast: 0.40)
+        let axes = ColorimetryAxes(isWarm: true, isLight: false, chroma: 0.60, contrast: 0.50)
         let summary = axes.plainLanguageSummary
         #expect(summary.contains("warm"))
         #expect(summary.contains("deep"))
