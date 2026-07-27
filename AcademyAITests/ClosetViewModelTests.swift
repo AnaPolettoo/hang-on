@@ -108,6 +108,31 @@ struct ClosetViewModelTests {
         #expect(viewModel.items.first?.matchesColorimetry == nil)
     }
 
+    @Test func saveItemPersistsPatternFlag() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+
+        viewModel.saveItem(
+            imageData: Data([0x01]), category: .tops, colorSwatch: .yellow, isPatterned: true
+        )
+
+        let saved = try context.fetch(FetchDescriptor<ClothingItem>())
+        #expect(saved.count == 1)
+        #expect(saved.first?.isPatterned == true)
+    }
+
+    @Test func saveItemDefaultsToNotPatterned() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+
+        let saved = try context.fetch(FetchDescriptor<ClothingItem>())
+        #expect(saved.first?.isPatterned == false)
+    }
+
     @Test func loadItemsFetchesExistingItemsSortedByNewestFirst() throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)

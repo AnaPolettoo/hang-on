@@ -67,10 +67,10 @@ struct VisionClothingClassifier: ClothingClassifying {
         // Without one, fall back to the saliency bounding box (previous behavior).
         let dominantColor: ClosetColor
         if let mask {
-            dominantColor = FaceColorSampler.averageColor(in: image, mask: mask)
+            dominantColor = GarmentColorSampler.dominantColor(in: image, mask: mask)
         } else {
             let region = try? regionDetector.detectRegion(in: image, orientation: orientation)
-            dominantColor = FaceColorSampler.averageColor(in: image, region: region ?? Self.fullImageRegion)
+            dominantColor = GarmentColorSampler.dominantColor(in: image, region: region ?? Self.fullImageRegion)
         }
 
         return ClothingClassification(category: category, dominantColor: dominantColor, confidence: confidence)

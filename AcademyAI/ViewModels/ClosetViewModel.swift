@@ -70,7 +70,12 @@ final class ClosetViewModel {
         }
     }
 
-    func saveItem(imageData: Data, category: ClothingCategory, colorSwatch: ClothingColorSwatch) {
+    func saveItem(
+        imageData: Data,
+        category: ClothingCategory,
+        colorSwatch: ClothingColorSwatch,
+        isPatterned: Bool = false
+    ) {
         // A failed classify() call earlier leaves its error message behind; without
         // clearing it here, a save that succeeds right after still reads as a failure
         // to every caller that gates on `errorMessage == nil` (AddPieceView's "+ Add
@@ -85,7 +90,8 @@ final class ClosetViewModel {
             imageData: imageData,
             category: category,
             dominantColor: color,
-            matchesColorimetry: matches
+            matchesColorimetry: matches,
+            isPatterned: isPatterned
         )
         modelContext.insert(item)
         do {

@@ -75,6 +75,10 @@ struct AddClothingItemMenu: View {
             }
             let colorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
             let category = processed?.classification.category ?? .other
+            // No pattern flag here: this path saves without a review screen, and
+            // the detector isn't reliable enough to set it unattended (see
+            // AddPieceView). The piece is saved as unpatterned; the person can
+            // still say otherwise when adding through the review flow.
             viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
             if viewModel.errorMessage == nil { onAdded() }
         }

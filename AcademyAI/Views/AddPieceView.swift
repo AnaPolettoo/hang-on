@@ -14,6 +14,7 @@ struct AddPieceView: View {
     @State private var reviewImageData: Data?
     @State private var selectedColorSwatch: ClothingColorSwatch?
     @State private var selectedCategory: ClothingCategory?
+    @State private var isPatterned = false
     @State private var sessionAddedItems: [ClothingItem] = []
     @State private var pendingConfirmImage: UIImage?
     
@@ -238,9 +239,33 @@ struct AddPieceView: View {
                     swatchPill(swatch)
                 }
             }
+
+            patternedPill
         }
     }
-    
+
+    private var patternedPill: some View {
+        Button {
+            isPatterned.toggle()
+        } label: {
+            Text("Patterned")
+                .font(Theme.Font.caption)
+                .foregroundStyle(isPatterned ? Theme.Color.cream : Theme.Color.ink)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .background(isPatterned ? Theme.Color.ink : Color.clear)
+                .overlay(
+                    Capsule().stroke(
+                        isPatterned ? Theme.Color.ink : Theme.Color.ink.opacity(0.3),
+                        lineWidth: isPatterned ? 2 : 1
+                    )
+                )
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isPatterned ? [.isSelected] : [])
+    }
+
     private func swatchPill(_ swatch: ClothingColorSwatch) -> some View {
         let isSelected = selectedColorSwatch == swatch
         return Button {
@@ -334,12 +359,22 @@ struct AddPieceView: View {
         reviewImage = displayImage
         reviewImageData = displayImage.pngData()
         selectedColorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
+        // Deliberately not pre-filled from the classification: the histogram-based
+        // detector fired on every solid garment we measured (a real photo's folds
+        // and shading spread one color across many bins), so auto-marking would
+        // mean unchecking this on nearly every piece. The person sets it.
+        isPatterned = false
         selectedCategory = processed.map { reviewableCategories.contains($0.classification.category) ? $0.classification.category : .other } ?? .other
     }
     
     private func addThisPiece() {
         guard let imageData = reviewImageData, let colorSwatch = selectedColorSwatch, let category = selectedCategory else { return }
-        viewModel.saveItem(imageData: imageData, category: category, colorSwatch: colorSwatch)
+        viewModel.saveItem(
+            imageData: imageData,
+            category: category,
+            colorSwatch: colorSwatch,
+            isPatterned: isPatterned
+        )
         guard viewModel.errorMessage == nil else { return }
         if let savedItem = viewModel.items.first {
             sessionAddedItems.append(savedItem)
@@ -348,5 +383,6 @@ struct AddPieceView: View {
         reviewImageData = nil
         selectedColorSwatch = nil
         selectedCategory = nil
+        isPatterned = false
     }
 }
