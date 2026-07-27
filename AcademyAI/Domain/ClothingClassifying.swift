@@ -1,4 +1,5 @@
 import Vision
+import CoreML
 import CoreGraphics
 import ImageIO
 
@@ -25,6 +26,13 @@ protocol ClothingClassifying {
 struct VisionClothingClassifier: ClothingClassifying {
     private static let fullImageRegion = CGRect(x: 0, y: 0, width: 1, height: 1)
 
+    // Carregado uma vez: instanciar o modelo por chamada custa caro e a foto
+    // é classificada em fluxo interativo (catalogar peça / validar compra).
+    private static let visionModel: VNCoreMLModel? = {
+        guard let wrapped = try? GarmentCategoryClassifier(configuration: MLModelConfiguration()) else { return nil }
+        return try? VNCoreMLModel(for: wrapped.model)
+    }()
+
     private let regionDetector: GarmentRegionDetecting
 
     init(regionDetector: GarmentRegionDetecting = VisionGarmentRegionDetector()) {
@@ -37,18 +45,23 @@ struct VisionClothingClassifier: ClothingClassifying {
     // it silently classifies the sideways buffer, which is why category
     // guesses on real photos were unreliable.
     func classify(_ image: CGImage, orientation: CGImagePropertyOrientation, mask: CGImage? = nil) async throws -> ClothingClassification {
-        let request = VNClassifyImageRequest()
         let handler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
-        try handler.perform([request])
 
-        let results = request.results ?? []
-        let confidence = results.first?.confidence ?? 0
+        var topLabel = ""
+        var confidence: Float = 0
+        if let visionModel = Self.visionModel {
+            let request = VNCoreMLRequest(model: visionModel)
+            // A peça já vem recortada e centralizada num canvas quadrado pelo
+            // VisionBackgroundRemover — centerCrop não corta nada relevante.
+            request.imageCropAndScaleOption = .centerCrop
+            try handler.perform([request])
+            if let top = (request.results as? [VNClassificationObservation])?.first {
+                topLabel = top.identifier
+                confidence = top.confidence
+            }
+        }
 
-        let identifiers = results
-            .filter { $0.confidence > 0.1 }
-            .map(\.identifier)
-
-        let category = ClothingCategoryMapper.category(forIdentifiers: identifiers)
+        let category = GarmentLabelMapper.category(forLabel: topLabel, confidence: confidence)
 
         // With a foreground mask, sample color only over the garment's pixels.
         // Without one, fall back to the saliency bounding box (previous behavior).
