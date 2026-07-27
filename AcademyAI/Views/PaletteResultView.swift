@@ -5,77 +5,55 @@ struct PaletteResultView: View {
     var ctaLabel: String = "Start Checking"
     let onStartChecking: () -> Void
 
+    @State private var showExplanation = false
+
     var body: some View {
         ZStack {
             Theme.Color.cream.ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text(viewModel.season.displayName)
-                    .font(Theme.Font.largeTitle)
-                    .foregroundStyle(Theme.Color.ink)
-                    .titleUnderline(offset: 4)
-                    .padding(.top, 8)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(viewModel.season.displayName)
+                        .font(Theme.Font.largeTitle)
+                        .foregroundStyle(Theme.Color.ink)
+                        .padding(.top, 8)
 
-                ForEach(Array(viewModel.recommended.enumerated()), id: \.offset) { _, color in
-                    Text(colorName(for: color))
-                        .font(Theme.Font.title)
-                        .foregroundStyle(textColor(for: color))
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(swiftUIColor(from: color))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius)
-                                .stroke(Theme.Color.ink, lineWidth: 1.5)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius))
+                    ForEach(Array(viewModel.recommended.enumerated()), id: \.offset) { _, color in
+                        Text(SeasonPalette.displayName(for: color))
+                            .font(Theme.Font.title)
+                            .foregroundStyle(textColor(for: color))
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(swiftUIColor(from: color))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius)
+                                    .stroke(Theme.Color.ink, lineWidth: 1.5)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius))
+                    }
+
+                    Button("Why these colors?") { showExplanation = true }
+                        .font(Theme.Font.subheadline)
+                        .foregroundStyle(Theme.Color.ink)
+                        .underline()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 4)
+
+                    Button(ctaLabel, action: onStartChecking)
+                        .buttonStyle(.closetPrimary)
+                        .padding(.top, 8)
                 }
-
-                Text(viewModel.explanation)
-                    .font(Theme.Font.body)
-                    .foregroundStyle(Theme.Color.inkMuted)
-
-                Spacer()
-
-                Button(ctaLabel, action: onStartChecking)
-                    .buttonStyle(.closetPrimary)
+                .padding()
             }
-            .padding()
         }
-    }
-
-    private func colorName(for color: ClosetColor) -> String {
-        switch color {
-        case .lime: return "Lime — everyday base"
-        case .wine: return "Wine — rich accent"
-        case .beige: return "Beige — neutral"
-        case .mauve: return "Mauve — pop of color"
-        case .coral: return "Coral"
-        case .peach: return "Peach"
-        case .turquoise: return "Turquoise"
-        case .golden: return "Golden"
-        case .softBlue: return "Soft Blue"
-        case .lavender: return "Lavender"
-        case .roseGray: return "Rose Gray"
-        case .slate: return "Slate"
-        case .icyBlue: return "Icy Blue"
-        case .emerald: return "Emerald"
-        case .trueRed: return "True Red"
-        case .deepBlack: return "Black"
-        case .warmIvory: return "Warm Ivory"
-        case .brightAqua: return "Bright Aqua"
-        case .rust: return "Rust"
-        case .olive: return "Olive"
-        case .camel: return "Camel"
-        case .sage: return "Sage"
-        case .mustard: return "Mustard"
-        case .forest: return "Forest"
-        case .dustyRose: return "Dusty Rose"
-        case .plum: return "Plum"
-        case .powderBlue: return "Powder Blue"
-        case .royalBlue: return "Royal Blue"
-        case .charcoal: return "Charcoal"
-        case .hotPink: return "Hot Pink"
-        default: return "Color"
+        .sheet(isPresented: $showExplanation) {
+            PaletteExplanationView(
+                viewModel: PaletteExplanationViewModel(
+                    season: viewModel.season,
+                    recommended: viewModel.recommended,
+                    explanation: viewModel.explanation
+                )
+            )
         }
     }
 
@@ -87,4 +65,16 @@ struct PaletteResultView: View {
     private func textColor(for color: ClosetColor) -> Color {
         color.isDark ? Theme.Color.cream : Theme.Color.ink
     }
+}
+
+#Preview {
+    PaletteResultView(
+        viewModel: PaletteResultViewModel(
+            season: .warmAutumn,
+            recommended: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoid: SeasonPalette.avoidColors(for: .warmAutumn),
+            explanation: "Warm Autumn reads rich and earthy — golden undertones in your skin, warm depth in your hair and eyes. Colors like rust and olive echo that warmth, while icy blues and stark black fight it and wash you out."
+        ),
+        onStartChecking: {}
+    )
 }
