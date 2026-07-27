@@ -1,47 +1,42 @@
 import CoreGraphics
 
-struct GarmentColorSample: Equatable {
-    let dominantColor: ClosetColor
-    /// True when no single quantized color covers enough of the garment.
-    let isPatterned: Bool
-
-    static let empty = GarmentColorSample(
-        dominantColor: ClosetColor(red: 0, green: 0, blue: 0),
-        isPatterned: false
-    )
-}
-
 /// Dominant color by mode, not mean. Averaging a red-and-white striped shirt
 /// yields pink — a color that appears nowhere on the garment. Counting quantized
-/// colors and returning the most common one always yields a real color, and the
-/// same count tells us whether the garment is patterned at all.
+/// colors and returning the most common one always yields a real color.
+///
+/// This deliberately does *not* try to detect whether a garment is patterned.
+/// The obvious signal — how much of the garment the winning bin covers — was
+/// measured against real product photos and marked every solid garment as
+/// patterned: folds and shading spread one color across many neighboring bins.
+/// Pattern is a manual toggle on the review screen instead.
 ///
 /// Deliberately separate from `FaceColorSampler`, which keeps averaging for the
 /// colorimetry path: skin is a near-uniform surface with no pattern problem, and
 /// changing it would silently move the season of every saved profile. The pixel
 /// geometry below is duplicated from it for the same reason.
 enum GarmentColorSampler {
+    private static let black = ClosetColor(red: 0, green: 0, blue: 0)
+
     /// 3 bits per channel. Coarse on purpose: a solid garment photographed with
-    /// folds and shadow spreads across neighboring bins, and finer bins would
-    /// read that shadow as a pattern. Precision isn't lost — the returned color
-    /// is the mean of the winning bin's pixels, not the bin's center.
+    /// folds and shadow spreads across neighboring bins, so finer bins would
+    /// splinter one real color into many. Precision isn't lost — the returned
+    /// color is the mean of the winning bin's pixels, not the bin's center.
     private static let levelsPerChannel = 8
     private static let binCount = levelsPerChannel * levelsPerChannel * levelsPerChannel
-    private static let patternThreshold = 0.5
 
-    static func sample(in image: CGImage, mask: CGImage) -> GarmentColorSample {
+    static func dominantColor(in image: CGImage, mask: CGImage) -> ClosetColor {
         let width = image.width, height = image.height
-        guard width > 0, height > 0 else { return .empty }
+        guard width > 0, height > 0 else { return black }
 
         guard let imageData = drawFullSize(image, width: width, height: height),
               let maskData = drawFullSize(mask, width: width, height: height)
-        else { return .empty }
+        else { return black }
 
         // Same foreground rule the previous implementation used: mask red > 127.
         return summarize(pixels: imageData) { maskData[$0] > 127 }
     }
 
-    static func sample(in image: CGImage, region: CGRect) -> GarmentColorSample {
+    static func dominantColor(in image: CGImage, region: CGRect) -> ClosetColor {
         let width = image.width, height = image.height
 
         let pixelRegion = CGRect(
@@ -52,7 +47,7 @@ enum GarmentColorSampler {
         ).integral
 
         let cropWidth = Int(pixelRegion.width), cropHeight = Int(pixelRegion.height)
-        guard cropWidth > 0, cropHeight > 0 else { return .empty }
+        guard cropWidth > 0, cropHeight > 0 else { return black }
 
         var pixelData = [UInt8](repeating: 0, count: cropWidth * cropHeight * 4)
         guard let context = CGContext(
@@ -63,7 +58,7 @@ enum GarmentColorSampler {
             bytesPerRow: cropWidth * 4,
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-        ) else { return .empty }
+        ) else { return black }
 
         // CGContext draws images in a bottom-left-origin, y-up space, while `region`
         // (and pixelRegion derived from it) uses a top-left-origin, y-down convention.
@@ -99,7 +94,7 @@ enum GarmentColorSampler {
     private static func summarize(
         pixels: [UInt8],
         includePixel: (Int) -> Bool
-    ) -> GarmentColorSample {
+    ) -> ClosetColor {
         var counts = [Int](repeating: 0, count: binCount)
         var sumRed = [Double](repeating: 0, count: binCount)
         var sumGreen = [Double](repeating: 0, count: binCount)
@@ -118,7 +113,7 @@ enum GarmentColorSampler {
             total += 1
         }
 
-        guard total > 0 else { return .empty }
+        guard total > 0 else { return black }
 
         // Strict `>` keeps the lowest bin index on ties, so the same photo always
         // resolves to the same color.
@@ -126,16 +121,13 @@ enum GarmentColorSampler {
         for bin in 1..<binCount where counts[bin] > counts[winner] {
             winner = bin
         }
-        guard counts[winner] > 0 else { return .empty }
+        guard counts[winner] > 0 else { return black }
 
         let winnerCount = Double(counts[winner])
-        return GarmentColorSample(
-            dominantColor: ClosetColor(
-                red: sumRed[winner] / winnerCount,
-                green: sumGreen[winner] / winnerCount,
-                blue: sumBlue[winner] / winnerCount
-            ),
-            isPatterned: winnerCount / Double(total) < patternThreshold
+        return ClosetColor(
+            red: sumRed[winner] / winnerCount,
+            green: sumGreen[winner] / winnerCount,
+            blue: sumBlue[winner] / winnerCount
         )
     }
 

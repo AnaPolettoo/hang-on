@@ -359,7 +359,11 @@ struct AddPieceView: View {
         reviewImage = displayImage
         reviewImageData = displayImage.pngData()
         selectedColorSwatch = processed.map { ClothingColorSwatch.nearest(to: $0.classification.dominantColor) } ?? .grey
-        isPatterned = processed?.classification.isPatterned ?? false
+        // Deliberately not pre-filled from the classification: the histogram-based
+        // detector fired on every solid garment we measured (a real photo's folds
+        // and shading spread one color across many bins), so auto-marking would
+        // mean unchecking this on nearly every piece. The person sets it.
+        isPatterned = false
         selectedCategory = processed.map { reviewableCategories.contains($0.classification.category) ? $0.classification.category : .other } ?? .other
     }
     
