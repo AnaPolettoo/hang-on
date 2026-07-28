@@ -12,6 +12,7 @@ struct ClosetView: View {
     @State private var showAddPiece = false
     @State private var showProfile = false
     @State private var pendingDeleteItem: ClothingItem?
+    @State private var editingItem: ClothingItem?
 
     private let horizontalPadding: CGFloat = 16
     private let gridSpacing: CGFloat = 8
@@ -72,6 +73,9 @@ struct ClosetView: View {
         }
         .navigationDestination(isPresented: $showAddPiece) {
             AddPieceView(viewModel: viewModel)
+        }
+        .navigationDestination(item: $editingItem) { item in
+            EditPieceView(item: item, viewModel: viewModel)
         }
         .background(.backgroundCustom)
         .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
@@ -252,6 +256,9 @@ struct ClosetView: View {
             )
         }
         .contextMenu {
+            Button("Edit", systemImage: "pencil") {
+                editingItem = item
+            }
             Button("Delete", systemImage: "trash", role: .destructive) {
                 pendingDeleteItem = item
             }
