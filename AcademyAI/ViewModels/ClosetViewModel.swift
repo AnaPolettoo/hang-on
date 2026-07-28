@@ -115,6 +115,23 @@ final class ClosetViewModel {
         }
     }
 
+    /// "I wore this" context-menu action (REQ-W.3). Whether this bumps
+    /// `wearCount` or only refreshes `lastWornDate` is `WearTracker`'s call
+    /// (REQ-W.4/W.7), not decided inline here.
+    func markAsWorn(_ item: ClothingItem, now: Date = .now) {
+        errorMessage = nil
+        if WearTracker.shouldIncrementCount(lastWorn: item.lastWornDate, now: now) {
+            item.wearCount += 1
+        }
+        item.lastWornDate = now
+        do {
+            try modelContext.save()
+            loadItems()
+        } catch {
+            errorMessage = String(localized: "Couldn't save the piece. Try again.")
+        }
+    }
+
     func updateItem(
         _ item: ClothingItem,
         category: ClothingCategory,

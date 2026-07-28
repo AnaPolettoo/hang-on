@@ -291,6 +291,65 @@ struct ClosetViewModelTests {
         #expect(viewModel.items.first?.matchesColorimetry == nil)
     }
 
+    @Test func markAsWornSetsDateAndIncrementsCountOnFirstLog() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+
+        viewModel.markAsWorn(item, now: now)
+
+        #expect(item.lastWornDate == now)
+        #expect(item.wearCount == 1)
+    }
+
+    @Test func markAsWornTwiceSameDayUpdatesDateButNotCount() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        let calendar = Calendar.current
+        let morning = calendar.date(from: DateComponents(year: 2026, month: 7, day: 28, hour: 8, minute: 0))!
+        let evening = calendar.date(from: DateComponents(year: 2026, month: 7, day: 28, hour: 20, minute: 0))!
+
+        viewModel.markAsWorn(item, now: morning)
+        viewModel.markAsWorn(item, now: evening)
+
+        #expect(item.lastWornDate == evening)
+        #expect(item.wearCount == 1)
+    }
+
+    @Test func markAsWornOnADifferentDayIncrementsCountAgain() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        let calendar = Calendar.current
+        let day1 = calendar.date(from: DateComponents(year: 2026, month: 7, day: 27, hour: 20, minute: 0))!
+        let day2 = calendar.date(from: DateComponents(year: 2026, month: 7, day: 28, hour: 8, minute: 0))!
+
+        viewModel.markAsWorn(item, now: day1)
+        viewModel.markAsWorn(item, now: day2)
+
+        #expect(item.lastWornDate == day2)
+        #expect(item.wearCount == 2)
+    }
+
+    @Test func neverWornItemKeepsNilDateAndZeroCount() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+
+        #expect(item.lastWornDate == nil)
+        #expect(item.wearCount == 0)
+    }
+
     @Test func updateItemSetsDominantColorToExactSwatchColor() throws {
         let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)
