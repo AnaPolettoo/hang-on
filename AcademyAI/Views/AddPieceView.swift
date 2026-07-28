@@ -139,11 +139,13 @@ struct AddPieceView: View {
     private var addPhotoCard: some View {
         Menu {
             Button { showCamera = true } label: {
-                Label("Take Photo", systemImage: "camera")
+                Label("Take Photo", systemImage: "camera.fill")
             }
+            .tint(Theme.Color.accentBorder)
             Button { showLibrary = true } label: {
-                Label("Choose from Library", systemImage: "photo.on.rectangle")
+                Label("Choose from Library", systemImage: "photo.on.rectangle.fill")
             }
+            .tint(Theme.Color.accentBorder)
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 20)

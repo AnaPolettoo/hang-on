@@ -106,6 +106,9 @@ final class PurchaseCheckViewModel {
                 motivo: verdict.motivo,
                 recomendacao: verdict.recomendacao
             )
+        } catch let error as ModelAvailabilityError {
+            errorMessage = error.message
+            return nil
         } catch {
             errorMessage = "We couldn't identify the piece. Try again with more light."
             return nil

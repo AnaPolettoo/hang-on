@@ -26,6 +26,8 @@ struct ProfileView: View {
             .padding(.bottom, 24)
         }
         .background(Theme.Color.cream)
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear { viewModel.loadProfile() }
         .fullScreenCover(isPresented: $showRetakeColorimetry, onDismiss: { viewModel.loadProfile() }) {
             RetakeColorimetryFlow(
@@ -61,6 +63,13 @@ struct ProfileView: View {
             Text(viewModel.profileName ?? "Your name")
                 .font(Theme.Font.sectionTitle)
                 .foregroundStyle(Theme.Color.ink)
+                .overlay(alignment: .bottom) {
+                    Capsule()
+                        .stroke(style: StrokeStyle(lineWidth: 2, dash: [4]))
+                        .foregroundStyle(Theme.Color.ink.opacity(0.4))
+                        .frame(height: 2)
+                        .offset(y: 6)
+                }
         }
         .padding(.top, 16)
     }
@@ -127,7 +136,7 @@ struct ProfileView: View {
                 Spacer()
                 Text("›")
                     .font(.system(size: 22))
-                    .foregroundStyle(Theme.Color.accentBorder)
+                    .foregroundStyle(Theme.Color.ink)
             }
             .padding(18)
             .background(Color.itemBackground)

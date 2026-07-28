@@ -31,7 +31,7 @@ final class FindYourColorsViewModel {
 
         do {
             guard let regions = try await regionDetector.detectRegions(in: image) else {
-                errorMessage = "We couldn't find your face. Try again in good, even light — avoid backlight."
+                errorMessage = "We couldn't find your face. Try again in good, even light, avoid backlight."
                 return
             }
 
@@ -76,6 +76,8 @@ final class FindYourColorsViewModel {
             try modelContext.save()
 
             result = (season, recommended, avoid, explanation)
+        } catch let error as ModelAvailabilityError {
+            errorMessage = error.message
         } catch {
             errorMessage = "Something went wrong. Try again."
         }

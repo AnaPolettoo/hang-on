@@ -51,10 +51,10 @@ enum SeasonPalette {
     /// `recommendedColors(for:)` above is covered by name.
     static func displayName(for color: ClosetColor) -> String {
         switch color {
-        case .lime: return "Lime — everyday base"
-        case .wine: return "Wine — rich accent"
-        case .beige: return "Beige — neutral"
-        case .mauve: return "Mauve — pop of color"
+        case .lime: return "Lime, everyday base"
+        case .wine: return "Wine, rich accent"
+        case .beige: return "Beige, neutral"
+        case .mauve: return "Mauve, pop of color"
         case .coral: return "Coral"
         case .peach: return "Peach"
         case .turquoise: return "Turquoise"

@@ -26,10 +26,10 @@ struct FindYourColorsView: View {
                     Ellipse()
                         .stroke(
                             style: viewModel.isProcessing || viewModel.errorMessage != nil
-                                ? StrokeStyle(lineWidth: 2)
-                                : StrokeStyle(lineWidth: 2, dash: [6])
+                                ? StrokeStyle(lineWidth: 3)
+                                : StrokeStyle(lineWidth: 3, dash: [6])
                         )
-                        .foregroundStyle(Theme.Color.ink)
+                        .foregroundStyle(Theme.Color.ink.opacity(0.4))
                         .frame(width: 260, height: 340)
 
                     if viewModel.isProcessing {
@@ -46,10 +46,10 @@ struct FindYourColorsView: View {
                         VStack(spacing: 6) {
                             Text("Align your face here")
                                 .font(Theme.Font.subheadline)
-                                .foregroundStyle(Theme.Color.ink)
+                                .foregroundStyle(Theme.Color.ink.opacity(0.7))
                             Text("Tap to capture")
                                 .font(Theme.Font.caption)
-                                .foregroundStyle(Theme.Color.inkMuted)
+                                .foregroundStyle(Theme.Color.ink.opacity(0.45))
                         }
                     }
                 }

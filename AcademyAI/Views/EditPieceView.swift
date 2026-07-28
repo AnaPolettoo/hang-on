@@ -52,11 +52,6 @@ struct EditPieceView: View {
         .navigationTitle("Edit Piece")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") { dismiss() }
-            }
-        }
     }
 
     private var photoCard: some View {
@@ -78,7 +73,7 @@ struct EditPieceView: View {
     }
 
     private var saveBar: some View {
-        Button("Save") {
+        Button("Hang It Up") {
             guard let colorSwatch = selectedColorSwatch, let category = selectedCategory else { return }
             viewModel.updateItem(item, category: category, colorSwatch: colorSwatch, isPatterned: isPatterned)
             if viewModel.errorMessage == nil {

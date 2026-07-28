@@ -21,11 +21,13 @@ struct AddClothingItemMenu: View {
                 // A same-tick `.async` isn't a long enough delay — this needs to clear
                 // the whole dismiss animation, not just the next run loop turn.
                 Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showCamera = true } } label: {
-                    Label("Take Photo", systemImage: "camera")
+                    Label("Take Photo", systemImage: "camera.fill")
                 }
+                .tint(Theme.Color.accentBorder)
                 Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showLibrary = true } } label: {
-                    Label("Choose from Library", systemImage: "photo.on.rectangle")
+                    Label("Choose from Library", systemImage: "photo.on.rectangle.fill")
                 }
+                .tint(Theme.Color.accentBorder)
             } label: {
                 Text("Add a Piece")
                     .font(Theme.Font.button)

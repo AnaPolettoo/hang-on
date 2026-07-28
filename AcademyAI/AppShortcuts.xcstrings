@@ -1,0 +1,193 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Is this worth buying, ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vale a pena comprar isso, ${applicationName}?"
+          }
+        }
+      }
+    },
+    "Should I buy this with ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devo comprar isso com o ${applicationName}?"
+          }
+        }
+      }
+    },
+    "Check this piece with ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confere essa peça com o ${applicationName}"
+          }
+        }
+      }
+    },
+    "Ask ${applicationName} if this is worth it" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pergunta pro ${applicationName} se vale a pena"
+          }
+        }
+      }
+    },
+    "Check a piece in ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confere uma peça no ${applicationName}"
+          }
+        }
+      }
+    },
+    "${applicationName}, does this piece deserve to hang in my closet?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}, será que essa peça merece um cabide no meu closet?"
+          }
+        }
+      }
+    },
+    "What's my palette in ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual é a minha paleta no ${applicationName}?"
+          }
+        }
+      }
+    },
+    "What are my colors in ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quais são as minhas cores no ${applicationName}?"
+          }
+        }
+      }
+    },
+    "What season am I in ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual estação sou eu no ${applicationName}?"
+          }
+        }
+      }
+    },
+    "What colors suit me, ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quais cores combinam comigo, ${applicationName}?"
+          }
+        }
+      }
+    },
+    "Tell me my ${applicationName} palette" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me diz minha paleta no ${applicationName}"
+          }
+        }
+      }
+    },
+    "${applicationName}, which colors hang best on me?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}, quais cores ficam penduradas no meu gosto?"
+          }
+        }
+      }
+    },
+    "How's my closet in ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como está o meu guarda-roupa no ${applicationName}?"
+          }
+        }
+      }
+    },
+    "Summarize my closet in ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume meu closet, ${applicationName}"
+          }
+        }
+      }
+    },
+    "How many pieces do I have in ${applicationName}?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantas peças eu tenho no ${applicationName}?"
+          }
+        }
+      }
+    },
+    "What's in my ${applicationName} closet?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O que tem no meu closet do ${applicationName}?"
+          }
+        }
+      }
+    },
+    "${applicationName}, catch me up on what's hanging in my closet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${applicationName}, pendura essa dúvida pra mim: como tá meu closet?"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

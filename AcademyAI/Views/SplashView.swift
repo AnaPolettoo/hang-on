@@ -9,23 +9,24 @@ struct SplashView: View {
             Theme.Color.cream.ignoresSafeArea()
 
             VStack(spacing: 12) {
-                Image(systemName: "hanger")
-                    .font(.system(size: 40, weight: .light))
-                    .foregroundStyle(Theme.Color.accentBorder)
+                Image("SplashHanger")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 70, height: 78)
 
-                Text("WorthWear")
+                Text("Hang On")
                     .font(Theme.Font.display)
                     .foregroundStyle(Theme.Color.ink)
                     .overlay(alignment: .bottom) {
                         Rectangle()
-                            .fill(Theme.Color.accentBorder)
-                            .frame(height: 2)
+                            .fill(Theme.Color.ink)
+                            .frame(height: 3)
                             .offset(y: 4)
                     }
 
-                Text("check it before you buy it")
+                Text("Is it your color?")
                     .font(Theme.Font.subheadline)
-                    .foregroundStyle(Theme.Color.inkMuted)
+                    .foregroundStyle(Theme.Color.ink.opacity(0.55))
             }
         }
         .onAppear { viewModel.startTimer() }

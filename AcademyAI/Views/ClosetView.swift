@@ -77,19 +77,21 @@ struct ClosetView: View {
         .navigationDestination(item: $editingItem) { item in
             EditPieceView(item: item, viewModel: viewModel)
         }
-        .background(.backgroundCustom)
-        .sheet(isPresented: $showProfile, onDismiss: { viewModel.loadItems() }) {
+        .navigationDestination(isPresented: $showProfile) {
             ProfileView(viewModel: profileViewModel, modelContext: modelContext)
         }
-        .confirmationDialog(
+        .background(.backgroundCustom)
+        .onChange(of: showProfile) { oldValue, newValue in
+            if oldValue && !newValue { viewModel.loadItems() }
+        }
+        .alert(
             pendingDeleteItem.map {
                 "Delete \(ClothingColorSwatch.nearest(to: $0.dominantColor).displayName) \($0.category.displayNoun)?"
             } ?? "Delete this piece?",
             isPresented: Binding(
                 get: { pendingDeleteItem != nil },
                 set: { if !$0 { pendingDeleteItem = nil } }
-            ),
-            titleVisibility: .visible
+            )
         ) {
             Button("Delete", role: .destructive) {
                 if let item = pendingDeleteItem {
@@ -100,6 +102,7 @@ struct ClosetView: View {
             Button("Cancel", role: .cancel) {
                 pendingDeleteItem = nil
             }
+            .tint(Theme.Color.ink)
         }
     }
     
@@ -144,7 +147,7 @@ struct ClosetView: View {
                         .font(Theme.Font.sectionTitle)
                         .foregroundStyle(Theme.Color.ink)
 
-                    Text("It fills itself as you go")
+                    Text("Hang tight, it fills itself as you go")
                         .font(Theme.Font.subheadline)
                         .foregroundStyle(
                             Theme.Color.ink.opacity(0.6)
@@ -251,17 +254,24 @@ struct ClosetView: View {
                 style: .continuous
             )
             .stroke(
-                Theme.Color.ink.opacity(0.18),
-                lineWidth: 1
+                Theme.Color.ink,
+                lineWidth: 0.7
             )
         }
         .contextMenu {
             Button("Edit", systemImage: "pencil") {
                 editingItem = item
             }
-            Button("Delete", systemImage: "trash", role: .destructive) {
-                pendingDeleteItem = item
+            .tint(Theme.Color.accentBorder)
+            Button("Delete", systemImage: "trash.fill") {
+                // Same fix as AddClothingItemMenu: presenting the confirmationDialog
+                // before the context menu's own dismiss animation finishes makes it
+                // appear anchored to the stale preview position instead of centered.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    pendingDeleteItem = item
+                }
             }
+            .tint(Theme.Color.accentBorder)
         }
     }
 }

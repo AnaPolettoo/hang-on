@@ -27,7 +27,7 @@ struct AnalysisView: View {
         VStack(spacing: 16) {
             Spacer()
             VStack(spacing: 12) {
-                Text("No stats yet")
+                Text("Nothing to hang your hat on yet")
                     .font(Theme.Font.sectionTitle)
                     .foregroundStyle(Theme.Color.ink)
                 Text("Add pieces to your closet to see your wardrobe analysis")

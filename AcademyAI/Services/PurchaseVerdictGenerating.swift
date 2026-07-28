@@ -21,6 +21,7 @@ protocol PurchaseVerdictGenerating {
 
 struct FoundationModelsPurchaseVerdictGenerator: PurchaseVerdictGenerating {
     func generateVerdict(category: ClothingCategory, color: ClosetColor, matchesColorimetry: Bool?, fillsGap: Bool?, similarItemsCount: Int) async throws -> PurchaseVerdict {
+        try ModelAvailabilityGate.check()
         let session = LanguageModelSession()
         let colorName = ClothingColorSwatch.nearest(to: color).displayName
         let pieceDescription = "\(colorName.lowercased()) \(category.rawValue)"

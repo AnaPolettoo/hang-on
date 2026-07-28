@@ -130,11 +130,13 @@ struct PurchaseCheckView: View {
             // A same-tick `.async` isn't a long enough delay — this needs to clear
             // the whole dismiss animation, not just the next run loop turn.
             Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showCamera = true } } label: {
-                Label("Take Photo", systemImage: "camera")
+                Label("Take Photo", systemImage: "camera.fill")
             }
+            .tint(Theme.Color.accentBorder)
             Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showLibrary = true } } label: {
-                Label("Choose from Library", systemImage: "photo.on.rectangle")
+                Label("Choose from Library", systemImage: "photo.on.rectangle.fill")
             }
+            .tint(Theme.Color.accentBorder)
         } label: {
             Text("Check a piece")
                 .font(Theme.Font.button)
@@ -199,7 +201,7 @@ struct PurchaseCheckView: View {
 
     private var emptyChecksCard: some View {
         VStack(spacing: 6) {
-            Text("No checks yet.")
+            Text("Nothing to hang on to yet.")
                 .font(Theme.Font.body)
                 .foregroundStyle(Theme.Color.ink.opacity(0.7))
             Text("Next time you're tempted, snap it first.")
@@ -294,7 +296,7 @@ struct PurchaseCheckView: View {
             ProgressView()
                 .tint(Theme.Color.cream)
                 .controlSize(.large)
-            Text("Checking the piece against your palette and closet…")
+            Text("Hang on, checking it against your palette and closet…")
                 .font(Theme.Font.subheadline)
                 .foregroundStyle(Theme.Color.cream.opacity(0.8))
                 .multilineTextAlignment(.center)

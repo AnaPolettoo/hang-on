@@ -20,9 +20,10 @@ struct NameView: View {
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.inkMuted)
 
-                TextField("Your name", text: $viewModel.name)
-                    .font(Theme.Font.title)
+                TextField("Your Name", text: $viewModel.name)
+                    .font(Theme.Font.sectionTitle)
                     .foregroundStyle(Theme.Color.ink)
+                    .multilineTextAlignment(.center)
                     .padding(.vertical, 14)
                     .padding(.horizontal, 20)
                     .background(Theme.Color.cream)
@@ -30,10 +31,10 @@ struct NameView: View {
                     .overlay(
                         Capsule().stroke(
                             style: viewModel.name.isEmpty
-                                ? StrokeStyle(lineWidth: 1.5, dash: [5])
-                                : StrokeStyle(lineWidth: 1.5)
+                                ? StrokeStyle(lineWidth: 2, dash: [4])
+                                : StrokeStyle(lineWidth: 2)
                         )
-                        .foregroundStyle(Theme.Color.accentBorder)
+                        .foregroundStyle(viewModel.name.isEmpty ? Theme.Color.ink.opacity(0.4) : Theme.Color.ink)
                     )
                     .padding(.horizontal)
 

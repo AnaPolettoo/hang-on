@@ -22,6 +22,7 @@ struct FoundationModelsPaletteExplainer: PaletteExplanationGenerating {
         recommendedColors: [ClosetColor],
         avoidColors: [ClosetColor]
     ) async throws -> String {
+        try ModelAvailabilityGate.check()
         let session = LanguageModelSession()
         let prompt = """
         The person's colorimetry subseason is \(season.displayName).

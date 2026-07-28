@@ -27,7 +27,7 @@ struct PaletteResultView: View {
                             .background(swiftUIColor(from: color))
                             .overlay(
                                 RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius)
-                                    .stroke(Theme.Color.ink, lineWidth: 1.5)
+                                    .stroke(Theme.Color.ink, lineWidth: 2)
                             )
                             .clipShape(RoundedRectangle(cornerRadius: Theme.Layout.cornerRadius))
                     }

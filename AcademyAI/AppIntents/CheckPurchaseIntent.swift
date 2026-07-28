@@ -132,6 +132,12 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         // Every phrase has to name the app, so each one is written to still sound
         // like something a person would say out loud with the name inside it.
+        // Phrases stay in English here — that's the project's only declared locale
+        // (see `knownRegions` in the .pbxproj). Portuguese variants live in
+        // Localizable.xcstrings as pt-BR translations of these exact strings;
+        // mixing raw Portuguese text into this array doesn't make Siri understand
+        // Portuguese, it just files more English-locale phrases Siri never matches
+        // against a pt-BR request.
         AppShortcut(
             intent: CheckPurchaseIntent(),
             phrases: [
@@ -139,7 +145,9 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
                 "Should I buy this with \(.applicationName)?",
                 "Check this piece with \(.applicationName)",
                 "Ask \(.applicationName) if this is worth it",
-                "Check a piece in \(.applicationName)"
+                "Check a piece in \(.applicationName)",
+                // pun: "deserve to hang" = worth keeping, playing on the app's name
+                "\(.applicationName), does this piece deserve to hang in my closet?"
             ],
             shortTitle: "Check a Piece",
             systemImageName: "camera.viewfinder"
@@ -151,7 +159,9 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
                 "What are my colors in \(.applicationName)?",
                 "What season am I in \(.applicationName)?",
                 "What colors suit me, \(.applicationName)?",
-                "Tell me my \(.applicationName) palette"
+                "Tell me my \(.applicationName) palette",
+                // pun: "hang best on me" = suit me well, playing on the app's name
+                "\(.applicationName), which colors hang best on me?"
             ],
             shortTitle: "My Palette",
             systemImageName: "paintpalette"
@@ -162,7 +172,9 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
                 "How's my closet in \(.applicationName)?",
                 "Summarize my closet in \(.applicationName)",
                 "How many pieces do I have in \(.applicationName)?",
-                "What's in my \(.applicationName) closet?"
+                "What's in my \(.applicationName) closet?",
+                // pun: "what's hanging" = what's in the closet, playing on the app's name
+                "\(.applicationName), catch me up on what's hanging in my closet"
             ],
             shortTitle: "Closet Summary",
             systemImageName: "tshirt"
