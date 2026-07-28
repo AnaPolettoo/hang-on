@@ -14,6 +14,8 @@ final class ClothingItem {
     var acquiredViaPurchaseCheck: Bool
     var linkedPurchaseCheckId: UUID?
     var dateAdded: Date
+    var lastWornDate: Date?
+    var wearCount: Int = 0
 
     var dominantColor: ClosetColor {
         get { Self.decodeColor(dominantColorData) }
@@ -28,7 +30,9 @@ final class ClothingItem {
         isPatterned: Bool = false,
         acquiredViaPurchaseCheck: Bool = false,
         linkedPurchaseCheckId: UUID? = nil,
-        dateAdded: Date = .now
+        dateAdded: Date = .now,
+        lastWornDate: Date? = nil,
+        wearCount: Int = 0
     ) {
         self.imageData = imageData
         self.category = category
@@ -38,6 +42,8 @@ final class ClothingItem {
         self.acquiredViaPurchaseCheck = acquiredViaPurchaseCheck
         self.linkedPurchaseCheckId = linkedPurchaseCheckId
         self.dateAdded = dateAdded
+        self.lastWornDate = lastWornDate
+        self.wearCount = wearCount
     }
 
     private static func encodeColor(_ color: ClosetColor) -> Data {

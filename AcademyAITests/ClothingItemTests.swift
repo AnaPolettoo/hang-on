@@ -51,4 +51,31 @@ struct ClothingItemTests {
         #expect(unlinked.linkedPurchaseCheckId == nil)
         #expect(linked.linkedPurchaseCheckId == checkId)
     }
+
+    @Test func wearTrackingDefaultsToNeverLogged() throws {
+        let container = try ModelContainer(for: ClothingItem.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let item = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil)
+        context.insert(item)
+        try context.save()
+
+        let fetched = try context.fetch(FetchDescriptor<ClothingItem>())
+        #expect(fetched.first?.lastWornDate == nil)
+        #expect(fetched.first?.wearCount == 0)
+    }
+
+    @Test func wearTrackingRoundTripsThroughSwiftData() throws {
+        let container = try ModelContainer(for: ClothingItem.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let item = ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: nil)
+        item.lastWornDate = now
+        item.wearCount = 5
+        context.insert(item)
+        try context.save()
+
+        let fetched = try context.fetch(FetchDescriptor<ClothingItem>())
+        #expect(fetched.first?.lastWornDate == now)
+        #expect(fetched.first?.wearCount == 5)
+    }
 }
