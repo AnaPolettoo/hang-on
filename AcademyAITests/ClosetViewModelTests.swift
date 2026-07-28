@@ -225,4 +225,81 @@ struct ClosetViewModelTests {
 
         #expect(viewModel.errorMessage == nil)
     }
+
+    @Test func updateItemPersistsCategoryChange() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+
+        viewModel.updateItem(item, category: .bottoms, colorSwatch: .yellow, isPatterned: false)
+
+        #expect(viewModel.items.first?.category == .bottoms)
+        let reloaded = try #require(try context.fetch(FetchDescriptor<ClothingItem>()).first)
+        #expect(reloaded.category == .bottoms)
+    }
+
+    @Test func updateItemRecalculatesMatchesColorimetryOnColorChange() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let profile = UserColorimetryProfile(
+            name: nil, skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
+            season: .warmAutumn,
+            recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
+        )
+        context.insert(profile)
+        try context.save()
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        #expect(item.matchesColorimetry == true)
+
+        viewModel.updateItem(item, category: .tops, colorSwatch: .black, isPatterned: false)
+
+        #expect(viewModel.items.first?.matchesColorimetry == false)
+    }
+
+    @Test func updateItemLeavesDateAddedImageDataAndIdentityUnchanged() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01, 0x02]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+        let originalDate = item.dateAdded
+        let originalImageData = item.imageData
+        let originalId = item.persistentModelID
+
+        viewModel.updateItem(item, category: .bottoms, colorSwatch: .navy, isPatterned: true)
+
+        let reloaded = try #require(viewModel.items.first)
+        #expect(reloaded.dateAdded == originalDate)
+        #expect(reloaded.imageData == originalImageData)
+        #expect(reloaded.persistentModelID == originalId)
+    }
+
+    @Test func updateItemWithoutProfileLeavesMatchesColorimetryNil() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+
+        viewModel.updateItem(item, category: .tops, colorSwatch: .black, isPatterned: false)
+
+        #expect(viewModel.items.first?.matchesColorimetry == nil)
+    }
+
+    @Test func updateItemSetsDominantColorToExactSwatchColor() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let viewModel = ClosetViewModel(modelContext: context)
+        viewModel.saveItem(imageData: Data([0x01]), category: .tops, colorSwatch: .yellow)
+        let item = try #require(viewModel.items.first)
+
+        viewModel.updateItem(item, category: .tops, colorSwatch: .navy, isPatterned: false)
+
+        #expect(viewModel.items.first?.dominantColor == ClothingColorSwatch.navy.color)
+    }
 }

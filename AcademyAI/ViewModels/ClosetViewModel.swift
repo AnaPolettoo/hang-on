@@ -114,4 +114,27 @@ final class ClosetViewModel {
             errorMessage = "Couldn't delete the piece. Try again."
         }
     }
+
+    func updateItem(
+        _ item: ClothingItem,
+        category: ClothingCategory,
+        colorSwatch: ClothingColorSwatch,
+        isPatterned: Bool
+    ) {
+        // Same errorMessage-clearing shape as saveItem/deleteItem.
+        errorMessage = nil
+        let profile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
+        item.category = category
+        item.dominantColor = colorSwatch.color
+        item.isPatterned = isPatterned
+        // Recompute rather than trust the old value: a color edit that didn't
+        // recheck the palette would leave the piece silently mismarked (REQ-E.4).
+        item.matchesColorimetry = ColorimetryMatcher.matches(color: colorSwatch.color, profile: profile)
+        do {
+            try modelContext.save()
+            loadItems()
+        } catch {
+            errorMessage = "Couldn't save the piece. Try again."
+        }
+    }
 }
