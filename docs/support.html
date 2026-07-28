@@ -1,0 +1,164 @@
+<title>Hang On — Support</title>
+<style>
+  :root {
+    --bg: #FDFBF7;
+    --surface: #F6F2EA;
+    --ink: #2B1F22;
+    --muted: #7A6B6D;
+    --accent: #B96C7C;
+    --accent-soft: #F0DEE2;
+    --border: rgba(43, 31, 34, 0.14);
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1B1517;
+      --surface: #241C1F;
+      --ink: #F3EAE7;
+      --muted: #B6A5A3;
+      --accent: #E4A2AE;
+      --accent-soft: #3A262B;
+      --border: rgba(243, 234, 231, 0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1517;
+    --surface: #241C1F;
+    --ink: #F3EAE7;
+    --muted: #B6A5A3;
+    --accent: #E4A2AE;
+    --accent-soft: #3A262B;
+    --border: rgba(243, 234, 231, 0.14);
+  }
+  :root[data-theme="light"] {
+    --bg: #FDFBF7;
+    --surface: #F6F2EA;
+    --ink: #2B1F22;
+    --muted: #7A6B6D;
+    --accent: #B96C7C;
+    --accent-soft: #F0DEE2;
+    --border: rgba(43, 31, 34, 0.14);
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding-top: 56px; }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    flex: none;
+    position: relative;
+  }
+  .mark::after {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 1.5px solid var(--accent);
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .sub { color: var(--muted); font-size: 16px; margin: 0 0 40px; max-width: 50ch; }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 400;
+    margin: 0 0 10px;
+  }
+  .qa {
+    padding: 22px 0;
+    border-top: 1px solid var(--border);
+  }
+  .qa:first-of-type { border-top: none; padding-top: 0; }
+  p { margin: 0 0 14px; max-width: 62ch; }
+  .qa p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  a:hover, a:focus-visible { border-bottom-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  .contact {
+    margin-top: 40px;
+    padding: 22px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .contact h2 { margin-bottom: 6px; }
+  .contact p { margin: 0 0 4px; color: var(--muted); }
+  .contact .email { font-size: 17px; color: var(--ink); }
+  footer {
+    margin-top: 56px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow"><span class="mark" aria-hidden="true"></span> Hang On</div>
+  <h1>Support</h1>
+  <p class="sub">Hang On checks a piece of clothing against your colors and your closet before you buy it. Here's how to get unstuck.</p>
+
+  <div class="qa">
+    <h2>Why does it need my camera?</h2>
+    <p>Two reasons: a one-time selfie to work out your colorimetry (your seasonal palette), and photos of clothing so it can tell what you're checking or cataloguing. Both are processed entirely on your phone — see the <a href="./privacy.html">privacy policy</a> for details.</p>
+  </div>
+
+  <div class="qa">
+    <h2>My selfie won't scan</h2>
+    <p>The face detector needs even, natural light and no backlight behind you — a window facing you works better than one behind you. Take off sunglasses or anything covering your hairline, and hold the phone at arm's length.</p>
+  </div>
+
+  <div class="qa">
+    <h2>How do I redo my colorimetry?</h2>
+    <p>Open your profile from the closet tab and tap <strong>Retake Colorimetry</strong>. Your old palette is replaced once the new selfie finishes processing.</p>
+  </div>
+
+  <div class="qa">
+    <h2>The stylist verdict isn't showing up</h2>
+    <p>Verdicts are written on-device by Apple Intelligence, which needs a compatible iPhone with Apple Intelligence turned on in Settings. Without it, Hang On still tells you whether a piece matches your palette and fills a gap — it just skips the written note.</p>
+  </div>
+
+  <div class="qa">
+    <h2>Can I use Hang On with Siri?</h2>
+    <p>Yes — try "Check a piece in Hang On," "What's my palette in Hang On," or "How's my closet in Hang On." Siri needs to be set to the language you're speaking, and the app has to have been opened at least once after install.</p>
+  </div>
+
+  <div class="qa">
+    <h2>How do I delete a piece from my closet?</h2>
+    <p>Press and hold any item's thumbnail and choose <strong>Delete</strong>.</p>
+  </div>
+
+  <div class="contact">
+    <h2>Still stuck?</h2>
+    <p>Email the developer directly and describe what happened:</p>
+    <p class="email"><a href="mailto:ana.carolina.palhares.poletto@gmail.com">ana.carolina.palhares.poletto@gmail.com</a></p>
+  </div>
+
+  <footer>Hang On — is it your color?</footer>
+</div>

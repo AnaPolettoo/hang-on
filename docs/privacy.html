@@ -1,0 +1,185 @@
+<title>Hang On — Privacy Policy</title>
+<style>
+  :root {
+    --bg: #FDFBF7;
+    --surface: #F6F2EA;
+    --ink: #2B1F22;
+    --muted: #7A6B6D;
+    --accent: #B96C7C;
+    --accent-soft: #F0DEE2;
+    --border: rgba(43, 31, 34, 0.14);
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1B1517;
+      --surface: #241C1F;
+      --ink: #F3EAE7;
+      --muted: #B6A5A3;
+      --accent: #E4A2AE;
+      --accent-soft: #3A262B;
+      --border: rgba(243, 234, 231, 0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1517;
+    --surface: #241C1F;
+    --ink: #F3EAE7;
+    --muted: #B6A5A3;
+    --accent: #E4A2AE;
+    --accent-soft: #3A262B;
+    --border: rgba(243, 234, 231, 0.14);
+  }
+  :root[data-theme="light"] {
+    --bg: #FDFBF7;
+    --surface: #F6F2EA;
+    --ink: #2B1F22;
+    --muted: #7A6B6D;
+    --accent: #B96C7C;
+    --accent-soft: #F0DEE2;
+    --border: rgba(43, 31, 34, 0.14);
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding-top: 56px; }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    flex: none;
+    position: relative;
+  }
+  .mark::after {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 1.5px solid var(--accent);
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    transform: rotate(0deg);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .updated { color: var(--muted); font-size: 14px; margin: 0 0 40px; }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    margin: 40px 0 12px;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  section:first-of-type h2 { border-top: none; padding-top: 0; }
+  p { margin: 0 0 14px; max-width: 62ch; }
+  .lede {
+    font-size: 17px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 8px;
+  }
+  ul { margin: 0 0 14px; padding-left: 20px; }
+  li { margin-bottom: 8px; max-width: 60ch; }
+  strong { font-weight: 600; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+  a:hover, a:focus-visible { border-bottom-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  .contact {
+    margin-top: 44px;
+    padding: 20px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .contact p { margin: 0; }
+  footer {
+    margin-top: 56px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 18px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; white-space: nowrap; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow"><span class="mark" aria-hidden="true"></span> Hang On</div>
+  <h1>Privacy policy</h1>
+  <p class="updated">Last updated July 28, 2026</p>
+
+  <section>
+    <p class="lede">Hang On doesn't collect your data. Every photo, every color, every measurement it takes stays on your phone — nothing is uploaded, sold, or shared, because there's nowhere for it to go. There are no servers behind this app.</p>
+  </section>
+
+  <section>
+    <h2>What the app looks at</h2>
+    <p>Hang On uses your phone's camera for two things: a one-time selfie to read your colorimetry (skin, hair, and eye tone), and photos of clothing you're cataloguing or considering buying.</p>
+    <table>
+      <tr><th>Data</th><td>Where it's processed</td></tr>
+      <tr><th>Selfie for colorimetry</th><td>On-device, using Apple's Vision framework. The photo itself is discarded after the three color samples are taken; only the resulting palette is kept.</td></tr>
+      <tr><th>Clothing photos</th><td>On-device, using Core ML and Vision to guess category and color. Stored locally so the piece shows up in your closet.</td></tr>
+      <tr><th>Your name</th><td>Stored locally, used only to personalize the on-screen greeting.</td></tr>
+      <tr><th>Stylist verdicts</th><td>Generated on-device by Apple Intelligence (Foundation Models), when available. No prompt or image leaves the phone.</td></tr>
+    </table>
+    <p>All of it lives in your phone's local storage. Deleting the app deletes it.</p>
+  </section>
+
+  <section>
+    <h2>What never happens</h2>
+    <ul>
+      <li>No account, sign-in, or email is required to use the app.</li>
+      <li>No analytics, tracking, or advertising SDKs are included.</li>
+      <li>No photo, color sample, or usage data is sent to a server — Hang On doesn't have one.</li>
+      <li>Nothing is shared with third parties, because nothing leaves the device in the first place.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Siri &amp; Shortcuts</h2>
+    <p>If you use Hang On's Siri Shortcuts ("Check a Piece," "My Palette," "Closet Summary"), the phrase you speak is processed by Siri under Apple's own privacy rules. Hang On only receives the request to run the shortcut — it answers using the same on-device data described above.</p>
+  </section>
+
+  <section>
+    <h2>Children's privacy</h2>
+    <p>Hang On isn't directed at children and doesn't knowingly collect information from anyone, of any age — the on-device design applies equally to every user.</p>
+  </section>
+
+  <section>
+    <h2>Changes to this policy</h2>
+    <p>If this policy ever changes, the update will be posted at this same address with a new date at the top.</p>
+  </section>
+
+  <div class="contact">
+    <p><strong>Questions about privacy?</strong><br>Reach the developer at <a href="mailto:ana.carolina.palhares.poletto@gmail.com">ana.carolina.palhares.poletto@gmail.com</a>.</p>
+  </div>
+
+  <footer>Hang On — is it your color?</footer>
+</div>
