@@ -3,6 +3,13 @@ import Testing
 import SwiftData
 @testable import AcademyAI
 
+private struct FakeDonationExplainer: DonationExplanationGenerating {
+    let text: String
+    func generateSuggestion(category: ClothingCategory, color: ClosetColor, isForgotten: Bool, daysSinceWorn: Int, isOffPalette: Bool, isDuplicate: Bool) async throws -> String {
+        text
+    }
+}
+
 @MainActor
 struct AnalysisViewModelTests {
     @Test func totalCountReflectsLoadedItems() throws {
@@ -127,5 +134,56 @@ struct AnalysisViewModelTests {
         viewModel.loadItems()
 
         #expect(viewModel.totalCount == 1)
+    }
+
+    @Test func donationCandidatesReflectsAdvisorLogic() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let candidateItem = ClothingItem(imageData: Data(), category: .tops, dominantColor: ClothingColorSwatch.teal.color, matchesColorimetry: false)
+        candidateItem.lastWornDate = Calendar.current.date(byAdding: .day, value: -120, to: .now)
+        let nonCandidateItem = ClothingItem(imageData: Data(), category: .bottoms, dominantColor: ClothingColorSwatch.navy.color, matchesColorimetry: true)
+        context.insert(candidateItem)
+        context.insert(nonCandidateItem)
+        try context.save()
+
+        let viewModel = AnalysisViewModel(modelContext: context)
+
+        #expect(viewModel.donationCandidates.map(\.item.persistentModelID) == [candidateItem.persistentModelID])
+    }
+
+    @Test func donationCandidatesIsEmptyWithEmptyCloset() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let viewModel = AnalysisViewModel(modelContext: ModelContext(container))
+
+        #expect(viewModel.donationCandidates.isEmpty)
+    }
+
+    @Test func donationSuggestionIsNilBeforeLoading() throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let item = ClothingItem(imageData: Data(), category: .tops, dominantColor: ClothingColorSwatch.teal.color, matchesColorimetry: false)
+        item.lastWornDate = Calendar.current.date(byAdding: .day, value: -120, to: .now)
+        context.insert(item)
+        try context.save()
+
+        let viewModel = AnalysisViewModel(modelContext: context, donationExplainer: FakeDonationExplainer(text: "unused"))
+
+        #expect(viewModel.donationSuggestion(for: item) == nil)
+    }
+
+    @Test func loadDonationSuggestionStoresGeneratorResultForCandidate() async throws {
+        let container = try ModelContainer(for: ClothingItem.self, UserColorimetryProfile.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let context = ModelContext(container)
+        let item = ClothingItem(imageData: Data(), category: .tops, dominantColor: ClothingColorSwatch.teal.color, matchesColorimetry: false)
+        item.lastWornDate = Calendar.current.date(byAdding: .day, value: -120, to: .now)
+        context.insert(item)
+        try context.save()
+
+        let viewModel = AnalysisViewModel(modelContext: context, donationExplainer: FakeDonationExplainer(text: "Maybe it's time to let this one go."))
+        let candidate = try #require(viewModel.donationCandidates.first)
+
+        await viewModel.loadDonationSuggestion(for: candidate)
+
+        #expect(viewModel.donationSuggestion(for: item) == "Maybe it's time to let this one go.")
     }
 }

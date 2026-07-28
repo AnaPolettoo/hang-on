@@ -7,11 +7,14 @@ import Observation
 final class AnalysisViewModel {
     var items: [ClothingItem] = []
     var profile: UserColorimetryProfile?
+    private(set) var donationSuggestions: [PersistentIdentifier: String] = [:]
 
     private let modelContext: ModelContext
+    private let donationExplainer: DonationExplanationGenerating
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, donationExplainer: DonationExplanationGenerating = FoundationModelsDonationExplainer()) {
         self.modelContext = modelContext
+        self.donationExplainer = donationExplainer
         loadItems()
     }
 
@@ -43,6 +46,36 @@ final class AnalysisViewModel {
     /// not in the palette, but still worth keeping since neutrals pair with everything.
     var neutralPieces: [ClothingItem] {
         items.filter { $0.matchesColorimetry == false && ClothingColorSwatch.nearest(to: $0.dominantColor).isNeutral }
+    }
+
+    /// Pieces worth suggesting for donation — see `DonationAdvisor` for the
+    /// candidacy rule. Empty (never an empty *state*) when nothing qualifies
+    /// or nobody in the closet has ever logged a wear (REQ-F.6/F.7).
+    var donationCandidates: [DonationAdvisor.Candidate] {
+        DonationAdvisor.candidates(items: items)
+    }
+
+    /// The generated suggestion sentence for a candidate, once loaded via
+    /// `loadDonationSuggestion(for:)`. `nil` until then — the View shows a
+    /// placeholder in that gap.
+    func donationSuggestion(for item: ClothingItem) -> String? {
+        donationSuggestions[item.persistentModelID]
+    }
+
+    /// Fetches and stores the donation suggestion sentence for one candidate.
+    /// The candidacy decision (which criteria fired) is already made by
+    /// `DonationAdvisor` — this only asks Foundation Models to phrase it
+    /// (REQ-F.4).
+    func loadDonationSuggestion(for candidate: DonationAdvisor.Candidate) async {
+        guard let text = try? await donationExplainer.generateSuggestion(
+            category: candidate.item.category,
+            color: candidate.item.dominantColor,
+            isForgotten: candidate.isForgotten,
+            daysSinceWorn: candidate.daysSinceWorn,
+            isOffPalette: candidate.isOffPalette,
+            isDuplicate: candidate.isDuplicate
+        ) else { return }
+        donationSuggestions[candidate.item.persistentModelID] = text
     }
 
     /// First letter of up to the first two words of the profile name, for the
