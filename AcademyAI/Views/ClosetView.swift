@@ -228,17 +228,29 @@ struct ClosetView: View {
     private func itemTile(
         _ item: ClothingItem
     ) -> some View {
-        ZStack {
-            Color.itemBackground
-            
-            if let uiImage = UIImage(data: item.imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
+        ZStack(alignment: .bottom) {
+            ZStack {
+                Color.itemBackground
+
+                if let uiImage = UIImage(data: item.imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(4)
+                } else {
+                    Theme.Color.ink
+                        .opacity(0.06)
+                }
+            }
+
+            if let lastWornDate = item.lastWornDate {
+                Text(WearTracker.relativeLabel(lastWorn: lastWornDate))
+                    .font(.system(size: 10))
+                    .foregroundStyle(Theme.Color.cream)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(Theme.Color.ink.opacity(0.65), in: Capsule())
                     .padding(4)
-            } else {
-                Theme.Color.ink
-                    .opacity(0.06)
             }
         }
         .aspectRatio(0.75, contentMode: .fit)
@@ -259,6 +271,10 @@ struct ClosetView: View {
             )
         }
         .contextMenu {
+            Button("I wore this", systemImage: "checkmark.circle") {
+                viewModel.markAsWorn(item)
+            }
+            .tint(Theme.Color.accentBorder)
             Button("Edit", systemImage: "pencil") {
                 editingItem = item
             }

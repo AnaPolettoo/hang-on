@@ -1,1456 +1,1466 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "·": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "·"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "·" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "·"
           }
         }
       }
     },
-    "›": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "›"
+    "›" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "›"
           }
         }
       }
     },
-    "%@ · %lld": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@ · %2$lld"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$lld"
-          }
-        }
-      }
-    },
-    "%@ %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@ %2$@"
+    "%@ · %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ %2$@"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld"
           }
         }
       }
     },
-    "%@ are your gap": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ são seu ponto fraco"
-          }
-        }
-      }
-    },
-    "%lld": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld"
-          }
-        }
-      }
-    },
-    "%lld %@ ALREADY IN YOUR CLOSET": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld %2$@ ALREADY IN YOUR CLOSET"
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld %2$@ JÁ NO SEU CLOSET"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
           }
         }
       }
     },
-    "%lld bought": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld compradas"
+    "%@ are your gap" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ são seu ponto fraco"
           }
         }
       }
     },
-    "%lld checked": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld verificadas"
+    "%lld" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
           }
         }
       }
     },
-    "%lld passed": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld dispensadas"
-          }
-        }
-      }
-    },
-    "+ Add a piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+ Adicionar peça"
-          }
-        }
-      }
-    },
-    "+%lld": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%lld"
-          }
-        }
-      }
-    },
-    "Add a piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar peça"
-          }
-        }
-      }
-    },
-    "Add a Piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar Peça"
-          }
-        }
-      }
-    },
-    "Add a piece now, or skip. Your closet fills up on its own as you check pieces before buying.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicione uma peça agora ou pule essa etapa. Seu closet se preenche sozinho conforme você for conferindo peças antes de comprar."
-          }
-        }
-      }
-    },
-    "Add pieces to your closet to see your wardrobe analysis": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicione peças ao seu closet para ver a análise do guarda-roupa"
-          }
-        }
-      }
-    },
-    "Align your face here": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alinhe seu rosto aqui"
-          }
-        }
-      }
-    },
-    "Analyzing...": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Analisando..."
-          }
-        }
-      }
-    },
-    "Black": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preto"
-          }
-        }
-      }
-    },
-    "bottoms": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "calças"
-          }
-        }
-      }
-    },
-    "Bottoms": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calça"
-          }
-        }
-      }
-    },
-    "Bought": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compradas"
-          }
-        }
-      }
-    },
-    "Brown": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Marrom"
-          }
-        }
-      }
-    },
-    "Buy": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comprar"
-          }
-        }
-      }
-    },
-    "Buy it anyway": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comprar mesmo assim"
-          }
-        }
-      }
-    },
-    "Buying": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comprando"
-          }
-        }
-      }
-    },
-    "BY CATEGORY": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "POR CATEGORIA"
-          }
-        }
-      }
-    },
-    "Camera or library": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Câmera ou biblioteca"
-          }
-        }
-      }
-    },
-    "Cancel": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelar"
-          }
-        }
-      }
-    },
-    "Category": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Categoria"
-          }
-        }
-      }
-    },
-    "Check a piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conferir uma peça"
-          }
-        }
-      }
-    },
-    "Check a Piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conferir uma Peça"
-          }
-        }
-      }
-    },
-    "Check if a piece is worth buying": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verificar se vale a pena comprar uma peça"
-          }
-        }
-      }
-    },
-    "Choose Again": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escolher Outra"
-          }
-        }
-      }
-    },
-    "Choose from Library": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escolher da Biblioteca"
-          }
-        }
-      }
-    },
-    "Clear Spring": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Primavera Brilhante"
-          }
-        }
-      }
-    },
-    "Clear Winter": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inverno Brilhante"
-          }
-        }
-      }
-    },
-    "Closet": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Closet"
-          }
-        }
-      }
-    },
-    "Closet Summary": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resumo do Closet"
-          }
-        }
-      }
-    },
-    "Color": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cor"
-          }
-        }
-      }
-    },
-    "Colors": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cores"
-          }
-        }
-      }
-    },
-    "Coming in a future update.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chegando em uma atualização futura."
-          }
-        }
-      }
-    },
-    "Continue": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continuar"
-          }
-        }
-      }
-    },
-    "Cool Summer": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verão Frio"
-          }
-        }
-      }
-    },
-    "Cool Winter": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inverno Frio"
-          }
-        }
-      }
-    },
-    "Couldn't delete the piece. Try again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível excluir a peça. Tente de novo."
-          }
-        }
-      }
-    },
-    "Couldn't process the photo. Try again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível processar a foto. Tente de novo."
-          }
-        }
-      }
-    },
-    "Couldn't save the check. Try again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível salvar a conferência. Tente de novo."
-          }
-        }
-      }
-    },
-    "Couldn't save the piece. Try again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível salvar a peça. Tente de novo."
-          }
-        }
-      }
-    },
-    "Cream": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Creme"
-          }
-        }
-      }
-    },
-    "Deep Autumn": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Outono Profundo"
-          }
-        }
-      }
-    },
-    "Deep Winter": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inverno Profundo"
-          }
-        }
-      }
-    },
-    "Delete": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir"
-          }
-        }
-      }
-    },
-    "Delete %@ %@?": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "Delete %1$@ %2$@?"
+    "%lld %@ ALREADY IN YOUR CLOSET" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@ ALREADY IN YOUR CLOSET"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir %1$@ %2$@?"
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld %2$@ JÁ NO SEU CLOSET"
           }
         }
       }
     },
-    "Delete this piece?": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir esta peça?"
+    "%lld bought" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld compradas"
           }
         }
       }
     },
-    "Done": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Concluir"
+    "%lld checked" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld verificadas"
           }
         }
       }
     },
-    "Dress": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vestido"
+    "%lld passed" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dispensadas"
           }
         }
       }
     },
-    "dresses": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "vestidos"
+    "+ Add a piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Adicionar peça"
           }
         }
       }
     },
-    "Edit": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Editar"
+    "+%lld" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
           }
         }
       }
     },
-    "Edit Piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Editar Peça"
+    "Add a piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar peça"
           }
         }
       }
     },
-    "Find Your Colors": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Descubra Suas Cores"
+    "Add a Piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar Peça"
           }
         }
       }
     },
-    "For pieces you already own. Add a photo and we'll guess the color and category, you can always fix it before saving.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Para peças que você já tem. Adicione uma foto que a gente já adivinha a cor e a categoria — você pode corrigir antes de salvar."
+    "Add a piece now, or skip. Your closet fills up on its own as you check pieces before buying." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicione uma peça agora ou pule essa etapa. Seu closet se preenche sozinho conforme você for conferindo peças antes de comprar."
           }
         }
       }
     },
-    "Get my color palette": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ver minha paleta de cores"
+    "Add pieces to your closet to see your wardrobe analysis" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicione peças ao seu closet para ver a análise do guarda-roupa"
           }
         }
       }
     },
-    "Green": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verde"
+    "Align your face here" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alinhe seu rosto aqui"
           }
         }
       }
     },
-    "Grey": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cinza"
+    "Analyzing..." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analisando..."
           }
         }
       }
     },
-    "Hang It Up": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pendurar no Closet"
+    "Black" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preto"
           }
         }
       }
     },
-    "Hang On": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hang On"
+    "bottoms" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "calças"
           }
         }
       }
     },
-    "Hang on, checking it against your palette and closet…": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Só um instante, conferindo com sua paleta e seu closet…"
+    "Bottoms" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calça"
           }
         }
       }
     },
-    "Hang tight, it fills itself as you go": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Relaxa, ele se preenche sozinho conforme você for usando"
+    "Bought" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compradas"
           }
         }
       }
     },
-    "Hi, %@": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oi, %@"
+    "Brown" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marrom"
           }
         }
       }
     },
-    "HONEST TAKE": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OPINIÃO SINCERA"
+    "Buy" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar"
           }
         }
       }
     },
-    "Indigo": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Índigo"
+    "Buy it anyway" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprar mesmo assim"
           }
         }
       }
     },
-    "Is it your color?": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "É a sua cor?"
+    "Buying" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprando"
           }
         }
       }
     },
-    "Jacket": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jaqueta"
+    "BY CATEGORY" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "POR CATEGORIA"
           }
         }
       }
     },
-    "jackets": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "jaquetas"
+    "Camera or library" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Câmera ou biblioteca"
           }
         }
       }
     },
-    "Light Blue": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azul Claro"
+    "Cancel" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
           }
         }
       }
     },
-    "Light Spring": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Primavera Clara"
+    "Category" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categoria"
           }
         }
       }
     },
-    "Light Summer": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verão Claro"
+    "Check a piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conferir uma peça"
           }
         }
       }
     },
-    "My Closet": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meu Closet"
+    "Check a Piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conferir uma Peça"
           }
         }
       }
     },
-    "My Palette": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Minha Paleta"
+    "Check if a piece is worth buying" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verificar se vale a pena comprar uma peça"
           }
         }
       }
     },
-    "Natural light, no filters. We just need to see you.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Luz natural, sem filtro. A gente só precisa ver você."
+    "Choose Again" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolher Outra"
           }
         }
       }
     },
-    "Navy": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azul-marinho"
+    "Choose from Library" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolher da Biblioteca"
           }
         }
       }
     },
-    "NEUTRAL PIECES · %lld": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "PEÇAS NEUTRAS · %lld"
+    "Clear Spring" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primavera Brilhante"
           }
         }
       }
     },
-    "Next time you're tempted, snap it first.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Da próxima vez que ficar tentada, fotografe antes."
+    "Clear Winter" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverno Brilhante"
           }
         }
       }
     },
-    "Nice to meet you": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prazer em conhecer você"
+    "Closet" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closet"
           }
         }
       }
     },
-    "Not in your palette, but neutrals pair with everything.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fora da sua paleta, mas neutros combinam com tudo."
+    "Closet Summary" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumo do Closet"
           }
         }
       }
     },
-    "Nothing to hang on to yet.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nada conferido ainda."
+    "Color" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cor"
           }
         }
       }
     },
-    "Nothing to hang your hat on yet": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ainda não há nada por aqui"
+    "Colors" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cores"
           }
         }
       }
     },
-    "OFF YOUR PALETTE · %lld": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "FORA DA SUA PALETA · %lld"
+    "Coming in a future update." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chegando em uma atualização futura."
           }
         }
       }
     },
-    "Olive": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verde-oliva"
+    "Continue" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
           }
         }
       }
     },
-    "Opens the camera so you can photograph a piece you're considering, then says whether it suits your palette and fills a real gap.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abre a câmera para você fotografar uma peça que está pensando em comprar e diz se ela combina com sua paleta e preenche uma lacuna real do guarda-roupa."
+    "Cool Summer" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verão Frio"
           }
         }
       }
     },
-    "Orange": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Laranja"
+    "Cool Winter" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverno Frio"
           }
         }
       }
     },
-    "Pass": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Passar"
+    "Couldn't delete the piece. Try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível excluir a peça. Tente de novo."
           }
         }
       }
     },
-    "Pass it anyway": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Passar mesmo assim"
+    "Couldn't process the photo. Try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível processar a foto. Tente de novo."
           }
         }
       }
     },
-    "Passed": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dispensadas"
+    "Couldn't save the check. Try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível salvar a conferência. Tente de novo."
           }
         }
       }
     },
-    "Patterned": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estampada"
+    "Couldn't save the piece. Try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível salvar a peça. Tente de novo."
           }
         }
       }
     },
-    "Piece": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peça"
+    "Cream" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creme"
           }
         }
       }
     },
-    "pieces": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "peças"
+    "Deep Autumn" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outono Profundo"
           }
         }
       }
     },
-    "Pink": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rosa"
+    "Deep Winter" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inverno Profundo"
           }
         }
       }
     },
-    "Profile": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Perfil"
+    "Delete" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir"
           }
         }
       }
     },
-    "Purple": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Roxo"
-          }
-        }
-      }
-    },
-    "RECENT CHECKS": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CONFERÊNCIAS RECENTES"
-          }
-        }
-      }
-    },
-    "Red": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vermelho"
-          }
-        }
-      }
-    },
-    "Retake Colorimetry": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Refazer Colorimetria"
-          }
-        }
-      }
-    },
-    "shoes": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "sapatos"
-          }
-        }
-      }
-    },
-    "Shoes": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapato"
-          }
-        }
-      }
-    },
-    "Should you buy it?": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vale a pena comprar?"
-          }
-        }
-      }
-    },
-    "Skip for now": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pular por enquanto"
-          }
-        }
-      }
-    },
-    "Snap a piece before you buy. I'll check it against your palette and closet.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotografe a peça antes de comprar. Eu confiro com sua paleta e seu closet."
-          }
-        }
-      }
-    },
-    "Soft Autumn": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Outono Suave"
-          }
-        }
-      }
-    },
-    "Soft Summer": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verão Suave"
-          }
-        }
-      }
-    },
-    "Something went wrong. Try again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Algo deu errado. Tente de novo."
-          }
-        }
-      }
-    },
-    "Start Your Closet": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comece Seu Closet"
-          }
-        }
-      }
-    },
-    "Summarize my closet": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resumir meu closet"
-          }
-        }
-      }
-    },
-    "Take Photo": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tirar Foto"
-          }
-        }
-      }
-    },
-    "Take Selfie": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tirar Selfie"
-          }
-        }
-      }
-    },
-    "Tap to add a photo": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toque para adicionar uma foto"
-          }
-        }
-      }
-    },
-    "Tap to capture": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toque para capturar"
-          }
-        }
-      }
-    },
-    "Taupe": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Taupe"
-          }
-        }
-      }
-    },
-    "Teal": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Azul-petróleo"
-          }
-        }
-      }
-    },
-    "Tells you how many pieces you have and how much of your closet sits in your palette, without opening the app.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diz quantas peças você tem e quanto do seu closet está na sua paleta, sem precisar abrir o app."
-          }
-        }
-      }
-    },
-    "Tells you your colorimetry subseason and the colors that suit you, without opening the app.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diz sua subestação de colorimetria e as cores que combinam com você, sem precisar abrir o app."
-          }
-        }
-      }
-    },
-    "The Verdict": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Veredito"
-          }
-        }
-      }
-    },
-    "Top": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blusa"
-          }
-        }
-      }
-    },
-    "tops": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "blusas"
-          }
-        }
-      }
-    },
-    "Use Photo": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Usar Foto"
-          }
-        }
-      }
-    },
-    "Wardrobe": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Guarda-roupa"
-          }
-        }
-      }
-    },
-    "Warm Autumn": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Outono Quente"
-          }
-        }
-      }
-    },
-    "Warm Spring": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Primavera Quente"
-          }
-        }
-      }
-    },
-    "We couldn't find your face. Try again in good, even light, avoid backlight.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não conseguimos encontrar seu rosto. Tente de novo em uma luz boa e uniforme, evite luz atrás de você."
-          }
-        }
-      }
-    },
-    "We couldn't get a clear read on the piece. Get closer, without the store's background around it.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não conseguimos identificar bem a peça. Chegue mais perto, sem o fundo da loja ao redor."
-          }
-        }
-      }
-    },
-    "We couldn't identify the piece. Try again with more light.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não conseguimos identificar a peça. Tente de novo com mais luz."
-          }
-        }
-      }
-    },
-    "What should we call you?": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Como podemos te chamar?"
-          }
-        }
-      }
-    },
-    "White": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Branco"
-          }
-        }
-      }
-    },
-    "Why these colors?": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Por que essas cores?"
-          }
-        }
-      }
-    },
-    "WORTH BUYING NEXT": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VALE A PENA COMPRAR"
-          }
-        }
-      }
-    },
-    "Yellow": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Amarelo"
-          }
-        }
-      }
-    },
-    "You have %lld %@ but only %lld %@. Time to balance your closet.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "You have %1$lld %2$@ but only %3$lld %4$@. Time to balance your closet."
+    "Delete %@ %@?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Delete %1$@ %2$@?"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você tem %1$lld %2$@, mas só %3$lld %4$@. Hora de equilibrar seu closet."
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir %1$@ %2$@?"
           }
         }
       }
     },
-    "You haven't found your colors yet. Open the app and take the colorimetry test first.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você ainda não descobriu suas cores. Abra o app e faça o teste de colorimetria primeiro."
+    "Delete this piece?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir esta peça?"
           }
         }
       }
     },
-    "Your closet is empty": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seu closet está vazio"
+    "Done" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concluir"
           }
         }
       }
     },
-    "Your closet is empty. Add a few pieces and ask me again.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seu closet está vazio. Adicione algumas peças e pergunte de novo."
+    "Dress" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vestido"
           }
         }
       }
     },
-    "Your Name": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seu Nome"
+    "dresses" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vestidos"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        }
+      }
+    },
+    "Edit Piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Peça"
+          }
+        }
+      }
+    },
+    "Find Your Colors" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descubra Suas Cores"
+          }
+        }
+      }
+    },
+    "For pieces you already own. Add a photo and we'll guess the color and category, you can always fix it before saving." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para peças que você já tem. Adicione uma foto que a gente já adivinha a cor e a categoria — você pode corrigir antes de salvar."
+          }
+        }
+      }
+    },
+    "Get my color palette" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver minha paleta de cores"
+          }
+        }
+      }
+    },
+    "Green" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde"
+          }
+        }
+      }
+    },
+    "Grey" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cinza"
+          }
+        }
+      }
+    },
+    "Hang It Up" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pendurar no Closet"
+          }
+        }
+      }
+    },
+    "Hang On" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hang On"
+          }
+        }
+      }
+    },
+    "Hang on, checking it against your palette and closet…" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Só um instante, conferindo com sua paleta e seu closet…"
+          }
+        }
+      }
+    },
+    "Hang tight, it fills itself as you go" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relaxa, ele se preenche sozinho conforme você for usando"
+          }
+        }
+      }
+    },
+    "Hi, %@" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oi, %@"
+          }
+        }
+      }
+    },
+    "HONEST TAKE" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OPINIÃO SINCERA"
+          }
+        }
+      }
+    },
+    "I wore this" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usei isso"
+          }
+        }
+      }
+    },
+    "Indigo" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índigo"
+          }
+        }
+      }
+    },
+    "Is it your color?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É a sua cor?"
+          }
+        }
+      }
+    },
+    "Jacket" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaqueta"
+          }
+        }
+      }
+    },
+    "jackets" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jaquetas"
+          }
+        }
+      }
+    },
+    "Light Blue" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul Claro"
+          }
+        }
+      }
+    },
+    "Light Spring" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primavera Clara"
+          }
+        }
+      }
+    },
+    "Light Summer" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verão Claro"
+          }
+        }
+      }
+    },
+    "My Closet" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meu Closet"
+          }
+        }
+      }
+    },
+    "My Palette" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minha Paleta"
+          }
+        }
+      }
+    },
+    "Natural light, no filters. We just need to see you." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luz natural, sem filtro. A gente só precisa ver você."
+          }
+        }
+      }
+    },
+    "Navy" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul-marinho"
+          }
+        }
+      }
+    },
+    "NEUTRAL PIECES · %lld" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PEÇAS NEUTRAS · %lld"
+          }
+        }
+      }
+    },
+    "Next time you're tempted, snap it first." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da próxima vez que ficar tentada, fotografe antes."
+          }
+        }
+      }
+    },
+    "Nice to meet you" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prazer em conhecer você"
+          }
+        }
+      }
+    },
+    "Not in your palette, but neutrals pair with everything." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fora da sua paleta, mas neutros combinam com tudo."
+          }
+        }
+      }
+    },
+    "Nothing to hang on to yet." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada conferido ainda."
+          }
+        }
+      }
+    },
+    "Nothing to hang your hat on yet" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainda não há nada por aqui"
+          }
+        }
+      }
+    },
+    "OFF YOUR PALETTE · %lld" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FORA DA SUA PALETA · %lld"
+          }
+        }
+      }
+    },
+    "Olive" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde-oliva"
+          }
+        }
+      }
+    },
+    "Opens the camera so you can photograph a piece you're considering, then says whether it suits your palette and fills a real gap." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre a câmera para você fotografar uma peça que está pensando em comprar e diz se ela combina com sua paleta e preenche uma lacuna real do guarda-roupa."
+          }
+        }
+      }
+    },
+    "Orange" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laranja"
+          }
+        }
+      }
+    },
+    "Pass" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passar"
+          }
+        }
+      }
+    },
+    "Pass it anyway" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passar mesmo assim"
+          }
+        }
+      }
+    },
+    "Passed" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispensadas"
+          }
+        }
+      }
+    },
+    "Patterned" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estampada"
+          }
+        }
+      }
+    },
+    "Piece" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peça"
+          }
+        }
+      }
+    },
+    "pieces" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "peças"
+          }
+        }
+      }
+    },
+    "Pink" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rosa"
+          }
+        }
+      }
+    },
+    "Profile" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfil"
+          }
+        }
+      }
+    },
+    "Purple" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roxo"
+          }
+        }
+      }
+    },
+    "RECENT CHECKS" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONFERÊNCIAS RECENTES"
+          }
+        }
+      }
+    },
+    "Red" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vermelho"
+          }
+        }
+      }
+    },
+    "Retake Colorimetry" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refazer Colorimetria"
+          }
+        }
+      }
+    },
+    "shoes" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sapatos"
+          }
+        }
+      }
+    },
+    "Shoes" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sapato"
+          }
+        }
+      }
+    },
+    "Should you buy it?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vale a pena comprar?"
+          }
+        }
+      }
+    },
+    "Skip for now" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pular por enquanto"
+          }
+        }
+      }
+    },
+    "Snap a piece before you buy. I'll check it against your palette and closet." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotografe a peça antes de comprar. Eu confiro com sua paleta e seu closet."
+          }
+        }
+      }
+    },
+    "Soft Autumn" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outono Suave"
+          }
+        }
+      }
+    },
+    "Soft Summer" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verão Suave"
+          }
+        }
+      }
+    },
+    "Something went wrong. Try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo deu errado. Tente de novo."
+          }
+        }
+      }
+    },
+    "Start Your Closet" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comece Seu Closet"
+          }
+        }
+      }
+    },
+    "Summarize my closet" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumir meu closet"
+          }
+        }
+      }
+    },
+    "Take Photo" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tirar Foto"
+          }
+        }
+      }
+    },
+    "Take Selfie" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tirar Selfie"
+          }
+        }
+      }
+    },
+    "Tap to add a photo" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque para adicionar uma foto"
+          }
+        }
+      }
+    },
+    "Tap to capture" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque para capturar"
+          }
+        }
+      }
+    },
+    "Taupe" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taupe"
+          }
+        }
+      }
+    },
+    "Teal" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul-petróleo"
+          }
+        }
+      }
+    },
+    "Tells you how many pieces you have and how much of your closet sits in your palette, without opening the app." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diz quantas peças você tem e quanto do seu closet está na sua paleta, sem precisar abrir o app."
+          }
+        }
+      }
+    },
+    "Tells you your colorimetry subseason and the colors that suit you, without opening the app." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diz sua subestação de colorimetria e as cores que combinam com você, sem precisar abrir o app."
+          }
+        }
+      }
+    },
+    "The Verdict" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Veredito"
+          }
+        }
+      }
+    },
+    "Top" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blusa"
+          }
+        }
+      }
+    },
+    "tops" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "blusas"
+          }
+        }
+      }
+    },
+    "Use Photo" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar Foto"
+          }
+        }
+      }
+    },
+    "Wardrobe" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda-roupa"
+          }
+        }
+      }
+    },
+    "Warm Autumn" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outono Quente"
+          }
+        }
+      }
+    },
+    "Warm Spring" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primavera Quente"
+          }
+        }
+      }
+    },
+    "We couldn't find your face. Try again in good, even light, avoid backlight." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos encontrar seu rosto. Tente de novo em uma luz boa e uniforme, evite luz atrás de você."
+          }
+        }
+      }
+    },
+    "We couldn't get a clear read on the piece. Get closer, without the store's background around it." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos identificar bem a peça. Chegue mais perto, sem o fundo da loja ao redor."
+          }
+        }
+      }
+    },
+    "We couldn't identify the piece. Try again with more light." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos identificar a peça. Tente de novo com mais luz."
+          }
+        }
+      }
+    },
+    "What should we call you?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como podemos te chamar?"
+          }
+        }
+      }
+    },
+    "White" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Branco"
+          }
+        }
+      }
+    },
+    "Why these colors?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por que essas cores?"
+          }
+        }
+      }
+    },
+    "WORTH BUYING NEXT" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VALE A PENA COMPRAR"
+          }
+        }
+      }
+    },
+    "Yellow" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amarelo"
+          }
+        }
+      }
+    },
+    "You have %lld %@ but only %lld %@. Time to balance your closet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You have %1$lld %2$@ but only %3$lld %4$@. Time to balance your closet."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem %1$lld %2$@, mas só %3$lld %4$@. Hora de equilibrar seu closet."
+          }
+        }
+      }
+    },
+    "You haven't found your colors yet. Open the app and take the colorimetry test first." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você ainda não descobriu suas cores. Abra o app e faça o teste de colorimetria primeiro."
+          }
+        }
+      }
+    },
+    "Your closet is empty" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu closet está vazio"
+          }
+        }
+      }
+    },
+    "Your closet is empty. Add a few pieces and ask me again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu closet está vazio. Adicione algumas peças e pergunte de novo."
+          }
+        }
+      }
+    },
+    "Your Name" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu Nome"
           }
         }
       }
     }
   },
-  "version": "1.1"
+  "version" : "1.1"
 }
