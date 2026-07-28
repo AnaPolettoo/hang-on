@@ -17,7 +17,8 @@ struct UserColorimetryProfileTests {
             hairColorSample: ClosetColor(red: 0.15, green: 0.08, blue: 0.05),
             season: .warmAutumn,
             recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn),
-            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn)
+            avoidColors: SeasonPalette.avoidColors(for: .warmAutumn),
+            explanationText: "Warm Autumn reads rich and earthy."
         )
         context.insert(profile)
         try context.save()
@@ -27,5 +28,6 @@ struct UserColorimetryProfileTests {
         #expect(fetched.first?.name == "Ana")
         #expect(fetched.first?.season == .warmAutumn)
         #expect(fetched.first?.recommendedColors.count == 8)
+        #expect(fetched.first?.explanationText == "Warm Autumn reads rich and earthy.")
     }
 }

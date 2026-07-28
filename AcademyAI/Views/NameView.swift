@@ -15,12 +15,6 @@ struct NameView: View {
                 Text("Nice to meet you")
                     .font(Theme.Font.largeTitle)
                     .foregroundStyle(Theme.Color.ink)
-                    .overlay(alignment: .bottom) {
-                        Rectangle()
-                            .fill(Theme.Color.ink)
-                            .frame(height: 2)
-                            .offset(y: 4)
-                    }
 
                 Text("What should we call you?")
                     .font(Theme.Font.subheadline)
@@ -34,7 +28,12 @@ struct NameView: View {
                     .background(Theme.Color.cream)
                     .clipShape(Capsule())
                     .overlay(
-                        Capsule().stroke(Theme.Color.ink, lineWidth: 1.5)
+                        Capsule().stroke(
+                            style: viewModel.name.isEmpty
+                                ? StrokeStyle(lineWidth: 1.5, dash: [5])
+                                : StrokeStyle(lineWidth: 1.5)
+                        )
+                        .foregroundStyle(Theme.Color.accentBorder)
                     )
                     .padding(.horizontal)
 

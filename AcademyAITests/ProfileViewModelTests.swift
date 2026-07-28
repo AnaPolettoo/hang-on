@@ -6,12 +6,13 @@ import SwiftData
 
 @MainActor
 struct ProfileViewModelTests {
-    @Test func loadProfileReadsNameSeasonAndUpToFourSwatches() throws {
+    @Test func loadProfileReadsNameSeasonAllSwatchesAndExplanation() throws {
         let container = try ModelContainer(for: UserColorimetryProfile.self, ClothingItem.self, PurchaseCheck.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let context = ModelContext(container)
         let profile = UserColorimetryProfile(
             name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .warmAutumn, recommendedColors: [.lime, .wine, .beige, .mauve, .coral], avoidColors: []
+            season: .warmAutumn, recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn), avoidColors: [],
+            explanationText: "Warm Autumn reads rich and earthy."
         )
         context.insert(profile)
         try context.save()
@@ -20,7 +21,8 @@ struct ProfileViewModelTests {
 
         #expect(viewModel.profileName == "Ana Carolina")
         #expect(viewModel.season == .warmAutumn)
-        #expect(viewModel.paletteSwatches == [.lime, .wine, .beige, .mauve])
+        #expect(viewModel.paletteSwatches == SeasonPalette.recommendedColors(for: .warmAutumn))
+        #expect(viewModel.explanation == "Warm Autumn reads rich and earthy.")
     }
 
     @Test func checkedCountAndClosetCountReflectStoredRecords() throws {

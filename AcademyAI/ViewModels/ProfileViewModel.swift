@@ -8,6 +8,7 @@ final class ProfileViewModel {
     var profileName: String?
     var season: Season?
     var paletteSwatches: [ClosetColor] = []
+    var explanation = ""
     var checkedCount = 0
     var closetCount = 0
 
@@ -22,7 +23,8 @@ final class ProfileViewModel {
         let profile = try? modelContext.fetch(FetchDescriptor<UserColorimetryProfile>()).first
         profileName = profile?.name
         season = profile?.season
-        paletteSwatches = Array((profile?.recommendedColors ?? []).prefix(4))
+        paletteSwatches = profile?.recommendedColors ?? []
+        explanation = profile?.explanationText ?? ""
         checkedCount = (try? modelContext.fetch(FetchDescriptor<PurchaseCheck>()))?.count ?? 0
         closetCount = (try? modelContext.fetch(FetchDescriptor<ClothingItem>()))?.count ?? 0
     }

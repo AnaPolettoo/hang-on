@@ -6,6 +6,7 @@ struct ProfileView: View {
     let viewModel: ProfileViewModel
     @State private var findYourColorsViewModel: FindYourColorsViewModel
     @State private var showRetakeColorimetry = false
+    @State private var showPaletteExplanation = false
 
     init(viewModel: ProfileViewModel, modelContext: ModelContext) {
         self.viewModel = viewModel
@@ -25,12 +26,25 @@ struct ProfileView: View {
             .padding(.bottom, 24)
         }
         .background(Theme.Color.cream)
+        .onAppear { viewModel.loadProfile() }
         .fullScreenCover(isPresented: $showRetakeColorimetry, onDismiss: { viewModel.loadProfile() }) {
             RetakeColorimetryFlow(
                 viewModel: findYourColorsViewModel,
                 name: viewModel.profileName,
+                onCancel: { showRetakeColorimetry = false },
                 onFinished: { showRetakeColorimetry = false }
             )
+        }
+        .sheet(isPresented: $showPaletteExplanation) {
+            if let season = viewModel.season {
+                PaletteExplanationView(
+                    viewModel: PaletteExplanationViewModel(
+                        season: season,
+                        recommended: viewModel.paletteSwatches,
+                        explanation: viewModel.explanation
+                    )
+                )
+            }
         }
     }
 
@@ -47,33 +61,33 @@ struct ProfileView: View {
             Text(viewModel.profileName ?? "Your name")
                 .font(Theme.Font.sectionTitle)
                 .foregroundStyle(Theme.Color.ink)
-                .overlay(alignment: .bottom) {
-                    Rectangle()
-                        .fill(Theme.Color.ink)
-                        .frame(height: 2)
-                        .offset(y: 6)
-                }
         }
         .padding(.top, 16)
     }
 
     private var paletteSection: some View {
-        VStack(spacing: 12) {
-            if let season = viewModel.season {
-                Text("MY PALETTE — \(season.displayName)".uppercased())
-                    .font(Theme.Font.micro)
-                    .tracking(0.5)
-                    .foregroundStyle(Theme.Color.ink.opacity(0.6))
-            }
-            HStack(spacing: 8) {
-                ForEach(Array(viewModel.paletteSwatches.enumerated()), id: \.offset) { _, color in
-                    Circle()
-                        .fill(swiftUIColor(color))
-                        .frame(width: 44, height: 44)
-                        .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+        Button {
+            showPaletteExplanation = true
+        } label: {
+            VStack(spacing: 12) {
+                if let season = viewModel.season {
+                    Text("MY PALETTE · \(season.displayName)".uppercased())
+                        .font(Theme.Font.micro)
+                        .tracking(0.5)
+                        .foregroundStyle(Theme.Color.ink.opacity(0.6))
+                }
+                FlowLayout(spacing: 8, rowSpacing: 8, horizontalAlignment: .center) {
+                    ForEach(Array(viewModel.paletteSwatches.enumerated()), id: \.offset) { _, color in
+                        Circle()
+                            .fill(swiftUIColor(color))
+                            .frame(width: 44, height: 44)
+                            .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+                    }
                 }
             }
         }
+        .buttonStyle(.plain)
+        .disabled(viewModel.season == nil)
     }
 
     private var statsRow: some View {
@@ -113,7 +127,7 @@ struct ProfileView: View {
                 Spacer()
                 Text("›")
                     .font(.system(size: 22))
-                    .foregroundStyle(Theme.Color.ink.opacity(0.5))
+                    .foregroundStyle(Theme.Color.accentBorder)
             }
             .padding(18)
             .background(Color.itemBackground)
@@ -134,25 +148,37 @@ struct ProfileView: View {
 private struct RetakeColorimetryFlow: View {
     let viewModel: FindYourColorsViewModel
     let name: String?
+    let onCancel: () -> Void
     let onFinished: () -> Void
 
     @State private var showResult = false
 
     var body: some View {
-        Group {
-            if showResult, let result = viewModel.result {
-                PaletteResultView(
-                    viewModel: PaletteResultViewModel(
-                        season: result.season,
-                        recommended: result.recommended,
-                        avoid: result.avoid,
-                        explanation: result.explanation
-                    ),
-                    ctaLabel: "Done",
-                    onStartChecking: onFinished
-                )
-            } else {
-                FindYourColorsView(viewModel: viewModel, name: name, onResult: { showResult = true })
+        NavigationStack {
+            Group {
+                if showResult, let result = viewModel.result {
+                    PaletteResultView(
+                        viewModel: PaletteResultViewModel(
+                            season: result.season,
+                            recommended: result.recommended,
+                            avoid: result.avoid,
+                            explanation: result.explanation
+                        ),
+                        ctaLabel: "Done",
+                        onStartChecking: onFinished
+                    )
+                } else {
+                    FindYourColorsView(viewModel: viewModel, name: name, onResult: { showResult = true })
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button(action: onCancel) {
+                                    Image(systemName: "chevron.backward")
+                                        .foregroundStyle(Theme.Color.ink)
+                                }
+                            }
+                        }
+                }
             }
         }
     }
@@ -166,7 +192,8 @@ private func makeProfilePreview() -> some View {
 
     context.insert(UserColorimetryProfile(
         name: "Ana Carolina", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-        season: .warmAutumn, recommendedColors: [.lime, .wine, .beige, .mauve], avoidColors: []
+        season: .warmAutumn, recommendedColors: SeasonPalette.recommendedColors(for: .warmAutumn), avoidColors: [],
+        explanationText: "Warm Autumn reads rich and earthy: golden undertones in your skin, warm depth in your hair and eyes. Colors like rust and olive echo that warmth, while icy blues and stark black fight it and wash you out."
     ))
     for _ in 0..<26 {
         context.insert(ClothingItem(imageData: Data(), category: .tops, dominantColor: .lime, matchesColorimetry: true))

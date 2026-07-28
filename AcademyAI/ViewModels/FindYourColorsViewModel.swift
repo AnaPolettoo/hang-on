@@ -59,6 +59,7 @@ final class FindYourColorsViewModel {
                 existingProfile.season = season
                 existingProfile.recommendedColors = recommended
                 existingProfile.avoidColors = avoid
+                existingProfile.explanationText = explanation
             } else {
                 let profile = UserColorimetryProfile(
                     name: name,
@@ -67,7 +68,8 @@ final class FindYourColorsViewModel {
                     hairColorSample: hair,
                     season: season,
                     recommendedColors: recommended,
-                    avoidColors: avoid
+                    avoidColors: avoid,
+                    explanationText: explanation
                 )
                 modelContext.insert(profile)
             }

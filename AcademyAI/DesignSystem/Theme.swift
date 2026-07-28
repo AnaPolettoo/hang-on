@@ -38,29 +38,6 @@ enum Theme {
     }
 }
 
-extension View {
-    /// The recurring "underline rule under a title" treatment (Figma title component) —
-    /// used for every main screen's title and the palette-result season heading.
-    func titleUnderline(offset: CGFloat = 3) -> some View {
-        overlay(alignment: .bottomLeading) {
-            Rectangle()
-                .fill(Theme.Color.ink)
-                .frame(height: 2)
-                .offset(y: offset)
-        }
-    }
-
-    /// Same underline rule, for use under a *native* `.navigationTitle` (large display
-    /// mode) instead of a custom title `Text` — sits right below the system title.
-    func nativeTitleUnderline() -> some View {
-        safeAreaInset(edge: .top, spacing: 0) {
-            Rectangle()
-                .fill(Theme.Color.ink)
-                .frame(height: 2)
-        }
-    }
-}
-
 extension SwiftUI.Color {
     init(hex: String) {
         var hexValue = UInt64()

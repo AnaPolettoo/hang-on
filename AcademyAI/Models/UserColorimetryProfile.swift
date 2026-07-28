@@ -16,6 +16,10 @@ final class UserColorimetryProfile {
     var season: Season
     private var recommendedColorsData: Data
     private var avoidColorsData: Data
+    /// The Foundation Models paragraph explaining why the season/palette fits,
+    /// generated once at onboarding (or retake) time and persisted here so the
+    /// Profile screen can show it again without a fresh generation call.
+    var explanationText: String = ""
     var createdAt: Date
 
     var skinToneSample: ClosetColor {
@@ -51,6 +55,7 @@ final class UserColorimetryProfile {
         season: Season,
         recommendedColors: [ClosetColor],
         avoidColors: [ClosetColor],
+        explanationText: String = "",
         createdAt: Date = .now
     ) {
         self.name = name
@@ -60,6 +65,7 @@ final class UserColorimetryProfile {
         self.season = season
         self.recommendedColorsData = (try? JSONEncoder().encode(recommendedColors)) ?? Data()
         self.avoidColorsData = (try? JSONEncoder().encode(avoidColors)) ?? Data()
+        self.explanationText = explanationText
         self.createdAt = createdAt
     }
 

@@ -11,14 +11,14 @@ struct SplashView: View {
             VStack(spacing: 12) {
                 Image(systemName: "hanger")
                     .font(.system(size: 40, weight: .light))
-                    .foregroundStyle(Theme.Color.ink)
+                    .foregroundStyle(Theme.Color.accentBorder)
 
-                Text("Closet")
+                Text("WorthWear")
                     .font(Theme.Font.display)
                     .foregroundStyle(Theme.Color.ink)
                     .overlay(alignment: .bottom) {
                         Rectangle()
-                            .fill(Theme.Color.ink)
+                            .fill(Theme.Color.accentBorder)
                             .frame(height: 2)
                             .offset(y: 4)
                     }

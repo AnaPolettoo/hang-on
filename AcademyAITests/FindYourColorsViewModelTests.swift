@@ -74,6 +74,7 @@ struct FindYourColorsViewModelTests {
         #expect(saved.count == 1)
         #expect(saved.first?.name == "Ana")
         #expect(saved.first?.recommendedColors.count == 8)
+        #expect(saved.first?.explanationText == generator.stubbedText)
     }
 
     @Test func processSelfieSetsErrorWhenNoFaceDetected() async throws {
@@ -97,7 +98,8 @@ struct FindYourColorsViewModelTests {
         let context = ModelContext(container)
         let existing = UserColorimetryProfile(
             name: "Ana", skinToneSample: .beige, eyeColorSample: .wine, hairColorSample: .wine,
-            season: .lightSpring, recommendedColors: [.icyBlue], avoidColors: [.golden]
+            season: .lightSpring, recommendedColors: [.icyBlue], avoidColors: [.golden],
+            explanationText: "stale explanation"
         )
         context.insert(existing)
         try context.save()
@@ -116,6 +118,7 @@ struct FindYourColorsViewModelTests {
         #expect(saved.count == 1)
         #expect(saved.first?.persistentModelID == existingID)
         #expect(saved.first?.season != .lightSpring)
+        #expect(saved.first?.explanationText == generator.stubbedText)
     }
 
     @Test func viewModelPassesAxesAndAvoidColorsToTheExplanationGenerator() async throws {

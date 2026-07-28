@@ -18,8 +18,7 @@ struct AddPieceView: View {
     @State private var sessionAddedItems: [ClothingItem] = []
     @State private var pendingConfirmImage: UIImage?
     
-    private let colorColumns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .dresses, .bottoms, .shoes]
+    private let reviewableCategories: [ClothingCategory] = [.tops, .outerwear, .dresses, .bottoms, .shoes, .other]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,7 +29,7 @@ struct AddPieceView: View {
                     } else {
                         HStack{
                             Spacer()
-                            Text("For pieces you already own. Add a photo and we'll guess the color and category — you can always fix it before saving.")
+                            Text("For pieces you already own. Add a photo and we'll guess the color and category, you can always fix it before saving.")
                                 .font(Theme.Font.caption)
                                 .foregroundStyle(Theme.Color.inkMuted)
                                 .multilineTextAlignment(.center)
@@ -234,13 +233,12 @@ struct AddPieceView: View {
                 .font(Theme.Font.body)
                 .foregroundStyle(Theme.Color.ink)
             
-            LazyVGrid(columns: colorColumns, spacing: 8) {
+            FlowLayout(spacing: 8, rowSpacing: 8) {
                 ForEach(ClothingColorSwatch.allCases, id: \.self) { swatch in
                     swatchPill(swatch)
                 }
+                patternedPill
             }
-
-            patternedPill
         }
     }
 
@@ -278,6 +276,7 @@ struct AddPieceView: View {
                     .overlay(Circle().stroke(Theme.Color.ink.opacity(0.2), lineWidth: 1))
                 Text(swatch.displayName)
                     .font(Theme.Font.caption)
+                    .fixedSize()
             }
             .foregroundStyle(isSelected ? Theme.Color.cream : Theme.Color.ink)
             .padding(.vertical, 6)
@@ -297,7 +296,7 @@ struct AddPieceView: View {
                 .font(Theme.Font.body)
                 .foregroundStyle(Theme.Color.ink)
             
-            HStack(spacing: 8) {
+            FlowLayout(spacing: 8, rowSpacing: 8) {
                 ForEach(reviewableCategories, id: \.self) { category in
                     categoryPill(category)
                 }
@@ -312,6 +311,7 @@ struct AddPieceView: View {
         } label: {
             Text(category.rawValue.capitalized)
                 .font(Theme.Font.subheadline)
+                .fixedSize()
                 .foregroundStyle(isSelected ? Theme.Color.cream : Theme.Color.ink)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 18)

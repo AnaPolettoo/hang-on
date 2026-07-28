@@ -53,7 +53,7 @@ struct PaletteExplanationView: View {
         viewModel: PaletteExplanationViewModel(
             season: .warmAutumn,
             recommended: SeasonPalette.recommendedColors(for: .warmAutumn),
-            explanation: "Warm Autumn reads rich and earthy — golden undertones in your skin, warm depth in your hair and eyes. Colors like rust and olive echo that warmth, while icy blues and stark black fight it and wash you out."
+            explanation: "Warm Autumn reads rich and earthy: golden undertones in your skin, warm depth in your hair and eyes. Colors like rust and olive echo that warmth, while icy blues and stark black fight it and wash you out."
         )
     )
 }

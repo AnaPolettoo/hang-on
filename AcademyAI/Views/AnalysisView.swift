@@ -6,7 +6,7 @@ import SwiftData
 struct AnalysisView: View {
     let viewModel: AnalysisViewModel
 
-    private let horizontalPadding: CGFloat = 24
+    private let horizontalPadding: CGFloat = 16
     private let cardCornerRadius: CGFloat = 18
 
     var body: some View {
@@ -19,7 +19,6 @@ struct AnalysisView: View {
         }
         .navigationTitle("Wardrobe")
         .navigationBarTitleDisplayMode(.large)
-        .nativeTitleUnderline()
         .background(Theme.Color.cream)
         .onAppear { viewModel.loadItems() }
     }

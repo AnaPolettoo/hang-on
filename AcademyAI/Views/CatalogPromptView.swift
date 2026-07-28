@@ -21,7 +21,7 @@ struct CatalogPromptView: View {
                             .offset(y: 4)
                     }
 
-                Text("Add a piece now, or skip — your closet fills up on its own as you check pieces before buying.")
+                Text("Add a piece now, or skip. Your closet fills up on its own as you check pieces before buying.")
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.inkMuted)
                     .multilineTextAlignment(.center)

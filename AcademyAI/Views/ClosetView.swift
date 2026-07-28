@@ -12,7 +12,7 @@ struct ClosetView: View {
     @State private var showAddPiece = false
     @State private var showProfile = false
     
-    private let horizontalPadding: CGFloat = 24
+    private let horizontalPadding: CGFloat = 16
     private let gridSpacing: CGFloat = 8
     
     private var thumbnailColumns: [GridItem] {
@@ -58,7 +58,6 @@ struct ClosetView: View {
         }
         .navigationTitle("My Closet")
         .navigationBarTitleDisplayMode(.large)
-        .nativeTitleUnderline()
         .toolbar {
             if !viewModel.items.isEmpty{
                 ToolbarItem(placement: .primaryAction) {
@@ -95,14 +94,11 @@ struct ClosetView: View {
         Button {
             showProfile = true
         } label: {
-            Text(viewModel.profileInitials)
-                .font(Theme.Font.subheadline)
+            Image(systemName: "person.fill")
                 .foregroundStyle(Theme.Color.ink)
-                .frame(width: 44, height: 44)
-                .background(Theme.Color.accentBorder)
-                .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
-                .clipShape(Circle())
         }
+        .buttonStyle(.borderedProminent)
+        .tint(Theme.Color.accentBorder)
         .accessibilityLabel("Profile")
     }
     
@@ -122,8 +118,7 @@ struct ClosetView: View {
                     Text("Your closet is empty")
                         .font(Theme.Font.sectionTitle)
                         .foregroundStyle(Theme.Color.ink)
-                        .titleUnderline()
-                    
+
                     Text("It fills itself as you go")
                         .font(Theme.Font.subheadline)
                         .foregroundStyle(
@@ -151,7 +146,7 @@ struct ClosetView: View {
         ScrollView {
             LazyVStack(
                 alignment: .leading,
-                spacing: 30
+                spacing: 26
             ) {
                 ForEach(
                     groupedItems,

@@ -4,6 +4,8 @@ import UIKit
 struct PurchaseCheckView: View {
     let viewModel: PurchaseCheckViewModel
 
+    private let horizontalPadding: CGFloat = 16
+
     @State private var showCamera = false
     @State private var showLibrary = false
     @State private var pendingLibraryImage: UIImage?
@@ -32,10 +34,11 @@ struct PurchaseCheckView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                greeting
                 ctaCard
                 statsRow
-                if !viewModel.recentChecks.isEmpty {
+                if viewModel.recentChecks.isEmpty {
+                    emptyChecksCard
+                } else {
                     recentChecksSection
                 }
 
@@ -44,7 +47,7 @@ struct PurchaseCheckView: View {
                         .font(Theme.Font.caption)
                         .foregroundStyle(Theme.Color.inkMuted)
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, horizontalPadding)
                 }
             }
             .padding(.top, 8)
@@ -52,6 +55,8 @@ struct PurchaseCheckView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.Color.cream.ignoresSafeArea())
+        .navigationTitle("Hi, \(viewModel.profileName ?? "there")")
+        .navigationBarTitleDisplayMode(.large)
         .fullScreenCover(isPresented: $showCamera) {
             CameraCaptureView(
                 cameraDevice: .rear,
@@ -106,6 +111,7 @@ struct PurchaseCheckView: View {
             viewModel.pendingAutoLaunchCamera = false
         }
         .onAppear {
+            viewModel.loadHistory()
             guard viewModel.pendingAutoLaunchCamera else { return }
             showCamera = true
             viewModel.pendingAutoLaunchCamera = false
@@ -118,8 +124,12 @@ struct PurchaseCheckView: View {
     // by hand — a custom ButtonStyle isn't guaranteed to apply to a Menu's trigger.
     private var checkAPieceMenu: some View {
         Menu {
-            Button("Take Photo") { showCamera = true }
-            Button("Choose from Library") { showLibrary = true }
+            Button { showCamera = true } label: {
+                Label("Take Photo", systemImage: "camera")
+            }
+            Button { showLibrary = true } label: {
+                Label("Choose from Library", systemImage: "photo.on.rectangle")
+            }
         } label: {
             Text("Check a piece")
                 .font(Theme.Font.button)
@@ -132,15 +142,6 @@ struct PurchaseCheckView: View {
         .disabled(viewModel.isProcessing)
     }
 
-    private var greeting: some View {
-        Text("Hi, \(viewModel.profileName ?? "there")")
-            .font(Theme.Font.largeTitle)
-            .foregroundStyle(Theme.Color.ink)
-            .titleUnderline()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 24)
-    }
-
     private var ctaCard: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
@@ -148,13 +149,7 @@ struct PurchaseCheckView: View {
                     Text("Should you buy it?")
                         .font(Theme.Font.sectionTitle)
                         .foregroundStyle(Theme.Color.ink)
-                        .overlay(alignment: .bottom) {
-                            Rectangle()
-                                .fill(Theme.Color.ink)
-                                .frame(height: 2)
-                                .offset(y: 3)
-                        }
-                    Text("Snap a piece before you buy — I'll check it against your palette and closet.")
+                    Text("Snap a piece before you buy. I'll check it against your palette and closet.")
                         .font(Theme.Font.subheadline)
                         .foregroundStyle(Theme.Color.inkMuted)
                         .multilineTextAlignment(.center)
@@ -182,7 +177,7 @@ struct PurchaseCheckView: View {
                 ProgressView().tint(Theme.Color.ink).padding(.top, 16)
             }
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, horizontalPadding)
     }
 
     private var statsRow: some View {
@@ -195,6 +190,27 @@ struct PurchaseCheckView: View {
         }
         .font(Theme.Font.caption)
         .foregroundStyle(Theme.Color.ink.opacity(0.6))
+    }
+
+    private var emptyChecksCard: some View {
+        VStack(spacing: 6) {
+            Text("No checks yet.")
+                .font(Theme.Font.body)
+                .foregroundStyle(Theme.Color.ink.opacity(0.7))
+            Text("Next time you're tempted, snap it first.")
+                .font(Theme.Font.subheadline)
+                .foregroundStyle(Theme.Color.inkMuted)
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
+        .padding(.horizontal, 16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(style: StrokeStyle(lineWidth: 2, dash: [6]))
+                .foregroundStyle(Theme.Color.ink.opacity(0.3))
+        )
+        .padding(.horizontal, horizontalPadding)
     }
 
     private var recentChecksSection: some View {
@@ -217,7 +233,7 @@ struct PurchaseCheckView: View {
             .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.Color.ink, lineWidth: 2))
             .clipShape(RoundedRectangle(cornerRadius: 18))
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, horizontalPadding)
     }
 
     private func recentCheckRow(_ check: PurchaseCheck) -> some View {

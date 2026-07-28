@@ -15,8 +15,12 @@ struct AddClothingItemMenu: View {
             // PrimaryButtonStyle's look by hand — a custom ButtonStyle isn't
             // guaranteed to apply to a Menu's trigger.
             Menu {
-                Button("Take Photo") { showCamera = true }
-                Button("Choose from Library") { showLibrary = true }
+                Button { showCamera = true } label: {
+                    Label("Take Photo", systemImage: "camera")
+                }
+                Button { showLibrary = true } label: {
+                    Label("Choose from Library", systemImage: "photo.on.rectangle")
+                }
             } label: {
                 Text("Add a Piece")
                     .font(Theme.Font.button)

@@ -14,14 +14,8 @@ struct FindYourColorsView: View {
                 Text("Find Your Colors")
                     .font(Theme.Font.largeTitle)
                     .foregroundStyle(Theme.Color.ink)
-                    .overlay(alignment: .bottom) {
-                        Rectangle()
-                            .fill(Theme.Color.ink)
-                            .frame(height: 2)
-                            .offset(y: 4)
-                    }
 
-                Text("Natural light, no filters — we just need to see you.")
+                Text("Natural light, no filters. We just need to see you.")
                     .font(Theme.Font.subheadline)
                     .foregroundStyle(Theme.Color.inkMuted)
                     .multilineTextAlignment(.center)
@@ -30,11 +24,16 @@ struct FindYourColorsView: View {
 
                 ZStack {
                     Ellipse()
-                        .stroke(Theme.Color.ink, lineWidth: 2)
+                        .stroke(
+                            style: viewModel.isProcessing || viewModel.errorMessage != nil
+                                ? StrokeStyle(lineWidth: 2)
+                                : StrokeStyle(lineWidth: 2, dash: [6])
+                        )
+                        .foregroundStyle(Theme.Color.ink)
                         .frame(width: 260, height: 340)
 
                     if viewModel.isProcessing {
-                        ProgressView("Analisando...")
+                        ProgressView("Analyzing...")
                             .tint(Theme.Color.ink)
                             .foregroundStyle(Theme.Color.ink)
                     } else if let errorMessage = viewModel.errorMessage {
