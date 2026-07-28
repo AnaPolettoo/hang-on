@@ -101,4 +101,17 @@ final class ClosetViewModel {
             errorMessage = "Couldn't save the piece. Try again."
         }
     }
+
+    func deleteItem(_ item: ClothingItem) {
+        // Same errorMessage-clearing shape as saveItem: a stale message from an
+        // earlier failed action shouldn't read as belonging to this delete.
+        errorMessage = nil
+        modelContext.delete(item)
+        do {
+            try modelContext.save()
+            loadItems()
+        } catch {
+            errorMessage = "Couldn't delete the piece. Try again."
+        }
+    }
 }
