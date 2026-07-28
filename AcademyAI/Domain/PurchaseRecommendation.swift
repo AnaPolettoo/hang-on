@@ -33,7 +33,7 @@ enum PurchaseRecommendation: Equatable {
     var symbolName: String {
         switch self {
         case .worthIt: return "checkmark.circle.fill"
-        case .alreadyOwned: return "checkmark.circle.fill"
+        case .alreadyOwned: return "arrow.triangle.2.circlepath.circle.fill"
         case .skipIt: return "xmark.circle.fill"
         }
     }

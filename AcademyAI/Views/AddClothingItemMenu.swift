@@ -15,10 +15,15 @@ struct AddClothingItemMenu: View {
             // PrimaryButtonStyle's look by hand — a custom ButtonStyle isn't
             // guaranteed to apply to a Menu's trigger.
             Menu {
-                Button { showCamera = true } label: {
+                // The Menu's own dismissal is a UIKit context-menu animation that spans
+                // several run loop turns; presenting a fullScreenCover/sheet before it
+                // finishes hangs the UI (menu closes but touches stop registering).
+                // A same-tick `.async` isn't a long enough delay — this needs to clear
+                // the whole dismiss animation, not just the next run loop turn.
+                Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showCamera = true } } label: {
                     Label("Take Photo", systemImage: "camera")
                 }
-                Button { showLibrary = true } label: {
+                Button { DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { showLibrary = true } } label: {
                     Label("Choose from Library", systemImage: "photo.on.rectangle")
                 }
             } label: {
