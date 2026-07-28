@@ -64,7 +64,7 @@ struct ProfileView: View {
                 .font(Theme.Font.sectionTitle)
                 .foregroundStyle(Theme.Color.ink)
                 .overlay(alignment: .bottom) {
-                    Capsule()
+                    DashedLine()
                         .stroke(style: StrokeStyle(lineWidth: 2, dash: [4]))
                         .foregroundStyle(Theme.Color.ink.opacity(0.4))
                         .frame(height: 2)
@@ -85,18 +85,25 @@ struct ProfileView: View {
                         .tracking(0.5)
                         .foregroundStyle(Theme.Color.ink.opacity(0.6))
                 }
-                FlowLayout(spacing: 8, rowSpacing: 8, horizontalAlignment: .center) {
-                    ForEach(Array(viewModel.paletteSwatches.enumerated()), id: \.offset) { _, color in
-                        Circle()
-                            .fill(swiftUIColor(color))
-                            .frame(width: 44, height: 44)
-                            .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
-                    }
+                VStack(spacing: 8) {
+                    swatchRow(Array(viewModel.paletteSwatches.prefix(4)))
+                    swatchRow(Array(viewModel.paletteSwatches.dropFirst(4).prefix(4)))
                 }
             }
         }
         .buttonStyle(.plain)
         .disabled(viewModel.season == nil)
+    }
+
+    private func swatchRow(_ colors: [ClosetColor]) -> some View {
+        HStack(spacing: 8) {
+            ForEach(Array(colors.enumerated()), id: \.offset) { _, color in
+                Circle()
+                    .fill(swiftUIColor(color))
+                    .frame(width: 44, height: 44)
+                    .overlay(Circle().stroke(Theme.Color.ink, lineWidth: 2))
+            }
+        }
     }
 
     private var statsRow: some View {
@@ -151,6 +158,17 @@ struct ProfileView: View {
 
     private func swiftUIColor(_ color: ClosetColor) -> Color {
         Color(red: color.red, green: color.green, blue: color.blue)
+    }
+}
+
+/// A single horizontal line, unlike `Capsule`/`Rectangle` which stroke as two
+/// parallel edges (top + bottom) when squashed to a thin height.
+private struct DashedLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.midY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        return path
     }
 }
 

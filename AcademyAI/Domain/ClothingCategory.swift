@@ -6,24 +6,24 @@ enum ClothingCategory: String, Codable, CaseIterable {
     /// Singular noun for item titles ("Teal " + displayNoun -> "Teal Top").
     var displayNoun: String {
         switch self {
-        case .tops: return "Top"
-        case .bottoms: return "Bottoms"
-        case .outerwear: return "Jacket"
-        case .dresses: return "Dress"
-        case .shoes: return "Shoes"
-        case .other: return "Piece"
+        case .tops: return String(localized: "Top")
+        case .bottoms: return String(localized: "Bottoms")
+        case .outerwear: return String(localized: "Jacket")
+        case .dresses: return String(localized: "Dress")
+        case .shoes: return String(localized: "Shoes")
+        case .other: return String(localized: "Piece")
         }
     }
 
     /// Plural, lowercase — for "N similar {pluralDisplayName} already in your closet".
     var pluralDisplayName: String {
         switch self {
-        case .tops: return "tops"
-        case .bottoms: return "bottoms"
-        case .outerwear: return "jackets"
-        case .dresses: return "dresses"
-        case .shoes: return "shoes"
-        case .other: return "pieces"
+        case .tops: return String(localized: "tops")
+        case .bottoms: return String(localized: "bottoms")
+        case .outerwear: return String(localized: "jackets")
+        case .dresses: return String(localized: "dresses")
+        case .shoes: return String(localized: "shoes")
+        case .other: return String(localized: "pieces")
         }
     }
 }

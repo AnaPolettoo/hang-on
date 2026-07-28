@@ -180,4 +180,8 @@ struct AcademyAIShortcuts: AppShortcutsProvider {
             systemImageName: "tshirt"
         )
     }
+
+    // Closest system tile color to the app's dusty-rose accent (Theme.Color.accentBorder,
+    // #D38492) — Shortcuts/Spotlight tiles only accept this fixed palette, not arbitrary hex.
+    static var shortcutTileColor: ShortcutTileColor { .pink }
 }

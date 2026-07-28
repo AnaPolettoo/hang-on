@@ -16,23 +16,23 @@ enum ClothingColorSwatch: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .cream: return "Cream"
-        case .brown: return "Brown"
-        case .indigo: return "Indigo"
-        case .navy: return "Navy"
-        case .white: return "White"
-        case .red: return "Red"
-        case .taupe: return "Taupe"
-        case .grey: return "Grey"
-        case .yellow: return "Yellow"
-        case .teal: return "Teal"
-        case .pink: return "Pink"
-        case .black: return "Black"
-        case .lightBlue: return "Light Blue"
-        case .green: return "Green"
-        case .olive: return "Olive"
-        case .orange: return "Orange"
-        case .purple: return "Purple"
+        case .cream: return String(localized: "Cream")
+        case .brown: return String(localized: "Brown")
+        case .indigo: return String(localized: "Indigo")
+        case .navy: return String(localized: "Navy")
+        case .white: return String(localized: "White")
+        case .red: return String(localized: "Red")
+        case .taupe: return String(localized: "Taupe")
+        case .grey: return String(localized: "Grey")
+        case .yellow: return String(localized: "Yellow")
+        case .teal: return String(localized: "Teal")
+        case .pink: return String(localized: "Pink")
+        case .black: return String(localized: "Black")
+        case .lightBlue: return String(localized: "Light Blue")
+        case .green: return String(localized: "Green")
+        case .olive: return String(localized: "Olive")
+        case .orange: return String(localized: "Orange")
+        case .purple: return String(localized: "Purple")
         }
     }
 

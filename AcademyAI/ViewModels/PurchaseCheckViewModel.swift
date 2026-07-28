@@ -78,7 +78,7 @@ final class PurchaseCheckViewModel {
         do {
             let classification = try await classifier.classify(finalImage, orientation: .up, mask: removal?.mask)
             guard classification.confidence >= Self.lowConfidenceThreshold else {
-                errorMessage = "We couldn't get a clear read on the piece. Get closer, without the store's background around it."
+                errorMessage = String(localized: "We couldn't get a clear read on the piece. Get closer, without the store's background around it.")
                 return nil
             }
 
@@ -110,7 +110,7 @@ final class PurchaseCheckViewModel {
             errorMessage = error.message
             return nil
         } catch {
-            errorMessage = "We couldn't identify the piece. Try again with more light."
+            errorMessage = String(localized: "We couldn't identify the piece. Try again with more light.")
             return nil
         }
     }
@@ -152,7 +152,7 @@ final class PurchaseCheckViewModel {
             try modelContext.save()
             loadHistory()
         } catch {
-            errorMessage = "Couldn't save the check. Try again."
+            errorMessage = String(localized: "Couldn't save the check. Try again.")
         }
     }
 }

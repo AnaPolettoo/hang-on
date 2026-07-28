@@ -69,7 +69,7 @@ struct FindYourColorsView: View {
                 onCapture: { image in
                     showCamera = false
                     guard let cgImage = image.cgImage else {
-                        viewModel.errorMessage = "Couldn't process the photo. Try again."
+                        viewModel.errorMessage = String(localized: "Couldn't process the photo. Try again.")
                         return
                     }
                     Task {

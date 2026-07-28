@@ -13,6 +13,7 @@ struct SplashView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 70, height: 78)
+                    .padding(.bottom, -6)
 
                 Text("Hang On")
                     .font(Theme.Font.display)

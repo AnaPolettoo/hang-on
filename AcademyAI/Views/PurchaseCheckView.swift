@@ -314,7 +314,7 @@ struct PurchaseCheckView: View {
 
     private func process(_ image: UIImage) async {
         guard let cgImage = image.cgImage else {
-            viewModel.errorMessage = "Couldn't process the photo. Try again."
+            viewModel.errorMessage = String(localized: "Couldn't process the photo. Try again.")
             return
         }
         let orientation = CGImagePropertyOrientation(image.imageOrientation)
@@ -322,7 +322,7 @@ struct PurchaseCheckView: View {
 
         let displayImage = UIImage(cgImage: processed.image)
         guard let imageData = displayImage.pngData() else {
-            viewModel.errorMessage = "Couldn't process the photo. Try again."
+            viewModel.errorMessage = String(localized: "Couldn't process the photo. Try again.")
             return
         }
 

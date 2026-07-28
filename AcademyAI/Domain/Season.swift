@@ -11,18 +11,18 @@ enum Season: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .warmSpring: return "Warm Spring"
-        case .lightSpring: return "Light Spring"
-        case .clearSpring: return "Clear Spring"
-        case .coolSummer: return "Cool Summer"
-        case .lightSummer: return "Light Summer"
-        case .softSummer: return "Soft Summer"
-        case .warmAutumn: return "Warm Autumn"
-        case .softAutumn: return "Soft Autumn"
-        case .deepAutumn: return "Deep Autumn"
-        case .coolWinter: return "Cool Winter"
-        case .clearWinter: return "Clear Winter"
-        case .deepWinter: return "Deep Winter"
+        case .warmSpring: return String(localized: "Warm Spring")
+        case .lightSpring: return String(localized: "Light Spring")
+        case .clearSpring: return String(localized: "Clear Spring")
+        case .coolSummer: return String(localized: "Cool Summer")
+        case .lightSummer: return String(localized: "Light Summer")
+        case .softSummer: return String(localized: "Soft Summer")
+        case .warmAutumn: return String(localized: "Warm Autumn")
+        case .softAutumn: return String(localized: "Soft Autumn")
+        case .deepAutumn: return String(localized: "Deep Autumn")
+        case .coolWinter: return String(localized: "Cool Winter")
+        case .clearWinter: return String(localized: "Clear Winter")
+        case .deepWinter: return String(localized: "Deep Winter")
         }
     }
 }

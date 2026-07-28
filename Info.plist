@@ -6,7 +6,5 @@
 	<array>
 		<string>PatrickHand-Regular.ttf</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Hang On uses the camera to identify clothing and to take your colorimetry selfie. Nothing leaves your device.</string>
 </dict>
 </plist>
