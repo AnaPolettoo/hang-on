@@ -276,7 +276,7 @@ struct AnalysisView: View {
         }
     }
 
-    private func donationCriterionChip(_ label: String) -> some View {
+    private func donationCriterionChip(_ label: LocalizedStringKey) -> some View {
         Text(label)
             .font(Theme.Font.micro)
             .foregroundStyle(Theme.Color.ink)
