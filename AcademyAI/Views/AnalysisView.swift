@@ -55,6 +55,9 @@ struct AnalysisView: View {
                 if !viewModel.offPaletteItems.isEmpty {
                     offPaletteSection
                 }
+                if !viewModel.donationCandidates.isEmpty {
+                    considerDonatingSection
+                }
             }
             .padding(.top, Theme.Layout.spacingXS)
             .padding(.bottom, 24)
@@ -224,6 +227,63 @@ struct AnalysisView: View {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .stroke(Theme.Color.ink.opacity(0.18), lineWidth: 1)
         }
+    }
+
+    // MARK: - Consider donating
+
+    private var considerDonatingSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("CONSIDER DONATING")
+                .font(Theme.Font.micro)
+                .tracking(0.5)
+                .foregroundStyle(Theme.Color.ink.opacity(0.6))
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(viewModel.donationCandidates, id: \.item.persistentModelID) { candidate in
+                    donationCandidateRow(candidate)
+                }
+            }
+        }
+    }
+
+    private func donationCandidateRow(_ candidate: DonationAdvisor.Candidate) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            offPaletteTile(candidate.item)
+                .frame(width: 64, height: 85)
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
+                    if candidate.isForgotten {
+                        donationCriterionChip("Forgotten")
+                    }
+                    if candidate.isOffPalette {
+                        donationCriterionChip("Off palette")
+                    }
+                    if candidate.isDuplicate {
+                        donationCriterionChip("Duplicate")
+                    }
+                }
+                Text(viewModel.donationSuggestion(for: candidate.item) ?? "...")
+                    .font(Theme.Font.caption)
+                    .foregroundStyle(Theme.Color.ink.opacity(0.7))
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground(cornerRadius: cardCornerRadius)
+        .task(id: candidate.item.persistentModelID) {
+            guard viewModel.donationSuggestion(for: candidate.item) == nil else { return }
+            await viewModel.loadDonationSuggestion(for: candidate)
+        }
+    }
+
+    private func donationCriterionChip(_ label: String) -> some View {
+        Text(label)
+            .font(Theme.Font.micro)
+            .foregroundStyle(Theme.Color.ink)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Theme.Color.accentBorder.opacity(0.25))
+            .clipShape(Capsule())
     }
 
     private func swiftUIColor(_ color: ClosetColor) -> Color {

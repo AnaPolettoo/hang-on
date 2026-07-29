@@ -439,6 +439,16 @@
         }
       }
     },
+    "CONSIDER DONATING" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONSIDERE DOAR"
+          }
+        }
+      }
+    },
     "Continue" : {
       "localizations" : {
         "pt-BR" : {
@@ -595,6 +605,16 @@
         }
       }
     },
+    "Duplicate" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicada"
+          }
+        }
+      }
+    },
     "dresses" : {
       "localizations" : {
         "pt-BR" : {
@@ -641,6 +661,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para peças que você já tem. Adicione uma foto que a gente já adivinha a cor e a categoria — você pode corrigir antes de salvar."
+          }
+        }
+      }
+    },
+    "Forgotten" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esquecida"
           }
         }
       }
@@ -921,6 +951,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FORA DA SUA PALETA · %lld"
+          }
+        }
+      }
+    },
+    "Off palette" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fora da paleta"
           }
         }
       }
